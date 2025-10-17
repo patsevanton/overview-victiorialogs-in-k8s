@@ -9,3 +9,5 @@ vlselect:
     ingressClassName: nginx
 vector:
   enabled: true
+  rbac:
+    create: true
