@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flog1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: flog1
+  name: flog1
+  namespace: flog1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flog1
+  template:
+    metadata:
+      labels:
+        app: flog1
+    spec:
+      containers:
+        - image: mingrammer/flog:0.4.3
+          name: flog1
+          args: ["--loop", "--delay", "2", "--format", "json"]
