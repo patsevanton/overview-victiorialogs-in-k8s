@@ -12,7 +12,7 @@ metadata:
   name: flog2
   namespace: flog2
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: flog2
@@ -24,4 +24,4 @@ spec:
       containers:
         - image: mingrammer/flog:0.4.3
           name: flog2
-          args: ["--loop", "--number", "1000", "--bytes", "1000"]
+          args: ["--loop", "--delay", "2", "--format", "json"]
