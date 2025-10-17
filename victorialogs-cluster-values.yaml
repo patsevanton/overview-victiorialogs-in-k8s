@@ -1,0 +1,11 @@
+vlselect:
+  ingress:
+    enabled: true
+    hosts:
+      - name: victorialogs.apatsev.org.ru
+        path:
+          - /
+        port: http
+    ingressClassName: nginx
+vector:
+  enabled: true

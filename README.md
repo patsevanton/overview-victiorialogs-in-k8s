@@ -1,1 +1,4 @@
-# overview-victiorialogs-in-k8s
+helm repo add vm https://victoriametrics.github.io/helm-charts/
+helm repo update
+kubectl create ns victorialogs
+helm upgrade --install vlc vm/victoria-logs-cluster -n victorialogs -f victorialogs-cluster-values.yaml
