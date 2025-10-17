@@ -18,3 +18,12 @@ defaultDatasources:
 kube-state-metrics:
   metricLabelsAllowlist:
     - pods=[*]
+vmselect:
+  ingress:
+    enabled: true
+    hosts:
+      - name: victoriametrics.apatsev.org.ru
+        path:
+          - /
+        port: http
+    ingressClassName: nginx
