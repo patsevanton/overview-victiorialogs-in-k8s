@@ -7,3 +7,5 @@ kubectl apply -f nginx-log-generator.yaml
 
 kubectl create ns victoria-metrics
 helm upgrade --install victoria-metrics vm/victoria-metrics-cluster -f vmks-values.yaml -n victoria-metrics
+
+kubectl apply -f prometheus-metrics-generator.yaml
