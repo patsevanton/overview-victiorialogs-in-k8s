@@ -6,6 +6,12 @@ grafana:
     enabled: true
     hosts:
       - grafana.apatsev.org.ru
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      - hosts:
+        - grafana.apatsev.org.ru
+        secretName: grafana-tls
 defaultDatasources:
   extra:
     - name: victoriametrics-logs
@@ -27,3 +33,9 @@ vmselect:
           - /
         port: http
     ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      - hosts:
+        - victoriametrics.apatsev.org.ru
+        secretName: victoriametrics-tls
