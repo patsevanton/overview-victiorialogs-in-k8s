@@ -25,7 +25,7 @@ helm upgrade --install vlc vm/victoria-logs-cluster -n victorialogs -f victorial
 kubectl apply -f nginx-log-generator.yaml
 
 kubectl create ns victoria-metrics
-helm upgrade --install victoria-metrics vm/victoria-metrics-cluster -f vmks-values.yaml -n victoria-metrics
+helm upgrade --install victoria-metrics vm/victoria-metrics-k8s-stack -f vmks-values.yaml -n victoria-metrics
 
 kubectl apply -f prometheus-metrics-generator.yaml
 
