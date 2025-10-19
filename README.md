@@ -21,9 +21,10 @@ kubectl apply -f python-log-generator.yaml
 ### WordPress Installation
 
 ```bash
-helm install my-wordpress-release oci://registry-1.docker.io/bitnamicharts/wordpress \
+helm upgrade --install my-wordpress-release oci://registry-1.docker.io/bitnamicharts/wordpress \
   --set ingress.enabled=true \
-  --set ingress.hostname=wordpress.apatsev.org.ru
+  --set ingress.hostname=wordpress.apatsev.org.ru \
+  --set ingress.ingressClassName=nginx
 ```
 
 
