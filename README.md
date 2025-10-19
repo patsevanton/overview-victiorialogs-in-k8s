@@ -41,7 +41,7 @@ helm upgrade --install my-wordpress-release oci://registry-1.docker.io/bitnamich
   --set ingress.enabled=true \
   --set ingress.hostname=wordpress.apatsev.org.ru \
   --set ingress.ingressClassName=nginx \
-  --set ingress.annotations."cert-manager.io/cluster-issuer"=letsencrypt-prod \
+  --set-json ingress.annotations='{"cert-manager.io/cluster-issuer":"letsencrypt-prod"}' \
   --set ingress.tls=true
 ```
 
