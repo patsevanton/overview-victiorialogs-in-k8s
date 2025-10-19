@@ -12,8 +12,8 @@ helm upgrade --install victoria-metrics vm/victoria-metrics-cluster -f vmks-valu
 kubectl apply -f prometheus-metrics-generator.yaml
 docker login
 
-docker build -t antonpatsev/log-generator:1 .
+docker build -t antonpatsev/log-generator:2 .
 
-docker push antonpatsev/log-generator:1
+docker push antonpatsev/log-generator:2
 
 kubectl apply -f log-generator.yaml

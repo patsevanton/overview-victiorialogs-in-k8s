@@ -1,16 +1,32 @@
-
 import argparse
+import json
 import logging
 import random
 import time
 
+
+class JsonFormatter(logging.Formatter):
+    def format(self, record):
+        log_record = {
+            "timestamp": self.formatTime(record, self.datefmt),
+            "level": record.levelname,
+            "message": record.getMessage(),
+        }
+        return json.dumps(log_record)
+
+
 def setup_logging():
     """Sets up the logging configuration."""
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(levelname)s - %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
+    logger = logging.getLogger()
+    if logger.hasHandlers():
+        logger.handlers.clear()
+    logger.setLevel(logging.INFO)
+    handler = logging.StreamHandler()
+    # Use the custom JSON formatter
+    formatter = JsonFormatter(datefmt="%Y-%m-%d %H:%M:%S")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
 
 def generate_logs(rate, duration):
     """Generates logs at a specified rate for a given duration."""
@@ -30,10 +46,11 @@ def generate_logs(rate, duration):
         logging.log(level, message)
         time.sleep(1 / rate)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Kubernetes Log Generator")
     parser.add_argument(
-        "--rate", type=int, default=1, help="Logs per second"
+        "--rate", type=int, default=10, help="Logs per second"  # Increased rate
     )
     parser.add_argument(
         "--duration", type=int, help="Duration in seconds (optional)"

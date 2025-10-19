@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: log-generator
-    image: antonpatsev/log-generator:1
+    image: antonpatsev/log-generator:2
     imagePullPolicy: IfNotPresent
     resources:
       requests:
