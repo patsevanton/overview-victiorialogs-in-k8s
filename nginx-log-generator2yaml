@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-log-generator
+  labels:
+    app: nginx-log-generator
+spec:
+  containers:
+  - name: nginx-log-generator
+    image: kscarlett/nginx-log-generator:latest
+    env:
+    - name: RATE
+      value: "10"
+    - name: IPV4_PERCENT
+      value: "100"
+    - name: STATUS_OK_PERCENT
+      value: "80"
+    - name: PATH_MIN
+      value: "1"
+    - name: PATH_MAX
+      value: "5"
+    - name: GET_PERCENT
+      value: "30"
+    - name: POST_PERCENT
+      value: "30"
+    - name: PUT_PERCENT
+      value: "10"
+    - name: PATCH_PERCENT
+      value: "10"
+    - name: DELETE_PERCENT
+      value: "10"
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
