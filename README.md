@@ -16,4 +16,4 @@ docker build -t antonpatsev/log-generator:2 .
 
 docker push antonpatsev/log-generator:2
 
-kubectl apply -f log-generator.yaml
+kubectl apply -f python-log-generator.yaml
