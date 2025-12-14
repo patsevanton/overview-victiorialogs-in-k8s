@@ -8,7 +8,7 @@ helm install \
   --namespace cert-manager \
   --create-namespace \
   --version v1.19.1 \
-  --set installCRDs=true
+  --set crds.enabled=true
 ```
 
 Apply the ClusterIssuer:
@@ -24,13 +24,13 @@ helm upgrade --install vlc vm/victoria-logs-cluster -n victorialogs -f victorial
 
 kubectl apply -f nginx-log-generator.yaml
 
-kubectl create ns victoria-metrics
-helm upgrade --install victoria-metrics vm/victoria-metrics-k8s-stack -f vmks-values.yaml -n victoria-metrics
+kubectl create ns vmks
+helm upgrade --install vmks vm/victoria-metrics-k8s-stack -f vmks-values.yaml -n vmks
 
 kubectl apply -f prometheus-metrics-generator.yaml
 
-docker build -t antonpatsev/log-generator:2 .
-docker push antonpatsev/log-generator:2
+# docker build -t antonpatsev/log-generator:2 .
+# docker push antonpatsev/log-generator:2
 kubectl apply -f python-log-generator.yaml
 
 
