@@ -37,6 +37,7 @@ helm install \
   --namespace cert-manager \
   --create-namespace \
   --version v1.19.1 \
+  --wait \
   --set crds.enabled=true
 ```
 
@@ -57,6 +58,7 @@ helm repo update
 kubectl create ns victorialogs
 helm upgrade --install vlc vm/victoria-logs-cluster \
   -n victorialogs \
+  --wait \
   -f victorialogs-cluster-values.yaml
 ```
 
@@ -99,6 +101,7 @@ kubectl apply -f python-log-generator.yaml
 kubectl create ns vmks
 helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
   -n vmks \
+  --wait \
   -f vmks-values.yaml
 ```
 
@@ -115,6 +118,7 @@ kubectl apply -f prometheus-metrics-generator.yaml
 ```bash
 helm upgrade --install my-wordpress-release \
   oci://registry-1.docker.io/bitnamicharts/wordpress \
+  --wait \
   --set ingress.enabled=true \
   --set ingress.hostname=wordpress.apatsev.org.ru \
   --set ingress.ingressClassName=nginx \
