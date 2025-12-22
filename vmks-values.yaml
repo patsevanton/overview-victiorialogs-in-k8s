@@ -10,7 +10,7 @@ grafana:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     tls:
       - hosts:
-        - grafana.apatsev.org.ru
+          - grafana.apatsev.org.ru
         secretName: grafana-tls
 defaultDatasources:
   extra:
@@ -24,18 +24,19 @@ defaultDatasources:
 kube-state-metrics:
   metricLabelsAllowlist:
     - pods=[*]
-vmselect:
+vmsingle:
+  enabled: false
+vmcluster:
+  enabled: true
   ingress:
-    enabled: true
-    hosts:
-      - name: victoriametrics.apatsev.org.ru
-        path:
-          - /
-        port: http
-    ingressClassName: nginx
-    annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    tls:
-      - hosts:
+    select:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
         - victoriametrics.apatsev.org.ru
-        secretName: victoriametrics-tls
+      tls:
+        - secretName: victoriametrics-tls
+          hosts:
+            - victoriametrics.apatsev.org.ru

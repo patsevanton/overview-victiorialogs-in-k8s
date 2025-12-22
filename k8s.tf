@@ -28,7 +28,7 @@ resource "yandex_kubernetes_cluster" "victorialogs" {
   network_id = yandex_vpc_network.victorialogs.id  # Сеть, к которой подключается кластер
 
   master {
-    version = "1.30"  # Версия Kubernetes мастера
+    version = "1.32"  # Версия Kubernetes мастера
     zonal {
       zone      = yandex_vpc_subnet.victorialogs-a.zone  # Зона размещения мастера
       subnet_id = yandex_vpc_subnet.victorialogs-a.id     # Подсеть для мастера
@@ -52,7 +52,7 @@ resource "yandex_kubernetes_node_group" "k8s-node-group" {
   description = "Node group for the Managed Service for Kubernetes cluster"
   name        = "k8s-node-group"
   cluster_id  = yandex_kubernetes_cluster.victorialogs.id
-  version     = "1.30"  # Версия Kubernetes на нодах
+  version     = "1.32"  # Версия Kubernetes на нодах
 
   scale_policy {
     fixed_scale {
@@ -105,6 +105,7 @@ provider "helm" {
   }
 }
 
+# TODO поправить
 # Установка ingress-nginx через Helm
 resource "helm_release" "ingress_nginx" {
   name             = "ingress-nginx"
