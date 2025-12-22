@@ -107,12 +107,6 @@ helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
   -f vmks-values.yaml
 ```
 
-Дополнительно применяется генератор метрик:
-
-```bash
-kubectl apply -f prometheus-metrics-generator.yaml
-```
-
 
 Все эти действия создают:
 
