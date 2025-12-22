@@ -36,7 +36,7 @@ helm install \
   cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.19.1 \
+  --version v1.19.2 \
   --wait \
   --set crds.enabled=true
 ```
@@ -59,6 +59,7 @@ kubectl create ns victorialogs
 helm upgrade --install vlc vm/victoria-logs-cluster \
   -n victorialogs \
   --wait \
+  --version 0.0.21 \
   -f victorialogs-cluster-values.yaml
 ```
 
@@ -102,6 +103,7 @@ kubectl create ns vmks
 helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
   -n vmks \
   --wait \
+  --version 0.66.0 \
   -f vmks-values.yaml
 ```
 
@@ -111,54 +113,6 @@ helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
 kubectl apply -f prometheus-metrics-generator.yaml
 ```
 
-## WordPress как источник реальных логов
-
-Для приближённого к production сценария разворачивается WordPress с ingress и TLS:
-
-```bash
-helm upgrade --install my-wordpress-release \
-  oci://registry-1.docker.io/bitnamicharts/wordpress \
-  --wait \
-  --set ingress.enabled=true \
-  --set ingress.hostname=wordpress.apatsev.org.ru \
-  --set ingress.ingressClassName=nginx \
-  --set-json ingress.annotations='{"cert-manager.io/cluster-issuer":"letsencrypt-prod"}' \
-  --set ingress.tls=true
-```
-
-WordPress генерирует:
-
-* access-логи ingress,
-* PHP/application логи,
-* security-релевантные события.
-
-## Генерация security-логов (атаки)
-
-> **Disclaimer:** Использовать только в тестовых средах и на системах, на которые у вас есть разрешение.
-
-### Brute-force директорий (gobuster)
-
-```bash
-gobuster dir \
-  -u https://wordpress.apatsev.org.ru \
-  -w SecLists/Discovery/Web-Content/DirBuster-2007_directory-list-2.3-big.txt
-```
-
-### Brute-force логина (Hydra)
-
-```bash
-hydra \
-  -L SecLists/Usernames/xato-net-10-million-usernames.txt \
-  -P SecLists/Passwords/Common-Credentials/Pwdb_top-10000000.txt \
-  wordpress.apatsev.org.ru \
-  https-post-form "/login.php:username=^USER^&password=^PASS^:F=Invalid"
-```
-
-### Сканирование уязвимостей (Nikto)
-
-```bash
-nikto -h https://wordpress.apatsev.org.ru
-```
 
 Все эти действия создают:
 
