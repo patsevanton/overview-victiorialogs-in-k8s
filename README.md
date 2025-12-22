@@ -94,20 +94,7 @@ kubectl apply -f python-log-generator.yaml
 
 Позволяет эмулировать application-level логи (INFO, WARN, ERROR).
 
-## Мониторинг: Victoria Metrics K8s Stack
-
-Для мониторинга инфраструктуры разворачивается Victoria Metrics K8s Stack.
-
-```bash
-kubectl create ns vmks
-helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
-  -n vmks \
-  --wait \
-  --version 0.66.0 \
-  -f vmks-values.yaml
-```
-
-Все эти действия создают:
+Открываем https://victorialogs.apatsev.org.ru/select/vmui и смотрим
 
 * всплески 4xx/5xx,
 * аномальные паттерны запросов,
@@ -129,6 +116,21 @@ VictoriaLogs в Kubernetes позволяет:
 * troubleshooting,
 * security monitoring,
 * SOC / SIEM-like use cases.
+
+## Мониторинг: Victoria Metrics K8s Stack
+
+Для мониторинга инфраструктуры разворачивается Victoria Metrics K8s Stack.
+
+```bash
+kubectl create ns vmks
+helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
+  -n vmks \
+  --wait \
+  --version 0.66.0 \
+  -f vmks-values.yaml
+```
+
+Открываем https://grafana.apatsev.org.ru/ и смотрим нагрузку на систему
 
 ## Заключение
 
