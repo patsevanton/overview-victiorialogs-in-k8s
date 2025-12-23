@@ -92,11 +92,11 @@ resource "yandex_kubernetes_node_group" "k8s-node-group" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     host                   = yandex_kubernetes_cluster.victorialogs.master[0].external_v4_endpoint
     cluster_ca_certificate = yandex_kubernetes_cluster.victorialogs.master[0].cluster_ca_certificate
 
-    exec {
+    exec = {
       api_version = "client.authentication.k8s.io/v1beta1"
       args        = ["k8s", "create-token"]
       command     = "yc"
@@ -113,10 +113,12 @@ resource "helm_release" "ingress_nginx" {
   create_namespace = true
   depends_on       = [yandex_kubernetes_cluster.victorialogs]
 
-  set {
-    name  = "controller.service.loadBalancerIP"
-    value = yandex_vpc_address.addr.external_ipv4_address[0].address
-  }
+  set = [
+    {
+      name  = "controller.service.loadBalancerIP"
+      value = yandex_vpc_address.addr.external_ipv4_address[0].address
+      }
+  ]
 }
 
 # Вывод команды для получения kubeconfig
