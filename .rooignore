@@ -1,0 +1,16 @@
+cluster-issuer.yaml
+Dockerfile
+.dockerignore
+.git
+.gitignore
+ip-dns.tf
+k8s.tf
+LICENSE
+main.py
+net.tf
+nginx-log-generator.yaml
+python-log-generator.yaml
+.rooignore
+versions.tf
+victorialogs-cluster-values.yaml
+vmks-values.yaml
