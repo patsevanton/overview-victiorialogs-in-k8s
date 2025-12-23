@@ -101,7 +101,49 @@ kubectl apply -f python-log-generator.yaml
 * аномальные паттерны запросов,
 * сигнатуры атак в логах ingress и приложения.
 
-## Практическая ценность VictoriaLogs
+## Производительность и преимущества VictoriaLogs
+
+### Ключевые преимущества
+
+1. **Высокая производительность**:
+   - Обработка миллионов строк логов в секунду на одной ноде
+   - Низкая задержка запросов (<100 мс для большинства операций)
+   - Эффективное сжатие данных (до 10x по сравнению с сырыми логами)
+
+2. **Экономия ресурсов**:
+   - Низкое потребление CPU и памяти
+   - Эффективное использование дискового пространства
+   - Автоматическое управление retention policies
+
+3. **Простота эксплуатации**:
+   - Единый бинарный файл без внешних зависимостей
+   - Простая конфигурация через командную строку или переменные окружения
+   - Нативная интеграция с Kubernetes через Helm
+
+4. **Масштабируемость**:
+   - Горизонтальное масштабирование в кластерном режиме
+   - Линейное увеличение производительности с добавлением нод
+   - Поддержка многопоточности для параллельной обработки запросов
+
+### Сравнение с альтернативами
+
+| Функция | VictoriaLogs | Elasticsearch | Grafana Loki |
+|---------|--------------|---------------|--------------|
+| Простота установки | ⭐⭐⭐⭐⭐ | ⭐⭐ | ⭐⭐⭐ |
+| Потребление ресурсов | ⭐⭐⭐⭐⭐ | ⭐ | ⭐⭐⭐ |
+| Скорость запросов | ⭐⭐⭐⭐⭐ | ⭐⭐⭐ | ⭐⭐ |
+| Масштабируемость | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐ | ⭐⭐⭐ |
+| Стоимость эксплуатации | ⭐⭐⭐⭐⭐ | ⭐ | ⭐⭐⭐⭐ |
+
+### Бенчмарки производительности
+
+Согласно [официальным бенчмаркам](https://docs.victoriametrics.com/victorialogs/README.md#benchmarks):
+- VictoriaLogs показывает в 2-5 раз лучшую производительность по сравнению с Elasticsearch
+- В 3-10 раз лучшее сжатие данных
+- На 70-90% меньшее потребление памяти
+- Поддержка до 10 миллионов запросов в секунду на одной ноде
+
+## Практическая ценность VictoriaLogs в Kubernetes
 
 VictoriaLogs в Kubernetes позволяет:
 
@@ -156,7 +198,9 @@ _time:1h | stats by (ip) count() requests, count() if (status:4*) errors | filte
 
 ### Мониторинг и алертинг
 
-VictoriaLogs интегрируется с [vmalert](https://docs.victoriametrics.com/victorialogs/vmalert/) для создания алертов на основе логов:
+VictoriaLogs интегрируется с [vmalert](https://docs.victoriametrics.com/victorialogs/vmalert/) для создания алертов на основе логов. vmalert использует статистические API VictoriaLogs:
+
+* [`/select/logsql/stats_query`](https://docs.victoriametrics.com/victorialogs/vmalert/) для создания алертов на основе логов:
 
 ```yaml
 groups:
@@ -168,11 +212,41 @@ groups:
         expr: 'env: "prod" AND status:~"error|warn" | stats by (service, kubernetes.pod) count() as errorLog | filter errorLog:>0'
         annotations:
           description: 'Service {{$labels.service}} (pod {{ index $labels "kubernetes.pod" }}) generated {{$labels.errorLog}} error logs in the last 5 minutes'
+
+  - name: ServiceRequest
+    type: vlogs
+    interval: 5m
+    rules:
+      - alert: TooManyFailedRequest
+        expr: '* | extract "ip=<ip> " | extract "status_code=<code>;" | stats by (ip) count() if (code:~4.*) as failed, count() as total| math failed / total as failed_percentage| filter failed_percentage :> 0.01 | fields ip,failed_percentage'
+        annotations:
+          description: "Connection from address {{$labels.ip}} has {{$value}}% failed requests in last 5 minutes"
+
+  - name: RequestDuration
+    type: vlogs
+    interval: 5m
+    rules:
+      - record: requestDurationQuantile
+        expr: '* | stats by (service) quantile(0.5, request_duration_seconds) p50, quantile(0.9, request_duration_seconds) p90, quantile(0.99, request_duration_seconds) p99'
+```
+
+#### Правила записи (Recording Rules)
+
+```yaml
+groups:
+  - name: RequestCount
+    type: vlogs
+    interval: 5m
+    rules:
+      - record: nginxRequestCount
+        expr: 'env: "test" AND service: "nginx" | stats count(*) as requests'
+      - record: prodRequestCount
+        expr: 'env: "prod" | stats by (service) count(*) as requests'
 ```
 
 ### Визуализация в Grafana
 
-VictoriaLogs имеет официальный [Grafana datasource plugin](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/), который позволяет:
+VictoriaLogs имеет официальный [Grafana datasource plugin](https://docs.victoriametrics.com/victorialogs/victorialogs-datasource/) позволяет:
 * Создавать дашборды для мониторинга логов
 * Строить графики на основе агрегированных данных логов
 * Настраивать алерты прямо из Grafana
@@ -191,6 +265,87 @@ VictoriaLogs имеет официальный [Grafana datasource plugin](https
 * **Security monitoring** - обнаружение аномалий и атак
 * **Compliance reporting** - отчёты для регуляторных требований
 * **Data retention policies** - настройка политик хранения логов
+
+## Практические примеры использования VictoriaLogs
+
+### Мониторинг ошибок приложений
+
+```logsql
+# Поиск всех ERROR логов за последние 24 часа
+_time:24h | filter level:ERROR | fields _time, service, message
+
+# Анализ производительности API
+_time:1h | extract "duration=<duration>" | stats 
+  quantile(0.5, duration) p50,
+  quantile(0.9, duration) p90,
+  quantile(0.99, duration) p99
+
+# Обнаружение подозрительных IP-адресов
+_time:1h | stats by (ip) count() requests, count() if (status:4*) errors | 
+  filter errors:>100 | fields ip, errors
+
+# Мониторинг трафика ботов
+_time:1h | filter user_agent:~"*bot*|*crawler*" | stats by (user_agent) count() requests
+
+# Поиск SQL-инъекций в логах
+_time:1h | filter message:~"*select*|*insert*|*update*|*delete*" | fields _time, ip, message
+
+# Анализ паттернов доступа
+_time:7d | stats by (ip) count() requests, count() if (status:4*) errors, count() if (status:5*) server_errors
+
+# Мониторинг аномальных паттернов запросов
+_time:1h | stats by (endpoint) count() requests, count() if (status:4*) client_errors
+```
+
+### Алертинг с vmalert
+
+```yaml
+groups:
+  - name: ApplicationMonitoring
+    type: vlogs
+    interval: 5m
+    rules:
+      - alert: HighErrorRate
+        expr: '_time:5m | stats count() if (level:ERROR) errors, count() total | math errors / total as error_rate | filter error_rate:>0.05'
+        annotations:
+          description: 'Error rate {{$value}} exceeds threshold'
+
+  - name: SecurityMonitoring
+    type: vlogs
+    interval: 1m
+    rules:
+      - alert: SuspiciousActivity
+        expr: '_time:1m | stats by (ip) count() requests | filter requests:>1000'
+        annotations:
+          description: 'IP {{$labels.ip}} made {{$value}} requests in the last minute'
+
+  - name: PerformanceMonitoring
+    type: vlogs
+    interval: 5m
+    rules:
+      - record: apiResponseTime
+        expr: '_time:5m | stats by (service) quantile(0.95, response_time) p95'
+```
+
+### Преимущества VictoriaLogs
+
+* **Высокая производительность** - до 10x быстрее чем Elasticsearch на production-нагрузках
+* **Низкое потребление ресурсов** - до 10x меньше RAM и disk space
+* **Простота установки** - один Helm chart для всего кластера
+* **LogsQL** - простой и мощный язык запросов
+* **Нативная интеграция с Kubernetes** - автоматическое парсинг логов контейнеров
+* **Горизонтальное масштабирование** - легко добавлять ноды
+* **Production-ready** - подходит для enterprise-нагрузок
+
+### Интеграция с Kubernetes
+
+VictoriaLogs автоматически:
+* Собирает логи всех контейнеров
+* Индексирует все поля логов
+* Поддерживает multitenancy
+* Интегрируется с cert-manager для автоматического TLS
+* Работает с существующими log collectors (FluentBit, Filebeat, Vector, etc.)
+* Предоставляет мощный Web UI для анализа логов
 
 ## Мониторинг: Victoria Metrics K8s Stack
 
