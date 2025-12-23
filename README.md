@@ -37,6 +37,7 @@ helm install \
   --create-namespace \
   --version v1.19.2 \
   --wait \
+  --timeout 15m \
   --set crds.enabled=true
 ```
 
