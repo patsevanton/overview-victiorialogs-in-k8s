@@ -58,7 +58,8 @@ kubectl create ns victorialogs
 helm upgrade --install vlc vm/victoria-logs-cluster \
   -n victorialogs \
   --wait \
-  --version 0.0.21 \
+  --version 0.0.22 \
+  --timeout 15m \
   -f victorialogs-cluster-values.yaml
 ```
 
@@ -126,6 +127,7 @@ helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
   -n vmks \
   --wait \
   --version 0.66.0 \
+  --timeout 15m \
   -f vmks-values.yaml
 ```
 
