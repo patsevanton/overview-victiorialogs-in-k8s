@@ -3,20 +3,20 @@ data "yandex_client_config" "client" {}
 
 # Создание сервисного аккаунта для управления Kubernetes
 resource "yandex_iam_service_account" "sa-k8s-editor" {
-  name      = "sa-k8s-editor"  # Имя сервисного аккаунта
+  name = "sa-k8s-editor" # Имя сервисного аккаунта
 }
 
 # Назначение роли "editor" сервисному аккаунту на уровне папки
 resource "yandex_resourcemanager_folder_iam_member" "sa-k8s-editor-permissions" {
-  role      = "editor"  # Роль, дающая полные права на ресурсы папки
+  role      = "editor" # Роль, дающая полные права на ресурсы папки
   folder_id = data.yandex_client_config.client.folder_id
-  member = "serviceAccount:${yandex_iam_service_account.sa-k8s-editor.id}"  # Назначаемый участник
+  member    = "serviceAccount:${yandex_iam_service_account.sa-k8s-editor.id}" # Назначаемый участник
 }
 
 # Пауза, чтобы изменения IAM успели примениться до создания кластера
 resource "time_sleep" "wait_sa" {
   create_duration = "20s"
-  depends_on      = [
+  depends_on = [
     yandex_iam_service_account.sa-k8s-editor,
     yandex_resourcemanager_folder_iam_member.sa-k8s-editor-permissions
   ]
@@ -24,24 +24,24 @@ resource "time_sleep" "wait_sa" {
 
 # Создание Kubernetes-кластера в Yandex Cloud
 resource "yandex_kubernetes_cluster" "victorialogs" {
-  name       = "victorialogs"  # Имя кластера
-  network_id = yandex_vpc_network.victorialogs.id  # Сеть, к которой подключается кластер
+  name       = "victorialogs"                     # Имя кластера
+  network_id = yandex_vpc_network.victorialogs.id # Сеть, к которой подключается кластер
 
   master {
-    version = "1.32"  # Версия Kubernetes мастера
+    version = "1.32" # Версия Kubernetes мастера
     zonal {
-      zone      = yandex_vpc_subnet.victorialogs-a.zone  # Зона размещения мастера
-      subnet_id = yandex_vpc_subnet.victorialogs-a.id     # Подсеть для мастера
+      zone      = yandex_vpc_subnet.victorialogs-a.zone # Зона размещения мастера
+      subnet_id = yandex_vpc_subnet.victorialogs-a.id   # Подсеть для мастера
     }
 
-    public_ip = true  # Включение публичного IP для доступа к мастеру
+    public_ip = true # Включение публичного IP для доступа к мастеру
   }
 
   # Сервисный аккаунт для управления кластером и нодами
   service_account_id      = yandex_iam_service_account.sa-k8s-editor.id
   node_service_account_id = yandex_iam_service_account.sa-k8s-editor.id
 
-  release_channel = "STABLE"  # Канал обновлений
+  release_channel = "STABLE" # Канал обновлений
 
   # Зависимость от ожидания применения IAM-ролей
   depends_on = [time_sleep.wait_sa]
@@ -52,11 +52,11 @@ resource "yandex_kubernetes_node_group" "k8s-node-group" {
   description = "Node group for the Managed Service for Kubernetes cluster"
   name        = "k8s-node-group"
   cluster_id  = yandex_kubernetes_cluster.victorialogs.id
-  version     = "1.32"  # Версия Kubernetes на нодах
+  version     = "1.32" # Версия Kubernetes на нодах
 
   scale_policy {
     fixed_scale {
-      size = 3  # Фиксированное количество нод
+      size = 3 # Фиксированное количество нод
     }
   }
 
@@ -68,10 +68,10 @@ resource "yandex_kubernetes_node_group" "k8s-node-group" {
   }
 
   instance_template {
-    platform_id = "standard-v2"  # Тип виртуальной машины
+    platform_id = "standard-v2" # Тип виртуальной машины
 
     network_interface {
-      nat = true  # Включение NAT для доступа в интернет
+      nat = true # Включение NAT для доступа в интернет
       subnet_ids = [
         yandex_vpc_subnet.victorialogs-a.id,
         yandex_vpc_subnet.victorialogs-b.id,
@@ -80,13 +80,13 @@ resource "yandex_kubernetes_node_group" "k8s-node-group" {
     }
 
     resources {
-      memory = 20  # ОЗУ
-      cores  = 4   # Кол-во ядер CPU
+      memory = 20 # ОЗУ
+      cores  = 4  # Кол-во ядер CPU
     }
 
     boot_disk {
-      type = "network-ssd"         # Тип диска
-      size = 128                   # Размер диска
+      type = "network-ssd" # Тип диска
+      size = 128           # Размер диска
     }
   }
 }
@@ -117,7 +117,7 @@ resource "helm_release" "ingress_nginx" {
     {
       name  = "controller.service.loadBalancerIP"
       value = yandex_vpc_address.addr.external_ipv4_address[0].address
-      }
+    }
   ]
 }
 
