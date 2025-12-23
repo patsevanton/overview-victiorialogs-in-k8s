@@ -134,6 +134,11 @@ helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
 
 Открываем https://grafana.apatsev.org.ru/ и смотрим нагрузку на систему
 
+Получение пароля grafana для admin юзера
+```shell
+kubectl get secret vmks-grafana -n vmks -o jsonpath='{.data.admin-password}' | base64 --decode; echo
+```
+
 ## Заключение
 
 VictoriaLogs — зрелое и production-ready решение для логирования в Kubernetes. Простота установки через Helm, высокая производительность и нативная интеграция с экосистемой VictoriaMetrics делают его отличной альтернативой тяжёлым ELK-стекам, особенно в cloud-native средах.
