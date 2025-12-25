@@ -10,5 +10,7 @@ spec:
     - alert: ServiceOOMKiller
       annotations:
         description: OOMKilled
-      expr: sum(increase(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[1m]))
+      expr: |
+        sum(increase(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[1m]))
+        or vector(0)
       for: 1m
