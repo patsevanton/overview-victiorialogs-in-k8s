@@ -1,11 +1,11 @@
 apiVersion: operator.victoriametrics.com/v1beta1
 kind: VMRule
 metadata:
-  name: OOMKilled
+  name: oomkilled
   namespace: vmks
 spec:
   groups:
-  - name: OOMKilled
+  - name: oomkilled
     rules:
     - alert: ServiceOOMKiller
       annotations:
