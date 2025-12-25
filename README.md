@@ -353,6 +353,8 @@ VictoriaLogs автоматически:
 
 ```bash
 kubectl create ns vmks
+helm repo add vm https://victoriametrics.github.io/helm-charts/
+helm repo update
 helm upgrade --install vmks vm/victoria-metrics-k8s-stack \
   -n vmks \
   --wait \
