@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: oom-pod
+spec:
+  containers:
+  - name: memory-hog
+    image: ubuntu:latest
+    command: ["stress-ng"]
+    args: ["--vm", "1", "--vm-bytes", "500M", "--vm-hang", "1"]
+    resources:
+      requests:
+        memory: "100Mi"
+      limits:
+        memory: "200Mi"
