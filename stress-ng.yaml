@@ -6,12 +6,12 @@ spec:
   containers:
   - name: stress-test
     image: alexeiled/stress-ng:latest
-    args: ["--cpu", "4", "--io", "2", "--vm", "1", "--vm-bytes", "2G", "--timeout", "60s", "--metrics-brief"]
+    args: ["--cpu", "4", "--io", "2", "--vm", "1", "--vm-bytes", "1G", "--timeout", "60s", "--metrics-brief"]
     resources:
       requests:
-        memory: "1.2Gi"
+        memory: "100Mi"
         cpu: "500m"
       limits:
-        memory: "1.5Gi"
+        memory: "100Mi"
         cpu: "2"
   restartPolicy: Never
