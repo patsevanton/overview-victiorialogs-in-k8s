@@ -1,0 +1,14 @@
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMRule
+metadata:
+  name: OOMKilled
+  namespace: vmks
+spec:
+  groups:
+  - name: OOMKilled
+    rules:
+    - alert: ServiceOOMKiller
+      annotations:
+        description: OOMKilled
+      expr: sum(increase(kube_pod_container_status_last_terminated_reason{reason="OOMKilled"}[1m]))
+      for: 1m
