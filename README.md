@@ -76,13 +76,18 @@ helm upgrade --install vlc vm/victoria-logs-cluster \
 Для демонстрации и тестирования используются несколько источников логов.
 
 ### NGINX Log Generator
+Генерирует HTTP access-логи, близкие к реальным ingress-сценариям.
 
 ```bash
 kubectl apply -f nginx-log-generator.yaml
+```
+
+### Log Generator
+```bash
 kubectl apply -f flog-log-generator.yaml
 ```
 
-Генерирует HTTP access-логи, близкие к реальным ingress-сценариям.
+
 
 ## Развёртывание VictoriaLogs Cluster
 
