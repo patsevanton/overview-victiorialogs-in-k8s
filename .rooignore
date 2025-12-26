@@ -1,6 +1,7 @@
 cluster-issuer.yaml
 Dockerfile
 .dockerignore
+flog-log-generator.yaml
 .git
 .gitignore
 ip-dns.tf
@@ -11,7 +12,6 @@ net.tf
 nginx-log-generator.yaml
 OOMKilled_alert.yaml
 python-log-generator.yaml
-README.md
 .rooignore
 stress-ng.yaml
 .terraform
