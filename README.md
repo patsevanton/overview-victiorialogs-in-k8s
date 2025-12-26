@@ -100,8 +100,6 @@ helm upgrade --install vlc vm/victoria-logs-collector \
   -f victoria-logs-collector-values.yaml
 ```
 
-Позволяет эмулировать application-level логи (INFO, WARN, ERROR).
-
 Открываем https://victorialogs.apatsev.org.ru/select/vmui и смотрим
 
 * всплески 4xx/5xx,
