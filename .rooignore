@@ -20,4 +20,5 @@ terraform.tfstate
 terraform.tfstate.backup
 versions.tf
 victorialogs-cluster-values.yaml
+victoria-logs-collector-values.yaml
 vmks-values.yaml
