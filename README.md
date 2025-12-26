@@ -87,11 +87,9 @@ kubectl apply -f nginx-log-generator.yaml
 kubectl apply -f flog-log-generator.yaml
 ```
 
+## Развёртывание victoria-logs-collector
 
-
-## Развёртывание VictoriaLogs Cluster
-
-VictoriaLogs устанавливается через официальный Helm-репозиторий VictoriaMetrics.
+victoria-logs-collector устанавливается через официальный Helm-репозиторий VictoriaMetrics.
 
 ```bash
 helm repo add vm https://victoriametrics.github.io/helm-charts/
