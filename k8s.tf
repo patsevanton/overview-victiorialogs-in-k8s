@@ -106,12 +106,14 @@ provider "helm" {
 
 resource "helm_release" "ingress_nginx" {
   name             = "ingress-nginx"
-  repository       = "https://kubernetes.github.io/ingress-nginx"
-  chart            = "ingress-nginx"
-  version          = "4.10.6"
+  chart            = "oci://cr.yandex/yc-marketplace/yandex-cloud/ingress-nginx/chart/ingress-nginx"
+  version          = "4.13.0"
   namespace        = "ingress-nginx"
   create_namespace = true
-  depends_on       = [yandex_kubernetes_cluster.victorialogs]
+
+  depends_on = [
+    yandex_kubernetes_cluster.victorialogs
+  ]
 
   set = [
     {

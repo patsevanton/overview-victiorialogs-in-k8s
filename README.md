@@ -83,14 +83,21 @@ kubectl apply -f nginx-log-generator.yaml
 
 Генерирует HTTP access-логи, близкие к реальным ingress-сценариям.
 
-### Python Log Generator
+## Развёртывание VictoriaLogs Cluster
 
-Сборка и публикация Docker-образа:
+VictoriaLogs устанавливается через официальный Helm-репозиторий VictoriaMetrics.
 
 ```bash
-docker build -t antonpatsev/log-generator:2 .
-docker push antonpatsev/log-generator:2
-kubectl apply -f python-log-generator.yaml
+helm repo add vm https://victoriametrics.github.io/helm-charts/
+helm repo update
+
+kubectl create ns victoria-logs-collector
+helm upgrade --install vlc vm/victoria-logs-collector \
+  -n victoria-logs-collector \
+  --wait \
+  --version 0.2.2 \
+  --timeout 15m \
+  -f victoria-logs-collector-values.yaml
 ```
 
 Позволяет эмулировать application-level логи (INFO, WARN, ERROR).
@@ -376,4 +383,3 @@ VictoriaLogs — зрелое и production-ready решение для логи
 
 TODO
 https://github.com/mingrammer/flog
-https://github.com/psemiletov/logfilegen

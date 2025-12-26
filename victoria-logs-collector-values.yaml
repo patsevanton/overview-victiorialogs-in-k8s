@@ -1,0 +1,2 @@
+remoteWrite:
+  - url: http://vlc-victoria-logs-cluster-vlinsert.victorialogs:9481

@@ -9,8 +9,15 @@ LICENSE
 main.py
 net.tf
 nginx-log-generator.yaml
+OOMKilled_alert.yaml
 python-log-generator.yaml
+README.md
 .rooignore
+stress-ng.yaml
+.terraform
+.terraform.lock.hcl
+terraform.tfstate
+terraform.tfstate.backup
 versions.tf
 victorialogs-cluster-values.yaml
 vmks-values.yaml
