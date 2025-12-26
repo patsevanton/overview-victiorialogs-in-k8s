@@ -13,7 +13,7 @@ vlselect:
       - hosts:
         - victorialogs.apatsev.org.ru
         secretName: victorialogs-tls
-vector:
-  enabled: true
-  rbac:
-    create: true
+# vector:
+#   enabled: true
+#   rbac:
+#     create: true
