@@ -82,11 +82,6 @@ helm upgrade --install vlc vm/victoria-logs-cluster \
 kubectl apply -f nginx-log-generator.yaml
 ```
 
-### Log Generator
-```bash
-kubectl apply -f flog-log-generator.yaml
-```
-
 ## Развёртывание victoria-logs-collector
 
 victoria-logs-collector устанавливается через официальный Helm-репозиторий VictoriaMetrics.
