@@ -115,19 +115,20 @@ resource "helm_release" "ingress_nginx" {
     yandex_kubernetes_cluster.victorialogs
   ]
 
-  set = [
-    {
-      name  = "controller.service.loadBalancerIP"
-      value = yandex_vpc_address.addr.external_ipv4_address[0].address
-    },
-    {
-      name  = "controller.config.log-format-escape-json"
-      value = "true"
-    },
-    {
-      name  = "controller.config.log-format-upstream"
-      value = "{\"time\": \"$time_iso8601\", \"remote_addr\": \"$remote_addr\", \"request\": \"$request\", \"status\": $status, \"bytes_sent\": $bytes_sent, \"upstream_addr\": \"$upstream_addr\", \"upstream_response_time\": $upstream_response_time, \"request_time\": $request_time}"
-    }
+  values = [
+    yamlencode({
+      controller = {
+        service = {
+          loadBalancerIP = yandex_vpc_address.addr.external_ipv4_address[0].address
+        }
+        config = {
+          log-format-escape-json = "true"
+          log-format-upstream = <<-EOT
+{"ts":"$time_iso8601","http":{"request_id":"$req_id","method":"$request_method","status_code":$status,"url":"$host$request_uri","host":"$host","uri":"$request_uri","request_time":$request_time,"user_agent":"$http_user_agent","protocol":"$server_protocol","trace_session_id":"$http_trace_session_id","server_protocol":"$server_protocol","content_type":"$sent_http_content_type","bytes_sent":"$bytes_sent"},"nginx":{"x-forward-for":"$proxy_add_x_forwarded_for","remote_addr":"$proxy_protocol_addr","http_referrer":"$http_referer"}}
+EOT
+        }
+      }
+    })
   ]
 }
 
