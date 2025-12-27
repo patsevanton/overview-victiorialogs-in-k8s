@@ -1,2 +1,7 @@
 remoteWrite:
   - url: http://vlc-victoria-logs-cluster-vlinsert.victorialogs:9481
+collector:
+  msgField:
+    - message
+    - msg
+    - http.uri
