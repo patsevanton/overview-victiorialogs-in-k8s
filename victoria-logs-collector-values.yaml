@@ -1,5 +1,8 @@
 remoteWrite:
   - url: http://vlc-victoria-logs-cluster-vlinsert.victorialogs:9481
+    headers:
+      VL-Ignore-Fields:
+        - kubernetes.container_id
 collector:
   msgField:
     - message
