@@ -40,7 +40,7 @@ vmcluster:
         cert-manager.io/cluster-issuer: letsencrypt-prod
       hosts:
         - vmselect.apatsev.org.ru
-      tls:
-        - secretName: victoriametrics-tls
-          hosts:
-            - vmselect.apatsev.org.ru
+      # tls:
+      #   - secretName: victoriametrics-tls
+      #     hosts:
+      #       - vmselect.apatsev.org.ru
