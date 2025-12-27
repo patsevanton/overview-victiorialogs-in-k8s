@@ -79,11 +79,13 @@ helm upgrade --install vlc vm/victoria-logs-cluster \
 Генерирует HTTP access-логи, близкие к реальным ingress-сценариям.
 
 ```bash
+kubectl create ns nginx-log-generator
 kubectl apply -f nginx-log-generator.yaml
 ```
 
 ### Log Generator
 ```bash
+kubectl create ns flog-log-generator
 kubectl apply -f flog-log-generator.yaml
 ```
 
@@ -104,7 +106,7 @@ helm upgrade --install vlc vm/victoria-logs-collector \
   -f victoria-logs-collector-values.yaml
 ```
 
-Открываем https://victorialogs.apatsev.org.ru/select/vmui и смотрим
+Открываем http://victorialogs.apatsev.org.ru/select/vmui и смотрим
 
 * всплески 4xx/5xx,
 * аномальные паттерны запросов,

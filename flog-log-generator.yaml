@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flog-log-generator
+  namespace: flog-log-generator
   labels:
     app: flog-log-generator
 spec:
