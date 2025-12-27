@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: nginx-log-generator
-    image: kscarlett/nginx-log-generator:latest
+    image: ghcr.io/patsevanton/generator-log-nginx:latest
     env:
     - name: RATE
       value: "10"
