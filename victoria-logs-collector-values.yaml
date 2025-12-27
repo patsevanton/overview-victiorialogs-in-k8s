@@ -4,8 +4,6 @@ remoteWrite:
       VL-Ignore-Fields:
         - kubernetes.container_id
         - kubernetes.pod_ip
-        - kubernetes.pod_name
-        - kubernetes.pod_node_name
 collector:
   msgField:
     - message
