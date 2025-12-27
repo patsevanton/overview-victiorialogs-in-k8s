@@ -119,6 +119,14 @@ resource "helm_release" "ingress_nginx" {
     {
       name  = "controller.service.loadBalancerIP"
       value = yandex_vpc_address.addr.external_ipv4_address[0].address
+    },
+    {
+      name  = "controller.config.log-format-escape-json"
+      value = "true"
+    },
+    {
+      name  = "controller.config.log-format-upstream"
+      value = "{\"time\": \"$time_iso8601\", \"remote_addr\": \"$remote_addr\", \"request\": \"$request\", \"status\": $status, \"bytes_sent\": $bytes_sent, \"upstream_addr\": \"$upstream_addr\", \"upstream_response_time\": $upstream_response_time, \"request_time\": $request_time}"
     }
   ]
 }
