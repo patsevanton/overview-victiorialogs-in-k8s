@@ -3,6 +3,7 @@ remoteWrite:
     headers:
       VL-Ignore-Fields:
         - kubernetes.container_id
+        - kubernetes.pod_ip
 collector:
   msgField:
     - message
