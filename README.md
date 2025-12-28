@@ -89,11 +89,10 @@ kubectl apply -f flog-log-generator.yaml
 victoria-logs-collector устанавливается через официальный Helm-репозиторий VictoriaMetrics.
 
 ```bash
-helm repo add vm https://victoriametrics.github.io/helm-charts/
-helm repo update
-
 kubectl create ns victoria-logs-collector
-helm upgrade --install victoria-logs-collector vm/victoria-logs-collector \
+
+helm upgrade --install victoria-logs-collector \
+  oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-collector \
   -n victoria-logs-collector \
   --wait \
   --version 0.2.4 \
