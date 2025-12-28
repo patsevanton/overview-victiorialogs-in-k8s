@@ -93,7 +93,8 @@ kubectl create ns victoria-logs-collector
 
 helm upgrade --install victoria-logs-collector \
   oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-collector \
-  -n victoria-logs-collector \
+  --namespace victoria-logs-collector \
+  --create-namespace \
   --wait \
   --version 0.2.4 \
   --timeout 15m \
