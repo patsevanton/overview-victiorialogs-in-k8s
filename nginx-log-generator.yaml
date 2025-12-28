@@ -13,13 +13,13 @@ spec:
     - name: RATE
       value: "50"
     - name: IP_ADDRESSES
-      value: "10.0.0.1,10.0.0.2,10.0.0.3"
+      value: "10.0.0.1,10.0.0.2"
     - name: HTTP_METHODS
-      value: "GET,POST,PUT"
+      value: "GET,POST"
     - name: PATHS
-      value: "/api/v1/users,/api/v1/products,/api/v1/categories"
+      value: "/api/v1/users,/api/v1/products"
     - name: STATUS_CODES
-      value: "200,401,403,500,503"
+      value: "200,401"
     - name: HOSTS
       value: "api.example.com"
     resources:
