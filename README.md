@@ -72,8 +72,6 @@ helm upgrade --install victoria-logs-cluster \
 victoria-logs-collector устанавливается через официальный Helm-репозиторий VictoriaMetrics.
 
 ```bash
-kubectl create ns victoria-logs-collector
-
 helm upgrade --install victoria-logs-collector \
   oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-collector \
   --namespace victoria-logs-collector \
