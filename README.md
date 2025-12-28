@@ -101,7 +101,7 @@ kubectl create ns victoria-logs-collector
 helm upgrade --install vlc vm/victoria-logs-collector \
   -n victoria-logs-collector \
   --wait \
-  --version 0.2.2 \
+  --version 0.2.4 \
   --timeout 15m \
   -f victoria-logs-collector-values.yaml
 ```
