@@ -192,6 +192,10 @@ VictoriaLogs предоставляет мощный язык запросов [
 
 Для миграции LogQL в LogsQL есть проект https://play-logql.victoriametrics.com/
 
+График status_code по ручке /api/v1/categories
+```
+kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/categories" | stats by (http.status_code) count() as count 
+```
 
 ```logsql
 # Поиск ошибок в логах за последний час
