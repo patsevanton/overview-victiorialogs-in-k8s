@@ -29,16 +29,14 @@
 Для работы ingress с TLS используется cert-manager.
 
 ```bash
-helm repo add jetstack https://charts.jetstack.io
-helm repo update
 helm install \
-  cert-manager jetstack/cert-manager \
+  cert-manager oci://quay.io/jetstack/charts/cert-manager \
+  --version v1.19.2 \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.19.2 \
+  --set crds.enabled=true \
   --wait \
-  --timeout 15m \
-  --set crds.enabled=true
+  --timeout 15m
 ```
 
 После установки применяется `ClusterIssuer`, который будет использоваться ingress-ресурсами для автоматического выпуска сертификатов:
@@ -52,12 +50,9 @@ kubectl apply -f cluster-issuer.yaml
 VictoriaLogs устанавливается через официальный Helm-репозиторий VictoriaMetrics.
 
 ```bash
-helm repo add vm https://victoriametrics.github.io/helm-charts/
-helm repo update
-
-kubectl create ns victorialogs
-helm upgrade --install vlc vm/victoria-logs-cluster \
-  -n victorialogs \
+helm upgrade --install victorialogs oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-cluster \
+  --namespace victorialogs \
+  --create-namespace \
   --wait \
   --version 0.0.24 \
   --timeout 15m \
@@ -98,7 +93,7 @@ helm repo add vm https://victoriametrics.github.io/helm-charts/
 helm repo update
 
 kubectl create ns victoria-logs-collector
-helm upgrade --install vlc vm/victoria-logs-collector \
+helm upgrade --install victoria-logs-collector vm/victoria-logs-collector \
   -n victoria-logs-collector \
   --wait \
   --version 0.2.4 \

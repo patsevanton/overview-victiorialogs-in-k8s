@@ -9,4 +9,4 @@ collector:
   msgField:
     - message
     - msg
-    - http.uri
+    # - http.uri
