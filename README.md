@@ -190,6 +190,9 @@ VictoriaLogs предоставляет мощный язык запросов [
 
 ### Примеры запросов LogsQL
 
+Для миграции LogQL в LogsQL есть проект https://play-logql.victoriametrics.com/
+
+
 ```logsql
 # Поиск ошибок в логах за последний час
 _time:1h error
