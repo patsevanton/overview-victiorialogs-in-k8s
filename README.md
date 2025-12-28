@@ -50,8 +50,9 @@ kubectl apply -f cluster-issuer.yaml
 VictoriaLogs устанавливается через официальный Helm-репозиторий VictoriaMetrics.
 
 ```bash
-helm upgrade --install victorialogs oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-cluster \
-  --namespace victorialogs \
+helm upgrade --install victoria-logs-cluster \
+  oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-cluster \
+  --namespace victoria-logs-cluster \
   --create-namespace \
   --wait \
   --version 0.0.24 \
