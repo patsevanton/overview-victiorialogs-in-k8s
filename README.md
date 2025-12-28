@@ -67,6 +67,23 @@ helm upgrade --install victoria-logs-cluster \
 * высокая скорость записи логов
 * подходит для production-нагрузок
 
+## Развёртывание victoria-logs-collector
+
+victoria-logs-collector устанавливается через официальный Helm-репозиторий VictoriaMetrics.
+
+```bash
+kubectl create ns victoria-logs-collector
+
+helm upgrade --install victoria-logs-collector \
+  oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-collector \
+  --namespace victoria-logs-collector \
+  --create-namespace \
+  --wait \
+  --version 0.2.4 \
+  --timeout 15m \
+  -f victoria-logs-collector-values.yaml
+```
+
 ## Генерация логов
 
 Для демонстрации и тестирования используются несколько источников логов.
@@ -85,22 +102,7 @@ kubectl create ns flog-log-generator
 kubectl apply -f flog-log-generator.yaml
 ```
 
-## Развёртывание victoria-logs-collector
-
-victoria-logs-collector устанавливается через официальный Helm-репозиторий VictoriaMetrics.
-
-```bash
-kubectl create ns victoria-logs-collector
-
-helm upgrade --install victoria-logs-collector \
-  oci://ghcr.io/victoriametrics/helm-charts/victoria-logs-collector \
-  --namespace victoria-logs-collector \
-  --create-namespace \
-  --wait \
-  --version 0.2.4 \
-  --timeout 15m \
-  -f victoria-logs-collector-values.yaml
-```
+## VMUI
 
 Открываем http://victorialogs.apatsev.org.ru/select/vmui и смотрим
 
