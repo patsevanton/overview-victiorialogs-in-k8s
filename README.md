@@ -363,10 +363,10 @@ VictoriaLogs автоматически:
 Для мониторинга инфраструктуры разворачивается Victoria Metrics K8s Stack.
 
 ```bash
-kubectl create ns vmks
-
-helm upgrade --install vmks oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-k8s-stack \
-  -n vmks \
+helm upgrade --install vmks \
+  oci://ghcr.io/victoriametrics/helm-charts/victoria-metrics-k8s-stack \
+  --namespace vmks \
+  --create-namespace \
   --wait \
   --version 0.66.1 \
   --timeout 15m \
