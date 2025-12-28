@@ -380,7 +380,7 @@ helm upgrade --install vmks \
   -f vmks-values.yaml
 ```
 
-Открываем https://grafana.apatsev.org.ru/ и смотрим нагрузку на систему
+Открываем http://grafana.apatsev.org.ru/ и смотрим нагрузку на систему
 
 Получение пароля grafana для admin юзера
 ```shell
