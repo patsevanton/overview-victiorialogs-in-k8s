@@ -8,28 +8,20 @@ metadata:
 spec:
   containers:
   - name: nginx-log-generator
-    image: ghcr.io/patsevanton/generator-log-nginx:latest
+    image: ghcr.io/patsevanton/generator-log-nginx:1.6.0
     env:
     - name: RATE
-      value: "10"
-    - name: IPV4_PERCENT
-      value: "100"
-    - name: STATUS_OK_PERCENT
-      value: "80"
-    - name: PATH_MIN
-      value: "1"
-    - name: PATH_MAX
-      value: "5"
-    - name: GET_PERCENT
-      value: "30"
-    - name: POST_PERCENT
-      value: "30"
-    - name: PUT_PERCENT
-      value: "10"
-    - name: PATCH_PERCENT
-      value: "10"
-    - name: DELETE_PERCENT
-      value: "10"
+      value: "1000"
+    - name: IP_ADDRESSES
+      value: "10.0.0.1,10.0.0.2,10.0.0.3"
+    - name: HTTP_METHODS
+      value: "GET,POST,PUT"
+    - name: PATHS
+      value: "/api/v1/users,/api/v1/products,/api/v1/categories"
+    - name: STATUS_CODES
+      value: "200,401,403,500,503"
+    - name: HOSTS
+      value: "api.example.com"
     resources:
       requests:
         memory: "64Mi"
