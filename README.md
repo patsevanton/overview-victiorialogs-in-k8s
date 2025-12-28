@@ -197,22 +197,41 @@ VictoriaLogs предоставляет мощный язык запросов [
 kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count 
 ```
 
-```logsql
-# Поиск ошибок в логах за последний час
-_time:1h error
-
-# Подсчёт запросов по IP-адресам
-_time:1h | stats by (ip) count() requests
-
-# Анализ HTTP статусов
-_time:1h | stats count() if (status:4*) as client_errors, count() if (status:5*) as server_errors
-
-# Поиск подозрительных паттернов
-_time:1h | filter user_agent:~"*bot*|*crawler*" | fields ip, user_agent
-
-# Мониторинг аномальных запросов
-_time:1h | stats by (ip) count() requests, count() if (status:4*) errors | filter errors:>10
+## Счетчики по статусам
+Подсчитывает количество запросов по HTTP-статусам с сортировкой по убыванию.
 ```
+_time:5m | stats by (http.status_code) count() as requests | sort by (requests desc)
+```
+Этот запрос группирует логи по полю `http.status_code` и считает записи в каждой группе.[3][4]
+
+## Топ медленных запросов
+Показывает топ-10 url с максимальным временем ответа.
+```
+_time:5m | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | first 10
+```
+Использует `max()` для нахождения пикового времени отклика по url, затем сортирует и ограничивает вывод.[4][1]
+
+## Ошибки по IP-адресам
+Количество 4xx/5xx ошибок по IP с топ-10 результатами.
+```
+_time:5m http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | first 10 by (errors desc)
+```
+Фильтрует логи с `status_code >= 400`, группирует по `nginx.remote_addr` (IP клиента).[2][1]
+
+## Доля ошибок
+Процент запросов с ошибками (4xx/5xx) от общего числа.
+```
+_time:5m | stats count() as total, count() if (http.status_code:>=400) as errors | math errors / total * 100 as error_rate
+```
+Вычисляет долю ошибок с помощью условного `count()` и `math`.[3][4]
+
+## Трафик по url
+Общий объем трафика (`bytes_sent`) по эндпоинтам с сортировкой.
+```
+_time:5m | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (total_bytes desc) | first 5
+```
+Суммирует `bytes_sent` по url для анализа нагрузки на API.[1][4]
+
 
 ### Мониторинг и алертинг
 
