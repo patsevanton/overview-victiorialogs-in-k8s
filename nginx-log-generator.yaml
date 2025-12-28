@@ -8,10 +8,10 @@ metadata:
 spec:
   containers:
   - name: nginx-log-generator
-    image: ghcr.io/patsevanton/generator-log-nginx:1.6.2
+    image: ghcr.io/patsevanton/generator-log-nginx:1.6.3
     env:
     - name: RATE
-      value: "1000"
+      value: "50"
     - name: IP_ADDRESSES
       value: "10.0.0.1,10.0.0.2,10.0.0.3"
     - name: HTTP_METHODS
