@@ -414,7 +414,7 @@ VictoriaLogs — зрелое и production-ready решение для логи
 # Установка k8s-event-logger
 ```bash
 helm upgrade --install k8s-event-logger \
-  oci://ghcr.io/deliveryhero/helm-charts/k8s-event-logger 
+  oci://ghcr.io/deliveryhero/helm-charts/k8s-event-logger \
   --namespace k8s-event-logger \
   --create-namespace \
   --wait \
