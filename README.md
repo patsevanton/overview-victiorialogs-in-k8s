@@ -421,3 +421,16 @@ helm upgrade --install k8s-event-logger \
   --version 1.1.10 \
   --timeout 15m
 ```
+
+
+### Stress
+```bash
+kubectl create ns stress1
+kubectl apply -f stress1.yaml
+
+kubectl create ns stress2
+kubectl apply -f stress2.yaml
+
+kubectl create ns stress3
+kubectl apply -f stress3.yaml
+```
