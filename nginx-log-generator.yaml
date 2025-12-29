@@ -11,13 +11,13 @@ spec:
     image: ghcr.io/patsevanton/generator-log-nginx:1.6.3
     env:
     - name: RATE
-      value: "50"
+      value: "1"
     - name: IP_ADDRESSES
       value: "10.0.0.1,10.0.0.2"
     - name: HTTP_METHODS
       value: "GET,POST"
     - name: PATHS
-      value: "/api/v1/users,/api/v1/products"
+      value: "/api/v1/users?RequestId=0fc0f571-d3c4-4e75-8a6f-3f9f137edbb8,/api/v1/users?RequestId=1ab2c345-d6e7-4890-b1c2-d3e4f5a6b7c8,/api/v1/users?RequestId=a1b2c3d4-e5f6-7890-abcd-ef1234567890,/api/v1/users?RequestId=123e4567-e89b-12d3-a456-426614174000,/api/v1/users?RequestId=f47ac10b-58cc-4372-a567-0e02b2c3d479"
     - name: STATUS_CODES
       value: "200,401"
     - name: HOSTS
