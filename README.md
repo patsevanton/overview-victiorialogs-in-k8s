@@ -422,6 +422,12 @@ helm upgrade --install k8s-event-logger \
   --timeout 15m
 ```
 
+# Установка eventrouter
+```
+helm repo add wikimedia https://helm-charts.wikimedia.org/stable/
+helm install my-eventrouter wikimedia/eventrouter --version 0.4.4
+```
+
 
 ### Stress
 ```bash
