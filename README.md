@@ -155,7 +155,7 @@ kubectl get secret vmks-grafana -n vmks -o jsonpath='{.data.admin-password}' | b
 ### Сравнение с альтернативами
 
 | Функция            | VictoriaLogs | Elasticsearch | Grafana Loki |
-|--|--||--|
+|--|--|--|--|
 | Простота установки | ⭐⭐⭐⭐⭐       | ⭐⭐           | ⭐⭐⭐         |
 | Потребление ресурсов | ⭐⭐⭐⭐⭐    | ⭐            | ⭐⭐⭐         |
 | Скорость запросов  | ⭐⭐⭐⭐⭐       | ⭐⭐⭐          | ⭐⭐          |
