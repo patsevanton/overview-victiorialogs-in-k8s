@@ -257,23 +257,28 @@ timestamp missing requests: 1 http.status_code: 400
 
 **Топ медленных запросов:**
 ```
-_time:5m | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | first 10
-_time:5m | stats by (http.url) max(http.request_time) as max_time | sort by (max_time) | first 10
+kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | first 10
+kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time) | first 10
 ```
 
 **Ошибки по IP-адресам:**
 ```
-_time:5m http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | first 10 by (errors desc)
+kubernetes.pod_namespace: "nginx-log-generator" | http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | first 10 by (errors desc)
+```
+Вывод
+```
+timestamp missing errors: 79nginx.remote_addr: 10.0.0.2
+timestamp missing errors: 70nginx.remote_addr: 10.0.0.1
 ```
 
 **Доля ошибок:**
 ```
-_time:5m | stats count() as total, count() if (http.status_code:>=400) as errors | math errors / total * 100 as error_rate
+kubernetes.pod_namespace: "nginx-log-generator" | stats count() as total, count() if (http.status_code:>=400) as errors | math errors / total * 100 as error_rate
 ```
 
 **Трафик по URL:**
 ```
-_time:5m | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (total_bytes desc) | first 5
+kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (total_bytes desc) | first 5
 ```
 
 ## LogsQL: язык запросов VictoriaLogs
@@ -292,7 +297,7 @@ _time:5m | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (to
 Пример:
 
 ```
-_time:5m kubernetes.namespace:"nginx" | extract "status=(\d+)" | stats by (status) count()
+kubernetes.pod_namespace: "nginx-log-generator" | kubernetes.namespace:"nginx" | extract "status=(\d+)" | stats by (status) count()
 ```
 
 
@@ -452,7 +457,7 @@ _time:10m | stats quantile(0.95, request_time) as p95
 Пример расчёта процента ошибок:
 
 ```
-_time:5m |
+kubernetes.pod_namespace: "nginx-log-generator" |
 stats
   count() as total,
   count() if (status:>=400) as errors |
