@@ -230,7 +230,7 @@ _time:1h      # последний час
 _time:24h     # последние сутки
 ```
 
-**График status_code по ручке /api/v1/products:**
+**График status_code по ручке /api/v1/products. По namespace nginx-log-generator**
 ```
 kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count 
 ```
@@ -241,7 +241,7 @@ timestamp missing http.status_code: 401 count: 5
 timestamp missing http.status_code: 200 count: 8
 ```
 
-**Счетчики по статусам:**
+**Счетчики по статусам. По всем логам за 5 последние 5 минут**
 ```
 _time:5m | stats by (http.status_code) count() as requests | sort by (requests desc)
 ```
