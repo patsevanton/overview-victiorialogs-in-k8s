@@ -82,22 +82,6 @@ helm upgrade --install victoria-logs-collector \
   -f victoria-logs-collector-values.yaml
 ```
 
-### 4. Генерация логов
-
-Для тестирования используются несколько источников логов.
-
-**NGINX Log Generator:**
-```bash
-kubectl create ns nginx-log-generator
-kubectl apply -f nginx-log-generator.yaml
-```
-
-**Log Generator:**
-```bash
-kubectl create ns flog-log-generator
-kubectl apply -f flog-log-generator.yaml
-```
-
 ### 5. Мониторинг: Victoria Metrics K8s Stack
 
 ```bash
@@ -175,6 +159,58 @@ kubectl get secret vmks-grafana -n vmks -o jsonpath='{.data.admin-password}' | b
 
 ## Практическое применение VictoriaLogs
 
+
+### 4. Генерация логов
+
+Для тестирования используются несколько источников логов.
+
+**NGINX Log Generator:**
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-log-generator
+  namespace: nginx-log-generator
+  labels:
+    app: nginx-log-generator
+spec:
+  containers:
+  - name: nginx-log-generator
+    image: ghcr.io/patsevanton/generator-log-nginx:1.6.3
+    env:
+    - name: RATE
+      value: "1"
+    - name: IP_ADDRESSES
+      value: "10.0.0.1,10.0.0.2"
+    - name: HTTP_METHODS
+      value: "GET,POST"
+    - name: PATHS
+      value: "/api/v1/products?RequestId=0fc0f571-d3c4-4e75-8a6f-3f9f137edbb8,/api/v1/products?RequestId=1ab2c345-d6e7-4890-b1c2-d3e4f5a6b7c8,/api/v1/users?RequestId=a1b2c3d4-e5f6-7890-abcd-ef1234567890,/api/v1/users?RequestId=123e4567-e89b-12d3-a456-426614174000,/api/v1/users?RequestId=f47ac10b-58cc-4372-a567-0e02b2c3d479"
+    - name: STATUS_CODES
+      value: "200,401"
+    - name: HOSTS
+      value: "api.example.com"
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "100m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+```
+
+
+```bash
+kubectl create ns nginx-log-generator
+kubectl apply -f nginx-log-generator.yaml
+```
+
+**Log Generator:**
+```bash
+kubectl create ns flog-log-generator
+kubectl apply -f flog-log-generator.yaml
+```
+
 ### Анализ логов с использованием LogsQL
 
 VictoriaLogs предоставляет мощный язык запросов [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/). Примеры запросов:
@@ -184,9 +220,22 @@ VictoriaLogs предоставляет мощный язык запросов [
 kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count 
 ```
 
+Вывод
+```
+timestamp missing http.status_code: 401count: 7
+timestamp missing http.status_code: 200count: 7
+```
+
 **Счетчики по статусам:**
 ```
 _time:5m | stats by (http.status_code) count() as requests | sort by (requests desc)
+```
+
+Вывод
+```
+timestamp missing requests: 160http.status_code: 200
+timestamp missing requests: 133http.status_code: 401
+timestamp missing requests: 75
 ```
 
 **Топ медленных запросов:**
