@@ -222,8 +222,8 @@ kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by 
 
 Вывод
 ```
-timestamp missing http.status_code: 401count: 7
-timestamp missing http.status_code: 200count: 7
+timestamp missing http.status_code: 401 count: 7
+timestamp missing http.status_code: 200 count: 7
 ```
 
 **Счетчики по статусам:**
@@ -233,8 +233,8 @@ _time:5m | stats by (http.status_code) count() as requests | sort by (requests d
 
 Вывод
 ```
-timestamp missing requests: 160http.status_code: 200
-timestamp missing requests: 133http.status_code: 401
+timestamp missing requests: 160 http.status_code: 200
+timestamp missing requests: 133 http.status_code: 401
 timestamp missing requests: 75
 ```
 
