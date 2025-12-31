@@ -215,6 +215,21 @@ kubectl apply -f flog-log-generator.yaml
 
 VictoriaLogs предоставляет мощный язык запросов [LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/). Примеры запросов:
 
+
+## 1. Фильтрация логов
+
+### Фильтр по времени
+
+```
+* # время указывается в UI
+```
+
+```
+_time:5m      # последние 5 минут
+_time:1h      # последний час
+_time:24h     # последние сутки
+```
+
 **График status_code по ручке /api/v1/products:**
 ```
 kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count 
@@ -222,8 +237,8 @@ kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by 
 
 Вывод
 ```
-timestamp missing http.status_code: 401 count: 7
-timestamp missing http.status_code: 200 count: 7
+timestamp missing http.status_code: 401 count: 5
+timestamp missing http.status_code: 200 count: 8
 ```
 
 **Счетчики по статусам:**
@@ -233,14 +248,17 @@ _time:5m | stats by (http.status_code) count() as requests | sort by (requests d
 
 Вывод
 ```
-timestamp missing requests: 160 http.status_code: 200
-timestamp missing requests: 133 http.status_code: 401
-timestamp missing requests: 75
+timestamp missing requests: 87
+timestamp missing requests: 77 http.status_code: 200
+timestamp missing requests: 35 http.status_code: 401
+timestamp missing requests: 1 http.status_code: 302
+timestamp missing requests: 1 http.status_code: 400
 ```
 
 **Топ медленных запросов:**
 ```
 _time:5m | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | first 10
+_time:5m | stats by (http.url) max(http.request_time) as max_time | sort by (max_time) | first 10
 ```
 
 **Ошибки по IP-адресам:**
@@ -277,15 +295,6 @@ _time:5m | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (to
 _time:5m kubernetes.namespace:"nginx" | extract "status=(\d+)" | stats by (status) count()
 ```
 
-## 1. Фильтрация логов
-
-### Фильтр по времени
-
-```
-_time:5m      # последние 5 минут
-_time:1h      # последний час
-_time:24h     # последние сутки
-```
 
 ### Фильтр по полям
 
