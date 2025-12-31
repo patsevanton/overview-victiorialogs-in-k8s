@@ -267,13 +267,17 @@ kubernetes.pod_namespace: "nginx-log-generator" | http.status_code:>=400 | stats
 ```
 Вывод
 ```
-timestamp missing errors: 79nginx.remote_addr: 10.0.0.2
-timestamp missing errors: 70nginx.remote_addr: 10.0.0.1
+timestamp missing errors: 79 nginx.remote_addr: 10.0.0.2
+timestamp missing errors: 70 nginx.remote_addr: 10.0.0.1
 ```
 
 **Доля ошибок:**
 ```
 kubernetes.pod_namespace: "nginx-log-generator" | stats count() as total, count() if (http.status_code:>=400) as errors | math errors / total * 100 as error_rate
+```
+Вывод
+```
+timestamp missing total: 2726errors: 1403error_rate: 51.46735143066764
 ```
 
 **Трафик по URL:**
