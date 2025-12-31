@@ -209,6 +209,268 @@ _time:5m | stats count() as total, count() if (http.status_code:>=400) as errors
 _time:5m | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (total_bytes desc) | first 5
 ```
 
+## LogsQL: язык запросов VictoriaLogs
+
+**LogsQL** — это потоковый (pipeline) язык запросов для работы с логами в VictoriaLogs.
+Он сочетает полнотекстовый поиск, фильтрацию, извлечение полей и агрегации в одном запросе.
+
+Запрос состоит из **последовательности стадий**, разделённых оператором `|`.
+
+### Общая структура запроса
+
+```
+<filtering> | <parsing/extract> | <transform> | <aggregation> | <post-filter>
+```
+
+Пример:
+
+```
+_time:5m kubernetes.namespace:"nginx" | extract "status=(\d+)" | stats by (status) count()
+```
+
+## 1. Фильтрация логов
+
+### Фильтр по времени
+
+```
+_time:5m      # последние 5 минут
+_time:1h      # последний час
+_time:24h     # последние сутки
+```
+
+### Фильтр по полям
+
+```
+status:200
+status_toggle:>=400
+method:GET
+kubernetes.namespace:"default"
+```
+
+Поддерживаются операторы сравнения:
+
+* `=`
+* `!=`
+* `>`
+* `<`
+* `>=`
+* `<=`
+
+### Поиск по строке (full-text search)
+
+```
+"error"
+"/api/v1/login"
+"timeout exceeded"
+```
+
+Можно комбинировать:
+
+```
+_time:10m "error" kubernetes.pod:"nginx"
+```
+
+## 2. Операторы пайплайна
+
+### `filter`
+
+Дополнительная фильтрация после агрегаций или вычислений:
+
+```
+| filter status:>=500
+```
+
+### `fields`
+
+Выбор нужных полей (аналог SELECT):
+
+```
+| fields _time, level, message, kubernetes.pod
+```
+
+### `sort`
+
+Сортировка результатов:
+
+```
+| sort by (_time desc)
+| sort by (requests desc)
+```
+
+### `first`
+
+Ограничение количества строк:
+
+```
+| first 10
+| first 5 by (errors desc)
+```
+
+## 3. Извлечение данных
+
+### `extract` (regex)
+
+Извлечение значений из текста лога:
+
+```
+| extract "duration=(\d+)"
+```
+
+С именованными группами:
+
+```
+| extract "status=(?<status>\d+)"
+```
+
+### `json`
+
+Если лог в JSON-формате:
+
+```
+| json
+```
+
+После этого поля доступны напрямую:
+
+```
+| filter level:"ERROR"
+```
+
+## 4. Агрегации и аналитика
+
+### `stats`
+
+Основной оператор агрегации:
+
+```
+| stats count()
+```
+
+Агрегация по полям:
+
+```
+| stats by (status) count() as requests
+```
+
+Часто используемые функции:
+
+* `count()`
+* `sum(field)`
+* `avg(field)`
+* `min(field)`
+* `max(field)`
+* `quantile(0.95, field)`
+
+### Примеры агрегаций
+
+**Количество запросов по статусам:**
+
+```
+_time:5m | stats by (http.status_code) count() as requests
+```
+
+**Топ URL по трафику:**
+
+```
+_time:5m | stats by (http.url) sum(http.bytes_sent) as bytes | sort by (bytes desc) | first 10
+```
+
+**P95 latency:**
+
+```
+_time:10m | stats quantile(0.95, request_time) as p95
+```
+
+## 5. Вычисления
+
+### `math`
+
+Позволяет вычислять новые поля:
+
+```
+| math errors / total * 100 as error_rate
+```
+
+Пример расчёта процента ошибок:
+
+```
+_time:5m |
+stats
+  count() as total,
+  count() if (status:>=400) as errors |
+math errors / total * 100 as error_rate
+```
+
+## 6. Условия в агрегациях
+
+### `if` внутри `stats`
+
+```
+| stats count() if (level:"ERROR") as error_count
+```
+
+Пример:
+
+```
+_time:5m | stats
+  count() as total,
+  count() if (status:5*) as server_errors
+```
+
+## 7. Практические паттерны
+
+### Топ IP с ошибками
+
+```
+_time:10m status:>=400 |
+stats by (remote_addr) count() as errors |
+sort by (errors desc) |
+first 10
+```
+
+### Медленные запросы
+
+```
+_time:5m |
+stats by (http.url) max(request_time) as max_time |
+sort by (max_time desc) |
+first 5
+```
+
+### Поиск аномалий
+
+```
+_time:1h "failed login" |
+stats by (user, ip) count() as attempts |
+filter attempts:>20
+```
+
+## 8. Использование LogsQL в Grafana
+
+LogsQL полностью поддерживается в **VictoriaLogs datasource для Grafana**:
+
+* построение time-series графиков;
+* таблицы с агрегациями;
+* алерты на основе логов;
+* единый язык запросов для VMUI и Grafana.
+
+
+
+## Краткий cheatsheet LogsQL
+
+| Операция          | Пример                         |
+| -- |  |
+| Фильтр по времени | `_time:5m`                     |
+| Поиск строки      | `"error"`                      |
+| Фильтр поля       | `status:>=500`                 |
+| JSON              | `\| json`                      |
+| Regex extract     | `\| extract "id=(\d+)"`        |
+| Агрегация         | `\| stats by (status) count()` |
+| Сортировка        | `\| sort by (count desc)`      |
+| Ограничение       | `\| first 10`                  |
+| Вычисление        | `\| math a / b * 100`          |
+
+
 ### Мониторинг и алертинг
 
 Интеграция с [vmalert](https://docs.victoriametrics.com/victorialogs/vmalert/) позволяет создавать алерты на основе логов:
