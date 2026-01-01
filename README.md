@@ -257,13 +257,13 @@ timestamp missing requests: 1 http.status_code: 400
 
 **Топ медленных запросов:**
 ```
-kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | first 10
-kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time) | first 10
+kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | limit 10
+kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time) | limit 10
 ```
 
 **Ошибки по IP-адресам:**
 ```
-kubernetes.pod_namespace: "nginx-log-generator" | http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | first 10 by (errors desc)
+kubernetes.pod_namespace: "nginx-log-generator" | http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | limit 10 by (errors desc)
 ```
 Вывод
 ```
