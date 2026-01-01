@@ -62,6 +62,11 @@ helm upgrade --install victoria-logs-cluster \
   -f victorialogs-cluster-values.yaml
 ```
 
+Удаление victoria-logs-cluster
+```
+helm uninstall -n victoria-logs-cluster	victoria-logs-cluster
+```
+
 **Преимущества кластерного режима:**
 
 - горизонтальное масштабирование;
@@ -203,12 +208,14 @@ spec:
 ```bash
 kubectl create ns nginx-log-generator
 kubectl apply -f nginx-log-generator.yaml
+kubectl delete -f nginx-log-generator.yaml
 ```
 
 **Log Generator:**
 ```bash
 kubectl create ns flog-log-generator
 kubectl apply -f flog-log-generator.yaml
+kubectl delete -f flog-log-generator.yaml
 ```
 
 ### Анализ логов с использованием LogsQL
