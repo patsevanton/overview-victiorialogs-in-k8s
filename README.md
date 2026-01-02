@@ -244,38 +244,50 @@ kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by 
 
 Вывод
 ```
-timestamp missing http.status_code: 401 count: 5
-timestamp missing http.status_code: 200 count: 8
+timestamp missing http.status_code: 401 count: 1
+timestamp missing http.status_code: 404 count: 1
+timestamp missing http.status_code: 500 count: 1
+timestamp missing http.status_code: 200 count: 1
+timestamp missing http.status_code: 403 count: 2
 ```
 
 **Счетчики по статусам. По всем логам за 5 последние 5 минут**
 ```
-_time:5m | stats by (http.status_code) count() as requests | sort by (requests desc)
+kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.status_code) count() as requests | sort by (requests desc)
 ```
 
 Вывод
 ```
-timestamp missing requests: 87
-timestamp missing requests: 77 http.status_code: 200
-timestamp missing requests: 35 http.status_code: 401
-timestamp missing requests: 1 http.status_code: 302
-timestamp missing requests: 1 http.status_code: 400
+timestamp missing requests: 10 http.status_code: 401
+timestamp missing requests: 10 http.status_code: 403
+timestamp missing requests: 9 http.status_code: 200
+timestamp missing requests: 8 http.status_code: 500
+timestamp missing requests: 6 http.status_code: 404
 ```
 
 **Топ медленных запросов:**
 ```
 kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | limit 10
-kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time) | limit 10
+```
+
+вывод
+```
+timestamp missing max_time: 1.9978073 http.url: api.example.com/api/v1/users?RequestId=a1b2c3d4-e5f6-7890-abcd-ef1234567890
+timestamp missing max_time: 1.9970258 http.url: api.example.com/api/v1/products?RequestId=1ab2c345-d6e7-4890-b1c2-d3e4f5a6b7c8
+timestamp missing max_time: 1.9878687 http.url: api.example.com/api/v1/users?RequestId=123e4567-e89b-12d3-a456-426614174000
+timestamp missing max_time: 1.9555196 http.url: api.example.com/api/v1/users?RequestId=f47ac10b-58cc-4372-a567-0e02b2c3d479
+timestamp missing max_time: 1.9316189 http.url: api.example.com/api/v1/products?RequestId=0fc0f571-d3c4-4e75-8a6f-3f9f137edbb8
 ```
 
 **Ошибки по IP-адресам:**
 ```
-kubernetes.pod_namespace: "nginx-log-generator" | http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | limit 10 by (errors desc)
+kubernetes.pod_namespace: "nginx-log-generator" | http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors
 ```
 Вывод
 ```
-timestamp missing errors: 79 nginx.remote_addr: 10.0.0.2
-timestamp missing errors: 70 nginx.remote_addr: 10.0.0.1
+timestamp missing nginx.remote_addr: 10.0.0.3 errors: 61
+timestamp missing nginx.remote_addr: 10.0.0.2 errors: 80
+timestamp missing nginx.remote_addr: 10.0.0.1 errors: 103
 ```
 
 **Доля ошибок:**
@@ -284,12 +296,21 @@ kubernetes.pod_namespace: "nginx-log-generator" | stats count() as total, count(
 ```
 Вывод
 ```
-timestamp missing total: 2726errors: 1403error_rate: 51.46735143066764
+timestamp missing total: 299 errors: 247 error_rate: 82.6086956521739
 ```
 
 **Трафик по URL:**
 ```
-kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (total_bytes desc) | first 5
+kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) sum(http.bytes_sent) as total_bytes | sort by (total_bytes desc) | limit 5
+```
+
+вывод
+```
+timestamp missing total_bytes: 33117 http.url: api.example.com/api/v1/users?RequestId=123e4567-e89b-12d3-a456-426614174000
+timestamp missing total_bytes: 31980 http.url: api.example.com/api/v1/users?RequestId=a1b2c3d4-e5f6-7890-abcd-ef1234567890
+timestamp missing total_bytes: 31625 http.url: api.example.com/api/v1/users?RequestId=f47ac10b-58cc-4372-a567-0e02b2c3d479
+timestamp missing total_bytes: 25118 http.url: api.example.com/api/v1/products?RequestId=1ab2c345-d6e7-4890-b1c2-d3e4f5a6b7c8
+timestamp missing total_bytes: 18680 http.url: api.example.com/api/v1/products?RequestId=0fc0f571-d3c4-4e75-8a6f-3f9f137edbb8
 ```
 
 ## LogsQL: язык запросов VictoriaLogs
@@ -305,20 +326,13 @@ kubernetes.pod_namespace: "nginx-log-generator" | stats by (http.url) sum(http.b
 <filtering> | <parsing/extract> | <transform> | <aggregation> | <post-filter>
 ```
 
-Пример:
-
-```
-kubernetes.pod_namespace: "nginx-log-generator" | kubernetes.namespace:"nginx" | extract "status=(\d+)" | stats by (status) count()
-```
-
-
 ### Фильтр по полям
 
 ```
-status:200
-status_toggle:>=400
-method:GET
-kubernetes.namespace:"default"
+http.status_code:200
+http.status_code:>=400
+http.method:GET
+kubernetes.pod_namespace:"default"
 ```
 
 Поддерживаются операторы сравнения:
@@ -341,7 +355,7 @@ kubernetes.namespace:"default"
 Можно комбинировать:
 
 ```
-_time:10m "error" kubernetes.pod:"nginx"
+_time:10m "error" kubernetes.pod_name:"nginx-log-generator"
 ```
 
 ## 2. Операторы пайплайна
@@ -359,7 +373,7 @@ _time:10m "error" kubernetes.pod:"nginx"
 Выбор нужных полей (аналог SELECT):
 
 ```
-| fields _time, level, message, kubernetes.pod
+| fields _time, level, _msg, kubernetes.pod_name
 ```
 
 ### `sort`
@@ -371,13 +385,13 @@ _time:10m "error" kubernetes.pod:"nginx"
 | sort by (requests desc)
 ```
 
-### `first`
+### `limit`
 
 Ограничение количества строк:
 
 ```
-| first 10
-| first 5 by (errors desc)
+| limit 10
+| limit 5 by (errors desc)
 ```
 
 ## 3. Извлечение данных
@@ -401,7 +415,7 @@ _time:10m "error" kubernetes.pod:"nginx"
 Если лог в JSON-формате:
 
 ```
-| json
+| unpack_json
 ```
 
 После этого поля доступны напрямую:
@@ -446,7 +460,7 @@ _time:5m | stats by (http.status_code) count() as requests
 **Топ URL по трафику:**
 
 ```
-_time:5m | stats by (http.url) sum(http.bytes_sent) as bytes | sort by (bytes desc) | first 10
+_time:5m | stats by (http.url) sum(http.bytes_sent) as bytes | sort by (bytes desc) | limit 10
 ```
 
 **P95 latency:**
@@ -499,7 +513,7 @@ _time:5m | stats
 _time:10m status:>=400 |
 stats by (remote_addr) count() as errors |
 sort by (errors desc) |
-first 10
+limit 10
 ```
 
 ### Медленные запросы
@@ -508,7 +522,7 @@ first 10
 _time:5m |
 stats by (http.url) max(request_time) as max_time |
 sort by (max_time desc) |
-first 5
+limit 5
 ```
 
 ### Поиск аномалий
@@ -541,7 +555,7 @@ LogsQL полностью поддерживается в **VictoriaLogs datasou
 | Regex extract     | `\| extract "id=(\d+)"`        |
 | Агрегация         | `\| stats by (status) count()` |
 | Сортировка        | `\| sort by (count desc)`      |
-| Ограничение       | `\| first 10`                  |
+| Ограничение       | `\| limit 10`                  |
 | Вычисление        | `\| math a / b * 100`          |
 
 
