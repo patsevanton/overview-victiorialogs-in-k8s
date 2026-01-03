@@ -1,36 +1,41 @@
-### Day range filter
+### Фильтр дневного диапазона
 
-`_time:day_range[start, end]` filter allows returning logs in the particular `start ... end` time for each day, where `start` and `end` have the format `hh:mm`.
-For example, the following query matches logs between `08:00` and `18:00` UTC every day:
+Фильтр `_time:day_range[start, end]` позволяет возвращать логи за определённый интервал времени `start ... end` **для каждого дня**, где `start` и `end` задаются в формате `hh:mm`.
+
+Например, следующий запрос выбирает логи между `08:00` и `18:00` UTC каждый день:
 
 ```logsql
 _time:day_range[08:00, 18:00)
 ```
 
-This query includes `08:00`, while `18:00` is excluded, e.g. the last matching time is `17:59:59.999999999`.
-Replace `[` with `(` in order to exclude the starting time. Replace `)` with `]` in order to include the ending time.
-For example, the following query matches logs between `08:00` and `18:00`, excluding `08:00:00.000000000` and including `18:00`:
+Этот запрос **включает** `08:00`, но **исключает** `18:00`, то есть последнее подходящее время — `17:59:59.999999999`.
+
+Замените `[` на `(`, чтобы исключить начальное время.
+Замените `)` на `]`, чтобы включить конечное время.
+
+Например, следующий запрос выбирает логи между `08:00` и `18:00`, **исключая** `08:00:00.000000000` и **включая** `18:00`:
 
 ```logsql
 _time:day_range(08:00, 18:00]
 ```
 
-If the time range must be applied to other than UTC time zone, then add `offset <duration>`, where `<duration>` can have [any supported duration value](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-For example, the following query selects logs between `08:00` and `18:00` at `+0200` time zone:
+Если временной диапазон нужно применять не к часовому поясу UTC, добавьте `offset <duration>`, где `<duration>` может принимать [любое поддерживаемое значение длительности](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
+
+Например, следующий запрос выбирает логи между `08:00` и `18:00` в часовом поясе `+0200`:
 
 ```logsql
 _time:day_range[08:00, 18:00) offset 2h
 ```
 
-Performance tip: it is recommended to specify a regular [time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) additionally to the `day_range` filter. For example, the following query selects logs
-between `08:00` and `18:00` every day for the last week:
+**Совет по производительности:** рекомендуется дополнительно указывать обычный [фильтр по времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) вместе с фильтром `day_range`.
+
+Например, следующий запрос выбирает логи между `08:00` и `18:00` каждый день за последнюю неделю:
 
 ```logsql
 _time:1w _time:day_range[08:00, 18:00)
 ```
 
-See also:
+См. также:
 
-- [Week range filter](https://docs.victoriametrics.com/victorialogs/logsql/#week-range-filter)
-- [Time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter)
-
+* [Фильтр недельного диапазона](https://docs.victoriametrics.com/victorialogs/logsql/#week-range-filter)
+* [Фильтр по времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter)

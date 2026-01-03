@@ -1,56 +1,57 @@
-### Case-insensitive filter
+### Регистронезависимый фильтр
 
-Case-insensitive filter can be applied to any word, phrase or prefix by wrapping the corresponding [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter),
-[phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) or [prefix filter](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter) into `i()`. For example, the following query returns
-log messages with `error` word in any case:
+Регистронезависимый фильтр можно применять к любому слову, фразе или префиксу, обернув соответствующий [фильтр слова](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter),
+[фильтр фразы](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) или [фильтр префикса](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter) в `i()`.
+Например, следующий запрос возвращает лог-сообщения со словом `error` в любом регистре:
 
 ```logsql
 i(error)
 ```
 
-The query matches the following [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+Запрос соответствует следующим [лог-сообщениям](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
-- `unknown error happened`
-- `ERROR: cannot read file`
-- `Error: unknown arg`
-- `An ErRoR occurred`
+* `unknown error happened`
+* `ERROR: cannot read file`
+* `Error: unknown arg`
+* `An ErRoR occurred`
 
-The query doesn't match the following log messages:
+Запрос **не** соответствует следующим лог-сообщениям:
 
-- `FooError`, since the `FooError` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) has superfluous prefix `Foo`. Use `~"(?i)error"` for this case. See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter) for details.
-- `too many Errors`, since the `Errors` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) has superfluous suffix `s`. Use `i(error*)` for this case.
+* `FooError`, поскольку [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) `FooError` имеет лишний префикс `Foo`. Для этого случая используйте `~"(?i)error"`. Подробности см. в [документации](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter).
+* `too many Errors`, поскольку [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) `Errors` имеет лишний суффикс `s`. Для этого случая используйте `i(error*)`.
 
-By default the `i()` filter is applied to the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-Specify the needed [field name](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) in front of the filter
-in order to apply it to the given field. For example, the following query matches `log.level` field containing `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) in any case:
+По умолчанию фильтр `i()` применяется к [полю `_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
+Укажите нужное [имя поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) перед фильтром, чтобы применить его к конкретному полю.
+Например, следующий запрос находит записи, где поле `log.level` содержит [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) `error` в любом регистре:
 
 ```logsql
 log.level:i(error)
 ```
 
-If the field name contains special chars, which may clash with the query syntax, then it may be put into quotes according to [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
-For example, the following query matches `log:level` field containing `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) in any case.
+Если имя поля содержит специальные символы, которые могут конфликтовать с синтаксисом запроса, его можно заключить в кавычки согласно [документации](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
+Например, следующий запрос находит записи, где поле `log:level` содержит [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) `error` в любом регистре:
 
 ```logsql
 "log:level":i("error")
 ```
 
-Performance tips:
+#### Советы по производительности
 
-- Prefer using [`contains_common_case` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter) over `i(...)`,
-  since `contains_common_case(...)` usually works much faster.
-- Prefer using case-sensitive filters such as [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-  and [phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) over case-insensitive filter.
-- Prefer moving [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter), [phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-  and [prefix filter](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter) in front of the case-insensitive filter
-  when using [logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
-- See [other performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+* Предпочитайте использовать фильтр [`contains_common_case`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter) вместо `i(...)`,
+  поскольку `contains_common_case(...)` обычно работает значительно быстрее.
+* По возможности используйте регистрозависимые фильтры, такие как [фильтр слова](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
+  и [фильтр фразы](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter), вместо регистронезависимого фильтра.
+* При использовании [логического фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
+  старайтесь располагать [фильтр слова](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter),
+  [фильтр фразы](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
+  и [фильтр префикса](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
+  перед регистронезависимым фильтром.
+* См. также [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-See also:
+#### См. также
 
-- [`contains_common_case` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter)
-- [Word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Exact filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
-
+* [`contains_common_case` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter)
+* [Фильтр слова](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
+* [Фильтр фразы](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
+* [Точный фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
+* [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

@@ -1,16 +1,16 @@
-### Any value filter
+### Фильтр «любое значение»
 
-Sometimes it is needed to find log entries containing any non-empty value for the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
-This can be performed with `log_field:*` syntax. For example, the following query matches log entries with non-empty `host.hostname` field:
+Иногда требуется найти записи журнала, содержащие **любое непустое значение** для заданного [поля журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+
+Это можно сделать с помощью синтаксиса `log_field:*`. Например, следующий запрос отбирает записи журнала с непустым полем `host.hostname`:
 
 ```logsql
 host.hostname:*
 ```
 
-See also:
+Смотрите также:
 
-- [No-op filter](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter)
-- [Empty value filter](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter)
-- [Prefix filter](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
-
+- [Фильтр «без операции»](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter)
+- [Фильтр пустого значения](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter)
+- [Фильтр по префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
+- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

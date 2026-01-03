@@ -1,29 +1,28 @@
-### contains_any filter
+### Фильтр `contains_any`
 
-Sometimes it is needed to find logs, which contain at least one [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) or phrase out of many words / phrases.
-This can be done with `v1 OR v2 OR ... OR vN` [logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
-VictoriaLogs provides an alternative approach with the `contains_any(v1, v2, ..., vN)` filter. For example, the following query matches logs,
-which contain `foo` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) or `"bar baz"` phrase in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+Иногда требуется найти логи, которые содержат хотя бы одно [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) или фразу из множества слов / фраз.
+Это можно сделать с помощью [логического фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) `v1 OR v2 OR ... OR vN`.
+
+VictoriaLogs предоставляет альтернативный подход — фильтр `contains_any(v1, v2, ..., vN)`.
+Например, следующий запрос находит логи, которые содержат слово `foo` или фразу `"bar baz"` в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
 ```logsql
 contains_any(foo, "bar baz")
 ```
 
-This is equivalent to the following query:
+Это эквивалентно следующему запросу:
 
 ```logsql
 foo OR "bar baz"
 ```
 
-There is a special case - `contains_any(*)` - this filter matches all the logs. See [no-op filter docs](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter) for details.
+Существует специальный случай — `contains_any(*)`. Этот фильтр совпадает со всеми логами. Подробности см. в документации по [no-op фильтру](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter).
 
-It is possible to pass arbitrary [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) inside `contains_any(...)` filter in order to match against the results of this query.
-See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter) for details.
+Внутрь фильтра `contains_any(...)` можно передавать произвольный [запрос](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), чтобы выполнять сопоставление по результатам этого запроса. Подробности см. в [этой документации](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter).
 
-See also:
+См. также:
 
-- [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [`in` filter](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter)
-- [`contains_all` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
-
+* [фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
+* [фильтр по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
+* [фильтр `in`](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter)
+* [фильтр `contains_all`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
