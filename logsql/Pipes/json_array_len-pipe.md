@@ -1,18 +1,26 @@
-### json_array_len pipe
+### Конвейер `json_array_len`
 
-`<q> | json_array_len(field) as result_field` calculates the length of JSON array at the given [`field`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-and stores it into the `result_field`, for every log entry returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+Конструкция  
+```
+<q> | json_array_len(поле) as результирующее_поле
+```  
+вычисляет длину JSON‑массива в указанном поле (`поле`) для каждой записи журнала, возвращённой запросом `<q>`, и сохраняет результат в поле `результирующее_поле`.
 
-For example, the following query returns top 5 logs that contain [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-with the biggest number of [words](https://docs.victoriametrics.com/victorialogs/logsql/#word) across all the logs for the last 5 minutes:
+Подробнее о модели данных см. в разделе [«Модель данных»](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), а о синтаксисе запросов — в разделе [«Синтаксис запросов»](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+
+**Пример.** Следующий запрос возвращает 5 лучших записей журнала (за последние 5 минут), содержащих сообщения с наибольшим числом слов:
 
 ```logsql
-_time:5m | unpack_words _msg as words | json_array_len (words) as words_count | first 5 (words_count desc)
+_time:5m | unpack_words _msg as words | json_array_len(words) as words_count | first 5 (words_count desc)
 ```
 
-See also:
+Пояснение:
+- `_time:5m` — отбор записей за последние 5 минут;
+- `unpack_words _msg as words` — разбиение текста сообщения `_msg` на слова и сохранение результата в поле `words` (см. конвейер [`unpack_words`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe));
+- `json_array_len(words) as words_count` — вычисление числа элементов в массиве `words` и сохранение в `words_count`;
+- `first 5 (words_count desc)` — отбор первых 5 записей с максимальным значением `words_count` (см. конвейер [`first`](https://docs.victoriametrics.com/victorialogs/logsql/#first-pipe)).
 
-- [`len` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe)
-- [`unpack_words` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe)
-- [`first` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#first-pipe)
-
+**См. также:**
+- конвейер [`len`](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe);
+- конвейер [`unpack_words`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe);
+- конвейер [`first`](https://docs.victoriametrics.com/victorialogs/logsql/#first-pipe).

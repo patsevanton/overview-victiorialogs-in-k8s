@@ -1,20 +1,26 @@
-### len pipe
+### `len` (длина) — конвейер (pipe)
 
-`<q> | len(field) as result` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) stores byte length of the given `field` value into the `result` field
-across all the logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+Конструкция  
+```
+<q> | len(field) as result
+```  
+сохраняет **длину в байтах** значения указанного поля `field` в новое поле `result` — для всех логов, возвращённых запросом `<q>`.
 
-For example, the following query shows top 5 log entries with the maximum byte length of `_msg` field across
-logs for the last 5 minutes:
+**Пример.** Следующий запрос выводит 5 записей логов с максимальной длиной поля `_msg` за последние 5 минут:
 
 ```logsql
 _time:5m | len(_msg) as msg_len | sort by (msg_len desc) | limit 5
 ```
 
-See also:
+**Пояснения к примеру:**
+- `_time:5m` — фильтрует логи за последние 5 минут;
+- `len(_msg) as msg_len` — вычисляет длину поля `_msg` в байтах и сохраняет в поле `msg_len`;
+- `sort by (msg_len desc)` — сортирует записи по убыванию значения `msg_len`;
+- `limit 5` — ограничивает вывод 5 записями.
 
-- [`json_array_len` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#json_array_len-pipe)
-- [`sum_len` stats function](https://docs.victoriametrics.com/victorialogs/logsql/#sum_len-stats)
-- [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-- [`limit` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#limit-pipe)
-- [`block_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe)
-
+**См. также:**
+- конвейер [`json_array_len`](https://docs.victoriametrics.com/victorialogs/logsql/#json_array_len-pipe) — длина JSON‑массива;
+- статистическая функция [`sum_len`](https://docs.victoriametrics.com/victorialogs/logsql/#sum_len-stats) — сумма длин;
+- конвейер [`sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe) — сортировка;
+- конвейер [`limit`](https://docs.victoriametrics.com/victorialogs/logsql/#limit-pipe) — ограничение числа записей;
+- конвейер [`block_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe) — статистика по блокам.
