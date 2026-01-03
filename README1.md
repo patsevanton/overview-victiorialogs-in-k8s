@@ -156,12 +156,17 @@ helm upgrade --install vmks \
   -f vmks-values.yaml
 ```
 
-Доступ к Grafana и получение пароля:
+ Можно анализировать логи через explore Grafana.
+ Для получения пароля admin от Grafana необходимо:
 
 ```bash
 # Откройте http://grafana.example.org/ (в зависимости от Ingress/Egress)
 kubectl get secret vmks-grafana -n vmks -o jsonpath='{.data.admin-password}' | base64 --decode; echo
 ```
+
+Либо можете анализировать логи через VMUI
+
+Интерфейс VMUI (http://victorialogs.apatsev.org.ru/select/vmui)
 
 
 ## Генерация тестовых логов
