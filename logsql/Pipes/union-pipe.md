@@ -1,15 +1,16 @@
-### union pipe
+### Объединение потоков (`union pipe`)
 
-`<q1> | union (<q2>)` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns results of `<q1>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) followed by results of `<q2>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
-It works similarly to `UNION ALL` in SQL. `<q1>` and `q2` may contain arbitrary [LogsQL queries](https://docs.victoriametrics.com/victorialogs/logsql/#logsql-tutorial).
-For example, the following query returns logs with `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) for the last 5 minutes, plus logs with `panic` word for the last hour:
+Конструкция `<q1> | union (<q2>)` [поток (pipe)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) возвращает сначала результаты запроса `<q1>`, а затем — результаты запроса `<q2>` [запрос (query)](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+
+По принципу работы она аналогична оператору `UNION ALL` в SQL. Запросы `<q1>` и `<q2>` могут содержать произвольные [запросы на языке LogsQL](https://docs.victoriametrics.com/victorialogs/logsql/#logsql-tutorial).
+
+**Пример:** следующий запрос вернёт логи, содержащие слово `error`, за последние 5 минут, а также логи со словом `panic` за последний час:
 
 ```logsql
 _time:5m error | union (_time:1h panic)
 ```
 
-See also:
+Смотрите также:
 
-- [`join` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)
-- [subquery filter](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter)
-
+- [поток `join`](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe);
+- [фильтр с подзапросом (subquery filter)](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter).

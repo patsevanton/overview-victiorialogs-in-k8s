@@ -1,21 +1,20 @@
-### total_stats pipe
+## Конвейер `total_stats`
 
-The `<q> | total_stats ...` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) calculates total (global) stats (such as [global count](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats) or [global sum](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats))
-over the specified [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax)
-and stores these stats in the specified log fields for each input log entry.
+Конвейер `<q> | total_stats …` [конвейер](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) вычисляет **общие (глобальные) статистические показатели** (такие как [общее количество](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats) или [общая сумма](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats)) по указанным [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), возвращаемым запросом `<q>` [синтаксис запроса](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), и сохраняет эти статистические данные в указанных полях лога для каждой входной записи.
 
-The total stats is calculated over the logs sorted by time, so the `<q>` must return the [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field)
-in order to properly calculate the total stats.
+Общая статистика вычисляется по логам, отсортированным по времени, поэтому запрос `<q>` **должен возвращать поле `_time`** [поле времени](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field), чтобы корректно рассчитать общую статистику.
 
-The `total_stats` pipe puts all the logs returned by `<q>` in memory, so make sure the `<q>` returns the limited number of logs in order to avoid high memory usage.
+Конвейер `total_stats` загружает в память все логи, возвращённые запросом `<q>`, поэтому убедитесь, что `<q>` возвращает ограниченное число логов — это позволит избежать чрезмерного потребления памяти.
 
-For example, the following LogsQL query calculates [total sum](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats) for the `hits` field over the logs for the last 5 minutes:
+### Пример
+
+Следующий запрос LogsQL вычисляет **общую сумму** для поля `hits` по логам за последние 5 минут:
 
 ```logsql
 _time:5m | total_stats sum(hits) as total_hits
 ```
 
-The `| total_stats ...` pipe has the following basic format:
+### Базовый формат конвейера `| total_stats …`
 
 ```logsql
 ... | total_stats
@@ -24,13 +23,17 @@ The `| total_stats ...` pipe has the following basic format:
   stats_funcN(...) as result_nameN
 ```
 
-Where `stats_func*` is any of the supported [total stats function](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions), while the `result_name*` is the name of the log field
-to store the result of the corresponding stats function. The `as` keyword is optional.
+Где:
+- `stats_func*` — любая из поддерживаемых [функций общей статистики](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions);
+- `result_name*` — имя поля лога, в которое будет сохранён результат соответствующей статистической функции.
 
-For example, the following query calculates the following total stats for logs over the last 5 minutes:
+Ключевое слово `as` необязательно.
 
-- the number of logs with the help of [`count` function](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats);
-- the sum of `hits` field with the help of [`sum` function](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats):
+### Пример с несколькими статистиками
+
+Следующий запрос вычисляет за последние 5 минут:
+- количество логов — с помощью функции [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats);
+- сумму значений поля `hits` — с помощью функции [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats):
 
 ```logsql
 _time:5m
@@ -39,15 +42,22 @@ _time:5m
         sum(hits) as total_hits
 ```
 
-It is allowed omitting the result name. In this case the result name equals the string representation of the used [total stats function](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions).
-For example, the following query returns the same stats as the previous one, but gives `count()` and `sum(hits)` names for the returned fields:
+Можно **опустить имя результата**. В этом случае имя результата будет равно строковому представлению использованной [функции общей статистики](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions).
+
+Например, следующий запрос возвращает те же статистики, что и предыдущий, но назначает полям имена `count()` и `sum(hits)`:
 
 ```logsql
 _time:5m | total_stats count(), sum(hits)
 ```
 
-It is useful to combine `total_stats` with [stats by time buckets](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets). For example, the following query returns per-hour number of logs over the last day,
-plus the total number of logs, and then calculates the per-hour percent of hits over the daily hits.
+### Сочетание `total_stats` с группировкой по временным интервалам
+
+Полезно комбинировать `total_stats` с [статистикой по временным интервалам](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets).
+
+Например, следующий запрос возвращает:
+- количество логов **по часам** за последние сутки;
+- общее количество логов;
+- затем вычисляет **процент логов за час** от общего количества за сутки:
 
 ```logsql
 _time:1d
@@ -56,17 +66,16 @@ _time:1d
     | math round((hits / total_hits)*100) as hits_percent
 ```
 
-See also:
+### См. также:
+- [Функции конвейера `total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions)
+- [`total_stats` по полям](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-by-fields)
+- Конвейер [`running_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
+- Конвейер [`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
+- Конвейер [`sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
 
-- [`total_stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions)
-- [`total_stats` by fields](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-by-fields)
-- [`running_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
+## `total_stats` по полям
 
-#### total_stats by fields
-
-The following LogsQL syntax can be used for calculating independent total stats per group of log fields:
+Для вычисления **независимой общей статистики по группам полей лога** используется следующий синтаксис LogsQL:
 
 ```logsql
 <q> | total_stats by (field1, ..., fieldM)
@@ -75,11 +84,15 @@ The following LogsQL syntax can be used for calculating independent total stats 
   stats_funcN(...) as result_nameN
 ```
 
-This calculates `stats_func*` for each `(field1, ..., fieldM)` group of [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-seen in the logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+Это вычисляет `stats_func*` для каждой группы `(field1, ..., fieldM)` [полей лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), встречающихся в логах, возвращённых запросом `<q>` [синтаксис запроса](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
 
-For example, the following query calculates total number of logs and total number of `hits` over the last 5 minutes,
-grouped by `(host, path)` fields:
+### Пример группировки по полям
+
+Следующий запрос вычисляет за последние 5 минут:
+- общее количество логов;
+- общую сумму `hits`,
+
+с группировкой по полям `(host, path)`:
 
 ```logsql
 _time:5m
@@ -88,15 +101,12 @@ _time:5m
         sum(hits) total_hits
 ```
 
-The `by` keyword can be skipped in `total_stats ...` pipe. For example, the following query is equivalent to the previous one:
+Ключевое слово `by` в конвейере `total_stats …` можно опустить. Например, следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | total_stats (host, path) count() total_logs, sum(hits) total_hits
 ```
 
-See also:
-
-- [`total_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
-- [`total_stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions)
-
-
+### См. также:
+- [Конвейер `total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
+- [Функции конвейера `total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions)
