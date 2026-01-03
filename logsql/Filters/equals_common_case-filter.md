@@ -1,28 +1,29 @@
-### equals_common_case filter
+### Фильтр equals_common_case
 
-The `field_name:equals_common_case(phrase1, ..., phraseN)` filter searches for logs where the `field_name` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-equals the following [phrases](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) and [words](https://docs.victoriametrics.com/victorialogs/logsql/#word):
+Фильтр `field_name:equals_common_case(phrase1, ..., phraseN)` ищет логи, в которых [поле лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `field_name`
+равно следующим [фразам](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) и [словам](https://docs.victoriametrics.com/victorialogs/logsql/#word):
 
-- the given phrases - `phrase1`, ..., `phraseN`
-- uppercase and lowercase phrases
-- individual phrases where every uppercase letter is independently replaced with the corresponding lowercase letter
+* заданным фразам — `phrase1`, …, `phraseN`
+* фразам в верхнем и нижнем регистре
+* отдельным фразам, в которых каждая заглавная буква независимо заменена на соответствующую строчную
 
-For example, `_msg:equals_common_case("VictoriaMetrics")` finds logs where the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-equals one of the following [words](https://docs.victoriametrics.com/victorialogs/logsql/#word):
+Например, `_msg:equals_common_case("VictoriaMetrics")` находит логи, в которых
+[поле `_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
+равно одному из следующих [слов](https://docs.victoriametrics.com/victorialogs/logsql/#word):
 
-- VictoriaMetrics
-- VICTORIAMETRICS
-- victoriametrics
-- Victoriametrics
-- victoriaMetrics
+* VictoriaMetrics
+* VICTORIAMETRICS
+* victoriametrics
+* Victoriametrics
+* victoriaMetrics
 
-The `equals_common_case(...)` usually works much faster than the [`i(...)`](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter).
+Фильтр `equals_common_case(...)` обычно работает значительно быстрее, чем
+[регистронезависимый фильтр `i(...)`](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter).
 
-If you need to find logs with log fields containing the common case words or phrases,
-then use [`contains_common_case` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter).
+Если вам нужно найти логи, в которых поля лога **содержат** слова или фразы с «обычным регистром»,
+используйте фильтр [`contains_common_case`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter).
 
-See also:
+См. также:
 
-- [case-insensitive filter](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)
-- [`contains_common_case` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter)
-
+* [регистронезависимый фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)
+* [`contains_common_case` фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter)
