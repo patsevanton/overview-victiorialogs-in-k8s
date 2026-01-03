@@ -106,7 +106,7 @@ _time:5m | unpack_syslog from foo result_prefix "foo_"
 * [`unpack_logfmt` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe)
 * [`extract` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
 
----
+
 
 ### Условный `unpack_syslog`
 

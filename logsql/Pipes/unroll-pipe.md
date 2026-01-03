@@ -18,7 +18,7 @@ _time:5m | unroll (timestamp, value)
 * статистическая функция [`uniq_values`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
 * статистическая функция [`values`](https://docs.victoriametrics.com/victorialogs/logsql/#values-stats)
 
----
+
 
 ### Условный `unroll`
 

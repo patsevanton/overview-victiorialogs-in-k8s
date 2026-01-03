@@ -17,8 +17,3 @@ _time:5m | decolorize _msg
 ```
 
 Рекомендуется удалять ANSI‑коды цветов на этапе приёма данных — см. [соответствующую документацию](https://docs.victoriametrics.com/victorialogs/data-ingestion/#decolorizing). Это упростит последующие запросы к логам: не придётся добавлять к ним трубу `| decolorize`.
-
-См. также:
-
-- труба [`replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe);
-- труба [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe).

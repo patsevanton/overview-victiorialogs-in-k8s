@@ -64,12 +64,3 @@ _time:5m | collapse_nums if (user_type:=admin) at foo
 ```
 
 **Примечание:** `collapse_nums` может пропустить некоторые числа или сжать неожиданные значения. В таких случаях рекомендуется использовать **условный `collapse_nums`** либо предварительно обработать данные с помощью конвейера [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe).
-
-***
-
-### См. также:
-
-- [условный `collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-collapse_nums)
-- [фильтр по шаблону](https://docs.victoriametrics.com/victorialogs/logsql/#pattern-match-filter)
-- [`replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
-- [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe)

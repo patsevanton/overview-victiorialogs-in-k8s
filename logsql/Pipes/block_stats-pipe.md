@@ -16,10 +16,3 @@
 Например, см.:
 - [как определить, какое поле логов занимает больше всего места на диске](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space);
 - [как определить, какой поток логов занимает больше всего места на диске](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-streams-occupy-the-most-of-disk-space).
-
-См. также:
-
-- конвейер [`query_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe);
-- фильтр [`value_type`](https://docs.victoriametrics.com/victorialogs/logsql/#value_type-filter);
-- конвейер [`blocks_count`](https://docs.victoriametrics.com/victorialogs/logsql/#blocks_count-pipe);
-- конвейер [`len`](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe).

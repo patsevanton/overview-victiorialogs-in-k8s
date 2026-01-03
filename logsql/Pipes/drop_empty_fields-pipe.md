@@ -8,8 +8,3 @@
 ```logsql
 _time:5m | extract 'email: <email>,' from foo | drop_empty_fields
 ```
-
-См. также:
-
-- конвейер [`filter`](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe);
-- конвейер [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe).

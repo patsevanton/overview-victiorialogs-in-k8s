@@ -25,9 +25,3 @@ _time:5m | copy _time as timestamp, _msg as message
 ```logsql
 _time:5m | copy foo* as bar*
 ```
-
-Смотрите также:
-
-- конвейер [`rename`](https://docs.victoriametrics.com/victorialogs/logsql/#rename-pipe);
-- конвейер [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe);
-- конвейер [`delete`](https://docs.victoriametrics.com/victorialogs/logsql/#delete-pipe).

@@ -15,8 +15,3 @@ _time:5m | delete host, app
 ```logsql
 _time:5m | delete foo*
 ```
-
-Смотрите также:
-
-- конвейер [`rename`](https://docs.victoriametrics.com/victorialogs/logsql/#rename-pipe);
-- конвейер [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe).

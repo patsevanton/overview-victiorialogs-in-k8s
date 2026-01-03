@@ -57,7 +57,7 @@ _time:5m | count(), count_uniq(_stream)
 * [`top` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
 * [`join` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)
 
----
+
 
 ### Статистика по полям
 
@@ -92,7 +92,7 @@ _time:5m | stats (host, path) count() logs_total, count_uniq(ip) ips_total
 * [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
 * [`row_any`](https://docs.victoriametrics.com/victorialogs/logsql/#row_any-stats)
 
----
+
 
 ### Статистика по временным бакетам
 
@@ -143,7 +143,7 @@ _time:5m
 * `month` — равно одному месяцу с учётом количества дней
 * `year` — равно одному году с учётом количества дней
 
----
+
 
 ### Статистика по временным бакетам с учётом часового пояса
 
@@ -159,7 +159,7 @@ VictoriaLogs хранит значения [`_time`](https://docs.victoriametric
 _time:1w | stats by (_time:1d offset 2h) count() logs_total
 ```
 
----
+
 
 ### Статистика по бакетам полей
 
@@ -171,7 +171,7 @@ _time:1w | stats by (_time:1d offset 2h) count() logs_total
 _time:1h | stats by (request_size_bytes:10KB) count() requests
 ```
 
----
+
 
 ### Статистика по IPv4-бакетам
 
@@ -183,7 +183,7 @@ _time:1h | stats by (request_size_bytes:10KB) count() requests
 _time:5m | stats by (ip:/24) count() requests_per_subnet
 ```
 
----
+
 
 ### Статистика с дополнительными фильтрами
 

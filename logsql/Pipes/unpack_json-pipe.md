@@ -79,7 +79,7 @@ _time:5m | unpack_json from foo result_prefix "foo_"
 * [`pack_json` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pack_json-pipe)
 * [`pack_logfmt` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pack_logfmt-pipe)
 
----
+
 
 #### Условный `unpack_json`
 
