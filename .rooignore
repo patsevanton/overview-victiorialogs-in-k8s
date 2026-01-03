@@ -1,3 +1,5 @@
+cluster-issuer.yaml
+Dockerfile
 .dockerignore
 flog-log-generator.yaml
 .git
@@ -12,7 +14,10 @@ OOMKilled_alert.yaml
 python-log-generator.yaml
 
 .rooignore
-stress-ng.yaml
+stress1.yaml
+stress2.yaml
+stress3.yaml
+stress.md
 .terraform
 .terraform.lock.hcl
 terraform.tfstate
