@@ -1,16 +1,15 @@
-### join pipe
+### Труба `join` (соединение)
 
-The `<q1> | join by (<fields>) (<q2>)` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) joins `<q1>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) results with the `<q2>` results by the given set of comma-separated `<fields>`.
-This pipe works in the following way:
+Конструкция `<q1> | join by (<поля>) (<q2>)` [труба](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) соединяет результаты запроса `<q1>` [запрос](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) с результатами `<q2>` по заданному набору полей (перечисляются через запятую в `<поля>`).
 
-1. It executes the `<q2>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) and remembers its results.
-1. For each input row from `<q1>` it searches for matching rows in the `<q2>` results by the given `<fields>`.
-1. If the `<q2>` results have no matching rows, then the input row is sent to the output as is.
-1. If the `<q2>` results have matching rows, then for each matching row the input row is extended
-   with new fields seen at the matching row, and the result is sent to the output.
+Эта труба работает следующим образом:
 
-This logic is similar to `LEFT JOIN` in SQL. For example, the following query returns the number of per-user logs across two applications — `app1` and `app2` (see
-[stream filters](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter) for details on the `{...}` filter):
+1. Выполняется запрос `<q2>` [запрос](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), и его результаты сохраняются.
+2. Для каждой входной строки из `<q1>` выполняется поиск совпадающих строк в результатах `<q2>` по указанным полям `<поля>`.
+3. Если в результатах `<q2>` нет совпадающих строк, входная строка передаётся на выход без изменений.
+4. Если в результатах `<q2>` найдены совпадающие строки, то для каждой такой строки входная строка дополняется новыми полями, присутствующими в совпадающей строке, и результат передаётся на выход.
+
+Эта логика аналогична операции `LEFT JOIN` в SQL. Например, следующий запрос возвращает количество логов на пользователя для двух приложений — `app1` и `app2` (подробнее о фильтре `{...}` см. [фильтры потоков](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)):
 
 ```logsql
 _time:1d {app="app1"} | stats by (user) count() app1_hits
@@ -19,8 +18,8 @@ _time:1d {app="app1"} | stats by (user) count() app1_hits
   )
 ```
 
-If you need results similar to `INNER JOIN` in SQL, then add `inner` suffix after the `join` pipe.
-For example, the following query returns stats only for users, which exist in both applications `app1` and `app2`:
+Если вам нужны результаты, аналогичные `INNER JOIN` в SQL, добавьте суффикс `inner` после трубы `join`.  
+Например, следующий запрос возвращает статистику только для пользователей, которые есть в обоих приложениях `app1` и `app2`:
 
 ```logsql
 _time:1d {app="app1"} | stats by (user) count() app1_hits
@@ -29,8 +28,8 @@ _time:1d {app="app1"} | stats by (user) count() app1_hits
   ) inner
 ```
 
-It is possible to add a prefix to all the field names returned by the `<query>` by specifying the needed prefix after the `<query>`.
-For example, the following query adds `app2.` prefix to all `<query>` log fields:
+Можно добавить префикс ко всем именам полей, возвращаемым запросом `<query>`, указав нужный префикс после `<query>`.  
+Например, следующий запрос добавляет префикс `app2.` ко всем полям логов из `<query>`:
 
 ```logsql
 _time:1d {app="app1"} | stats by (user) count() app1_hits
@@ -39,16 +38,15 @@ _time:1d {app="app1"} | stats by (user) count() app1_hits
   ) prefix "app2."
 ```
 
-**Performance tips**:
+**Советы по производительности**:
 
-- Make sure that the `<query>` in the `join` pipe returns relatively small number of results, since they are kept in RAM during execution of `join` pipe.
-- [Conditional `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) is usually faster to execute.
-  They usually require less RAM than the equivalent `join` pipe.
+- Убедитесь, что запрос `<query>` в трубе `join` возвращает относительно небольшое число результатов, поскольку они хранятся в оперативной памяти (RAM) во время выполнения трубы `join`.
+- [Условные `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) обычно выполняются быстрее.  
+  Как правило, они требуют меньше оперативной памяти, чем эквивалентная труба `join`.
 
-See also:
+См. также:
 
-- [subquery filter](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter)
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [conditional `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters)
-- [`filter` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe)
-
+- [фильтр подзапроса](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter)
+- [труба `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
+- [условные `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters)
+- [труба `filter`](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe)

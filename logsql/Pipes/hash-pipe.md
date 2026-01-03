@@ -1,16 +1,18 @@
-### hash pipe
+### Конвейер `hash`
 
-`<q> | hash(field) as result_field` calculates hash value for the given [`field`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-and stores it into the `result_field`, for every log entry returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+Конструкция  
+```
+<q> | hash(поле) as результирующее_поле
+```  
+вычисляет хеш‑значение для указанного поля [`поле`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) и сохраняет его в поле `результирующее_поле` для каждой записи журнала, возвращённой запросом `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
 
-For example, the following query calculates the hash value over `user_id` field and stores it into `user_id_hash` field, across logs for the last 5 minutes:
+Например, следующий запрос вычисляет хеш‑значение для поля `user_id` и сохраняет его в поле `user_id_hash` для журналов за последние 5 минут:
 
 ```logsql
 _time:5m | hash(user_id) as user_id_hash
 ```
 
-See also:
+См. также:
 
-- [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
-- [`filter` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe)
-
+- конвейер [`math`](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe);
+- конвейер [`filter`](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe).
