@@ -1,13 +1,14 @@
-### stats pipe
+### Пайп `stats`
 
-The `<q> | stats ...` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) calculates various stats over the logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
-For example, the following LogsQL query uses [`count` stats function](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats) for calculating the number of logs for the last 5 minutes:
+Пайп `<q> | stats ...` вычисляет различные статистики по логам, возвращаемым запросом `<q>` ([синтаксис запроса](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax)).
+
+Например, следующий запрос LogsQL использует функцию статистики [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats) для подсчёта количества логов за последние 5 минут:
 
 ```logsql
 _time:5m | stats count() as logs_total
 ```
 
-The `| stats ...` pipe has the following basic format:
+Пайп `| stats ...` имеет следующий базовый формат:
 
 ```logsql
 ... | stats
@@ -16,51 +17,51 @@ The `| stats ...` pipe has the following basic format:
   stats_funcN(...) as result_nameN
 ```
 
-Where `stats_func*` is any of the supported [stats function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions), while the `result_name*` is the name of the log field
-to store the result of the corresponding stats function. The `as` keyword is optional.
+Где `stats_func*` — любая из поддерживаемых [функций статистики](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions), а `result_name*` — имя поля лога, в которое будет записан результат соответствующей функции. Ключевое слово `as` является необязательным.
 
-For example, the following query calculates the following stats for logs over the last 5 minutes:
+Например, следующий запрос вычисляет следующие статистики по логам за последние 5 минут:
 
-- the number of logs with the help of [`count` stats function](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats);
-- the number of unique [log streams](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) with the help of [`count_uniq` stats function](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats):
+* количество логов с помощью функции [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats);
+* количество уникальных [потоков логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) с помощью функции [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats):
 
 ```logsql
 _time:5m | stats count() logs_total, count_uniq(_stream) streams_total
 ```
 
-It is allowed omitting `stats` prefix for convenience. So the following query is equivalent to the previous one:
+Для удобства допускается опускать префикс `stats`. Следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | count() logs_total, count_uniq(_stream) streams_total
 ```
 
-It is allowed omitting the result name. In this case the result name equals the string representation of the used [stats function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions).
-For example, the following query returns the same stats as the previous one, but gives `count()` and `count_uniq(_stream)` names for the returned fields:
+Также допускается опускать имя результата. В этом случае имя результата будет равно строковому представлению используемой функции статистики. Например, следующий запрос возвращает те же статистики, что и предыдущий, но использует имена `count()` и `count_uniq(_stream)` для возвращаемых полей:
 
 ```logsql
 _time:5m | count(), count_uniq(_stream)
 ```
 
-See also:
+См. также:
 
-- [stats pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-- [stats by fields](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-fields)
-- [stats by time buckets](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets)
-- [stats by time buckets with timezone offset](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets-with-timezone-offset)
-- [stats by field buckets](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-field-buckets)
-- [stats by IPv4 buckets](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-ipv4-buckets)
-- [stats with additional filters](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters)
-- [`running_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
-- [`total_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
-- [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
-- [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-- [`uniq` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe)
-- [`top` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
-- [`join` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)
+* [функции пайпа `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
+* [статистика по полям](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-fields)
+* [статистика по временным бакетам](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets)
+* [статистика по временным бакетам с учётом смещения часового пояса](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets-with-timezone-offset)
+* [статистика по бакетам полей](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-field-buckets)
+* [статистика по IPv4-бакетам](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-ipv4-buckets)
+* [статистика с дополнительными фильтрами](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters)
+* [`running_stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
+* [`total_stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
+* [`math` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
+* [`sort` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
+* [`uniq` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe)
+* [`top` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
+* [`join` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)
 
-#### Stats by fields
+---
 
-The following LogsQL syntax can be used for calculating independent stats per group of log fields:
+### Статистика по полям
+
+Следующий синтаксис LogsQL может использоваться для вычисления независимых статистик по группам полей логов:
 
 ```logsql
 <q> | stats by (field1, ..., fieldM)
@@ -69,33 +70,33 @@ The following LogsQL syntax can be used for calculating independent stats per gr
   stats_funcN(...) as result_nameN
 ```
 
-This calculates `stats_func*` for each `(field1, ..., fieldM)` group of [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-seen in the logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+Это вычисляет `stats_func*` для каждой группы `(field1, ..., fieldM)` [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), встречающихся в логах, возвращаемых запросом `<q>`.
 
-For example, the following query calculates the number of logs and unique IP addresses over the last 5 minutes,
-grouped by `(host, path)` fields:
+Например, следующий запрос вычисляет количество логов и количество уникальных IP-адресов за последние 5 минут, сгруппированных по полям `(host, path)`:
 
 ```logsql
 _time:5m | stats by (host, path) count() logs_total, count_uniq(ip) ips_total
 ```
 
-The `by` keyword can be skipped in `stats ...` pipe. For example, the following query is equivalent to the previous one:
+Ключевое слово `by` может быть опущено в пайпе `stats`. Например, следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | stats (host, path) count() logs_total, count_uniq(ip) ips_total
 ```
 
-See also:
+См. также:
 
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-- [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats)
-- [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
-- [`row_any`](https://docs.victoriametrics.com/victorialogs/logsql/#row_any-stats)
+* [`stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
+* [функции `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
+* [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats)
+* [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
+* [`row_any`](https://docs.victoriametrics.com/victorialogs/logsql/#row_any-stats)
 
-#### Stats by time buckets
+---
 
-The following syntax can be used for calculating stats grouped by time buckets:
+### Статистика по временным бакетам
+
+Следующий синтаксис может использоваться для вычисления статистики, сгруппированной по временным интервалам:
 
 ```logsql
 <q> | stats by (_time:step)
@@ -104,16 +105,15 @@ The following syntax can be used for calculating stats grouped by time buckets:
   stats_funcN(...) as result_nameN
 ```
 
-This calculates `stats_func*` for each `step` of the [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) field
-across logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax). The `step` can have any [duration value](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-For example, the following LogsQL query returns per-minute number of logs and unique IP addresses over the last 5 minutes:
+Это вычисляет `stats_func*` для каждого шага `step` поля [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) по логам, возвращаемым запросом `<q>`. Значение `step` может быть любым [значением длительности](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
+
+Например, следующий запрос возвращает поминутное количество логов и уникальных IP-адресов за последние 5 минут:
 
 ```logsql
 _time:5m | stats by (_time:1m) count() logs_total, count_uniq(ip) ips_total
 ```
 
-It might be useful to calculate running stats over the calculated per-time bucket stats, with the help of [`running_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe).
-For example, the following query adds the running number of logs to the `running_hits` field for the query above:
+Часто бывает полезно вычислять накопительные статистики поверх статистик по временным бакетам с помощью пайпа [`running_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe). Например, следующий запрос добавляет накопительное количество логов в поле `running_hits`:
 
 ```logsql
 _time:5m
@@ -121,9 +121,7 @@ _time:5m
     | running_stats sum(hits) as running_hits
 ```
 
-It might be useful to calculate total stats over the calculated per-time bucket stats, with the help of [`total_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe).
-For example, the following query adds the total number of logs into `total_hits` field and then uses this field for calculating the per-minute percentage of hits
-with the [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe):
+Также может быть полезно вычислять итоговые статистики поверх временных бакетов с помощью пайпа [`total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe). Например, следующий запрос добавляет общее количество логов в поле `total_hits`, а затем использует это поле для вычисления поминутного процента запросов с помощью пайпа [`math`](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe):
 
 ```logsql
 _time:5m
@@ -132,84 +130,66 @@ _time:5m
     | math round((hits / total_hits)*100) as hits_percent
 ```
 
-Additionally, the following `step` values are supported:
+Дополнительно поддерживаются следующие значения `step`:
 
-- `nanosecond` - equals `1ns` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `microsecond` - equals `1µs` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `millisecond` - equals `1ms` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `second` - equals `1s` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `minute` - equals `1m` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `hour` - equals `1h` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `day` - equals `1d` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `week` - equals `1w` [duration](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-- `month` - equals one month. It properly takes into account the number of days in each month.
-- `year` - equals one year. It properly takes into account the number of days in each year.
+* `nanosecond` — равно `1ns`
+* `microsecond` — равно `1µs`
+* `millisecond` — равно `1ms`
+* `second` — равно `1s`
+* `minute` — равно `1m`
+* `hour` — равно `1h`
+* `day` — равно `1d`
+* `week` — равно `1w`
+* `month` — равно одному месяцу с учётом количества дней
+* `year` — равно одному году с учётом количества дней
 
-See also:
+---
 
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-- [`running_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
-- [`total_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
-- [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
+### Статистика по временным бакетам с учётом часового пояса
 
-#### Stats by time buckets with timezone offset
-
-VictoriaLogs stores [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) values as [Unix time](https://en.wikipedia.org/wiki/Unix_time)
-in nanoseconds. This time corresponds to [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) time zone. Sometimes it is needed calculating stats
-grouped by days or weeks at non-UTC timezone. This is possible with the following syntax:
+VictoriaLogs хранит значения [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) как Unix-время в наносекундах, соответствующее часовому поясу UTC. Иногда требуется вычислять статистику, сгруппированную по дням или неделям в часовом поясе, отличном от UTC. Это возможно с помощью следующего синтаксиса:
 
 ```logsql
 <q> | stats by (_time:step offset timezone_offset) ...
 ```
 
-For example, the following query calculates per-day number of logs over the last week, in `UTC+02:00` [time zone](https://en.wikipedia.org/wiki/Time_zone):
+Например, следующий запрос вычисляет количество логов по дням за последнюю неделю в часовом поясе `UTC+02:00`:
 
 ```logsql
 _time:1w | stats by (_time:1d offset 2h) count() logs_total
 ```
 
-See also:
+---
 
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-- [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
+### Статистика по бакетам полей
 
-#### Stats by field buckets
+Каждое поле лога внутри `<q> | stats by (...)` может быть разбито на бакеты аналогично полю `_time`. В качестве значения `step` может использоваться любое [числовое значение](https://docs.victoriametrics.com/victorialogs/logsql/#numeric-values).
 
-Every log field inside `<q> | stats by (...)` can be bucketed in the same way as `_time` field in [this example](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets).
-Any [numeric value](https://docs.victoriametrics.com/victorialogs/logsql/#numeric-values) can be used as `step` value for the bucket. For example, the following query calculates
-the number of requests for the last hour, bucketed by 10KB of `request_size_bytes` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model):
+Например, следующий запрос вычисляет количество запросов за последний час, сгруппированных по 10 КБ поля `request_size_bytes`:
 
 ```logsql
 _time:1h | stats by (request_size_bytes:10KB) count() requests
 ```
 
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-- [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
+---
 
-#### Stats by IPv4 buckets
+### Статистика по IPv4-бакетам
 
-Stats can be bucketed by [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) containing [IPv4 addresses](https://en.wikipedia.org/wiki/IP_address)
-via the `ip_field_name:/network_mask` syntax inside `by(...)` clause. For example, the following query returns the number of log entries per `/24` subnetwork
-extracted from the `ip` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) during the last 5 minutes:
+Статистика может быть сгруппирована по [полю лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), содержащему IPv4-адреса, с помощью синтаксиса `ip_field_name:/network_mask` внутри `by(...)`.
+
+Например, следующий запрос возвращает количество логов по подсетям `/24`, извлечённым из поля `ip`, за последние 5 минут:
 
 ```logsql
 _time:5m | stats by (ip:/24) count() requests_per_subnet
 ```
 
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-- [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
-- [`ipv4_range` filter](https://docs.victoriametrics.com/victorialogs/logsql/#ipv4-range-filter)
+---
 
-#### Stats with additional filters
+### Статистика с дополнительными фильтрами
 
-Sometimes it is needed to calculate [stats](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe) on different subsets of matching logs. This can be done by inserting an `if (<any_filters>)` condition
-between the [stats function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) and `result_name`, where `any_filters` can contain arbitrary [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
-For example, the following query calculates individually the number of [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-with `GET`, `POST` and `PUT` [words](https://docs.victoriametrics.com/victorialogs/logsql/#word), additionally to the total number of logs over the last 5 minutes:
+Иногда требуется вычислять статистику по разным подмножествам подходящих логов. Это можно сделать, вставив условие `if (<any_filters>)` между функцией статистики и именем результата. В `any_filters` могут использоваться произвольные [фильтры](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+
+Например, следующий запрос отдельно вычисляет количество сообщений логов со словами `GET`, `POST` и `PUT`, а также общее количество логов за последние 5 минут:
 
 ```logsql
 _time:5m | stats
@@ -219,11 +199,10 @@ _time:5m | stats
   count() total
 ```
 
-If zero input rows match the given `if (...)` filter, then zero result is returned for the given stats function.
+Если ни одна входная строка не соответствует фильтру `if (...)`, то для соответствующей функции статистики будет возвращено значение `0`.
 
-See also:
+См. также:
 
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`stats` pipe functions](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-- [`join` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)
-
+* [`stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
+* [функции `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
+* [`join` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)

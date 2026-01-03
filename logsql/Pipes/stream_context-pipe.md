@@ -1,38 +1,36 @@
-### stream_context pipe
+### Конвейер `stream_context`
 
-`<q> | stream_context ...` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) allows selecting surrounding logs in a [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields)
-across the logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) in the way similar to `grep -A` / `grep -B`.
-The returned log chunks are delimited with `---` [log message](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) for easier investigation.
+Конвейер `| stream_context ...` в выражении `<q> | stream_context ...` позволяет выбирать окружающие записи логов в рамках одного [потока логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) среди логов, возвращённых [запросом](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>`, аналогично `grep -A` / `grep -B`.
 
-For example, the following query returns up to 10 additional logs after every log message with the `panic` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) across all the logs for the last 5 minutes:
+Возвращаемые фрагменты логов разделяются сообщением `---` (см. поле [log message](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)) для более удобного анализа.
+
+Например, следующий запрос возвращает до 10 дополнительных логов **после** каждого сообщения, содержащего [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) `panic`, среди всех логов за последние 5 минут:
 
 ```logsql
 _time:5m panic | stream_context after 10
 ```
 
-The following query returns up to 5 additional logs in front of every log message with the `stacktrace` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) across all the logs for the last 5 minutes:
+Следующий запрос возвращает до 5 дополнительных логов **перед** каждым сообщением, содержащим слово `stacktrace`, среди всех логов за последние 5 минут:
 
 ```logsql
 _time:5m stacktrace | stream_context before 5
 ```
 
-The following query returns up to 2 logs in front of the log message with the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) and up to 5 logs after this log message
-across all the logs for the last 5 minutes:
+Следующий запрос возвращает до 2 логов **перед** сообщением, содержащим слово `error`, и до 5 логов **после** этого сообщения среди всех логов за последние 5 минут:
 
 ```logsql
 _time:5m error | stream_context before 2 after 5
 ```
 
-By default `stream_context` pipe looks for surrounding logs in a one-hour window. This window can be changed via the `time_window` option at query time.
-For example, the following query searches for surrounding logs in a one-week window:
+По умолчанию конвейер `stream_context` ищет окружающие логи в окне длительностью один час. Это окно можно изменить во время выполнения запроса с помощью опции `time_window`.
+Например, следующий запрос ищет окружающие логи в окне длительностью одну неделю:
 
 ```logsql
 _time:5m error | stream_context before 10 time_window 1w
 ```
 
-The `| stream_context` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) must go first just after the [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+Конвейер `| stream_context` должен располагаться первым — сразу после [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
 
-See also:
+См. также:
 
-- [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)
-
+* [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)
