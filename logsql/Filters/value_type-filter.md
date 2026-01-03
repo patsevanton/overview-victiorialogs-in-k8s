@@ -1,18 +1,17 @@
-### value_type filter
+### Фильтр `value_type`
 
-VictoriaLogs automatically detects types for the ingested [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) and stores log field values
-according to the detected type (such as `const`, `dict`, `string`, `int64`, `float64`, etc.). Value types for stored fields can be obtained via [`block_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe).
+VictoriaLogs автоматически определяет типы для загружаемых [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) и сохраняет значения полей логов в соответствии с обнаруженным типом (например, `const`, `dict`, `string`, `int64`, `float64` и т. д.). Типы значений для сохранённых полей можно получить с помощью конвейера [`block_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe).
 
-Sometimes it is needed to select logs with fields of a particular value type. Then `value_type(type)` filter can be used.
-For example, the following filter selects logs where `user_id` field values are stored as `uint64` type:
+Иногда требуется выбрать логи с полями определённого типа значения. В этом случае можно использовать фильтр `value_type(type)`.
+
+Например, следующий фильтр выбирает логи, в которых значения поля `user_id` хранятся как тип `uint64`:
 
 ```logsql
 user_id:value_type(uint64)
 ```
 
-See also:
+См. также:
 
-- [`block_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe)
-- [`query_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
-
+- конвейер [`block_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe);
+- конвейер [`query_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe);
+- [логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).

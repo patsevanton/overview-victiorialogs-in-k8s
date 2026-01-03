@@ -1,73 +1,73 @@
-### Time filter
+### Фильтр по времени
 
-VictoriaLogs scans all the logs for each query if it doesn't contain the filter on the [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
-It uses various optimizations in order to accelerate full scan queries without the `_time` filter,
-but such queries can be slow if the storage contains large number of logs over long time range. The easiest way to optimize queries
-is to narrow down the search with the filter on [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
+VictoriaLogs сканирует **все** логи для каждого запроса, если в нём отсутствует фильтр по полю [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
 
-For example, the following query returns logs ingested into VictoriaLogs during the last hour, which contain the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word)
-at the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+Для ускорения запросов с полным сканированием (без фильтра `_time`) система использует различные оптимизации. Однако такие запросы могут выполняться медленно, если в хранилище содержится большое количество логов за длительный промежуток времени.
+
+Самый простой способ оптимизировать запросы — сузить область поиска с помощью фильтра по полю [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
+
+Например, следующий запрос вернёт логи, поступившие в VictoriaLogs за последний час и содержащие слово `error` в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
 ```logsql
 _time:1h AND error
 ```
 
-The following formats are supported for `_time` filter:
+## Поддерживаемые форматы фильтра `_time`
 
-- `_time:duration` matches logs with timestamps on the time range `(now-duration, now]`, where `duration` can have [these values](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values). Examples:
-  - `_time:5m` - returns logs for the last 5 minutes
-  - `_time:2.5d15m42.345s` - returns logs for the last 2.5 days, 15 minutes and 42.345 seconds
-  - `_time:1y` - returns logs for the last year
-- `_time:>duration` - matches logs with timestamps older than `now-duration`.
-- `_time:YYYY-MM-DDZ` - matches all the logs for the particular day by UTC. For example, `_time:2023-04-25Z` matches logs on April 25, 2023 by UTC.
-- `_time:YYYY-MMZ` - matches all the logs for the particular month by UTC. For example, `_time:2023-02Z` matches logs on February, 2023 by UTC.
-- `_time:YYYYZ` - matches all the logs for the particular year by UTC. For example, `_time:2023Z` matches logs on 2023 by UTC.
-- `_time:YYYY-MM-DDTHHZ` - matches all the logs for the particular hour by UTC. For example, `_time:2023-04-25T22Z` matches logs on April 25, 2023 at 22 hour by UTC.
-- `_time:YYYY-MM-DDTHH:MMZ` - matches all the logs for the particular minute by UTC. For example, `_time:2023-04-25T22:45Z` matches logs on April 25, 2023 at 22:45 by UTC.
-- `_time:YYYY-MM-DDTHH:MM:SSZ` - matches all the logs for the particular second by UTC. For example, `_time:2023-04-25T22:45:59Z` matches logs on April 25, 2023 at 22:45:59 by UTC.
-- `_time:>min_time` - matches logs with timestamps bigger than the `min_time`.
-- `_time:>=min_time` - matches logs with timestamps bigger or equal to the `min_time`.
-- `_time:<max_time` - matches logs with timestamps smaller than the `max_time`.
-- `_time:<=max_time` - matches logs with timestamps smaller or equal to the `max_time`.
-- `_time:[min_time, max_time]` - matches logs on the time range `[min_time, max_time]`, including both `min_time` and `max_time`.
-    The `min_time` and `max_time` can contain any format specified [here](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#timestamp-formats).
-    For example, `_time:[2023-04-01Z, 2023-04-30Z]` matches logs for the whole April, 2023 by UTC, e.g. it is equivalent to `_time:2023-04Z`.
-- `_time:[min_time, max_time)` - matches logs on the time range `[min_time, max_time)`, not including `max_time`.
-    The `min_time` and `max_time` can contain any format specified [here](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#timestamp-formats).
-    For example, `_time:[2023-02-01Z, 2023-03-01Z)` matches logs for the whole February, 2023 by UTC, e.g. it is equivalent to `_time:2023-02Z`.
+- `_time:duration` — выбирает логи с временными метками в диапазоне `(сейчас − duration, сейчас]`, где `duration` может принимать [следующие значения](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values). Примеры:
+  - `_time:5m` — логи за последние 5 минут;
+  - `_time:2.5d15m42.345s` — логи за последние 2,5 дня, 15 минут и 42,345 секунды;
+  - `_time:1y` — логи за последний год.
+- `_time:>duration` — логи с временными метками старше, чем `сейчас − duration`.
+- `_time:YYYY-MM-DDZ` — все логи за конкретный день по UTC. Например, `_time:2023-04-25Z` — логи за 25 апреля 2023 года по UTC.
+- `_time:YYYY-MMZ` — все логи за конкретный месяц по UTC. Например, `_time:2023-02Z` — логи за февраль 2023 года по UTC.
+- `_time:YYYYZ` — все логи за конкретный год по UTC. Например, `_time:2023Z` — логи за 2023 год по UTC.
+- `_time:YYYY-MM-DDTHHZ` — все логи за конкретный час по UTC. Например, `_time:2023-04-25T22Z` — логи за 22-й час 25 апреля 2023 года по UTC.
+- `_time:YYYY-MM-DDTHH:MMZ` — все логи за конкретную минуту по UTC. Например, `_time:2023-04-25T22:45Z` — логи за 22:45 25 апреля 2023 года по UTC.
+- `_time:YYYY-MM-DDTHH:MM:SSZ` — все логи за конкретную секунду по UTC. Например, `_time:2023-04-25T22:45:59Z` — логи за 22:45:59 25 апреля 2023 года по UTC.
+- `_time:>min_time` — логи с временными метками больше, чем `min_time`.
+- `_time:>=min_time` — логи с временными метками больше или равны `min_time`.
+- `_time:<max_time` — логи с временными метками меньше, чем `max_time`.
+- `_time:<=max_time` — логи с временными метками меньше или равны `max_time`.
+- `_time:[min_time, max_time]` — логи в диапазоне `[min_time, max_time]`, включая обе границы.  
+  `min_time` и `max_time` могут быть в любом формате, указанном [здесь](https://docs.victoriametrics.com/victoriametrics/single-server-victoriametrics/#timestamp-formats).  
+  Например, `_time:[2023-04-01Z, 2023-04-30Z]` — логи за весь апрель 2023 года по UTC (эквивалентно `_time:2023-04Z`).
+- `_time:[min_time, max_time)` — логи в диапазоне `[min_time, max_time)`, не включая `max_time`.  
+  Например, `_time:[2023-02-01Z, 2023-03-01Z)` — логи за весь февраль 2023 года по UTC (эквивалентно `_time:2023-02Z`).
 
-It is possible to specify time zone offset for all the absolute time formats by appending `+hh:mm` or `-hh:mm` suffix.
-For example, `_time:2023-04-25+05:30` matches all the logs on April 25, 2023 by India time zone,
-while `_time:2023-02-07:00` matches all the logs on February, 2023 by California time zone.
+## Указание часового пояса
 
-If the timezone offset information is missing, then the local time zone of the host where VictoriaLogs runs is used.
-For example, `_time:2023-10-20` matches all the logs for `2023-10-20` day according to the local time zone of the host where VictoriaLogs runs.
+Для всех форматов абсолютного времени можно указать смещение часового пояса, добавив суффикс `+hh:mm` или `-hh:mm`.
 
-It is possible to specify generic offset for the selected time range by appending `offset` after the `_time` filter. Examples:
+- `_time:2023-04-25+05:30` — логи за 25 апреля 2023 года по часовому поясу Индии (+05:30).
+- `_time:2023-02-07:00` — логи за февраль 2023 года по часовому поясу Калифорнии (−07:00).
 
-- `_time:offset 1h` matches logs until `now-1h`.
-- `_time:5m offset 1h` matches logs on the time range `(now-1h5m, now-1h]`.
-- `_time:2023-07Z offset 5h30m` matches logs on July, 2023 by UTC with offset 5h30m.
-- `_time:[2023-02-01Z, 2023-03-01Z) offset 1w` matches logs the week before the time range `[2023-02-01Z, 2023-03-01Z)` by UTC.
+Если смещение часового пояса не указано, используется локальный часовой пояс хоста, на котором работает VictoriaLogs.  
+Например, `_time:2023-10-20` — логи за 20 октября 2023 года по локальному времени хоста.
 
-See also [`time_offset` option](https://docs.victoriametrics.com/victorialogs/logsql/#query-options), which allows applying the given offset to all the filters on `_time` field without the need to modify the query.
+## Смещение диапазона времени
 
-See also [`time_add` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#time_add-pipe), which allows adding the given duration to the given log field.
+Можно указать общее смещение для выбранного диапазона времени, добавив `offset` после фильтра `_time`. Примеры:
 
-Performance tips:
+- `_time:offset 1h` — логи до `сейчас − 1ч`.
+- `_time:5m offset 1h` — логи в диапазоне `(сейчас − 1ч 5м, сейчас − 1ч]`.
+- `_time:2023-07Z offset 5h30m` — логи за июль 2023 года по UTC со смещением +5ч 30м.
+- `_time:[2023-02-01Z, 2023-03-01Z) offset 1w` — логи за неделю до диапазона `[2023-02-01Z, 2023-03-01Z)` по UTC.
 
-- It is recommended to specify the smallest possible time range during the search, since it reduces the amount of log entries that need to be scanned during the query.
-  For example, `_time:1h` is usually faster than `_time:5h`.
+Смотрите также:
+- опцию [`time_offset`](https://docs.victoriametrics.com/victorialogs/logsql/#query-options) — позволяет применить заданное смещение ко всем фильтрам по полю `_time` без изменения запроса;
+- конвейер [`time_add`](https://docs.victoriametrics.com/victorialogs/logsql/#time_add-pipe) — позволяет добавить заданную длительность к указанному полю лога.
 
-- While LogsQL supports arbitrary number of `_time:...` filters at any level of [logical filters](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter),
-  it is recommended specifying a single `_time` filter at the top level of the query.
+## Советы по производительности
 
-- See [other performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+- Рекомендуется указывать **наименьший возможный** диапазон времени при поиске — это сокращает объём логов, которые нужно просканировать.  
+  Например, `_time:1h` обычно выполняется быстрее, чем `_time:5h`.
+- Хотя LogsQL поддерживает произвольное количество фильтров `_time:...` на любом уровне [логических фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter), рекомендуется указывать **один** фильтр `_time` на верхнем уровне запроса.
+- Смотрите также [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-See also:
+## См. также
 
-- [Day range filter](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter)
-- [Week range filter](https://docs.victoriametrics.com/victorialogs/logsql/#week-range-filter)
-- [Stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)
-- [Word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-
+- [Фильтр по дню](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter)
+- [Фильтр по неделе](https://docs.victoriametrics.com/victorialogs/logsql/#week-range-filter)
+- [Фильтр по потоку](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)
+- [Фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)

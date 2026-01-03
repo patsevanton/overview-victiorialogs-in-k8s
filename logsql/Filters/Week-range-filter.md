@@ -1,52 +1,56 @@
-### Week range filter
+### Фильтр диапазона дней недели
 
-`_time:week_range[start, end]` filter allows returning logs on the particular `start ... end` days for each week, where `start` and `end` can have the following values:
+Фильтр `_time:week_range[start, end]` позволяет возвращать логи за определённые дни недели в диапазоне `start … end`, где `start` и `end` могут принимать следующие значения:
 
-- `Sun` or `Sunday`
-- `Mon` or `Monday`
-- `Tue` or `Tuesday`
-- `Wed` or `Wednesday`
-- `Thu` or `Thursday`
-- `Fri` or `Friday`
-- `Sat` or `Saturday`
+- `Sun` или `Sunday` (воскресенье);
+- `Mon` или `Monday` (понедельник);
+- `Tue` или `Tuesday` (вторник);
+- `Wed` или `Wednesday` (среда);
+- `Thu` или `Thursday` (четверг);
+- `Fri` или `Friday` (пятница);
+- `Sat` или `Saturday` (суббота).
 
-For example, the following query matches logs between Monday and Friday UTC every day:
+**Пример:** следующий запрос выбирает логи с понедельника по пятницу (включительно) каждый день в часовом поясе UTC:
 
 ```logsql
 _time:week_range[Mon, Fri]
 ```
 
-This query includes Monday and Friday.
-Replace `[` with `(` in order to exclude the starting day. Replace `]` with `)` in order to exclude the ending day.
-For example, the following query matches logs between Sunday and Saturday, excluding Sunday and Saturday (e.g. it is equivalent to the previous query):
+Этот запрос включает понедельник и пятницу.
+
+Чтобы **исключить начальный день**, замените `[` на `(`; чтобы **исключить конечный день**, замените `]` на `)`.
+
+**Пример:** следующий запрос выбирает логи с воскресенья по субботу, **исключая** воскресенье и субботу (т. е. эквивалентен предыдущему запросу):
 
 ```logsql
 _time:week_range(Sun, Sat)
 ```
 
-If the day range must be applied to other than UTC time zone, then add `offset <duration>`, where `<duration>` can have [any supported duration value](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
-For example, the following query selects logs between Monday and Friday at `+0200` time zone:
+Если диапазон дней нужно применить к часовому поясу, отличному от UTC, добавьте `offset <duration>`, где `<duration>` может иметь любое поддерживаемое значение длительности (см. [значения длительности](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values)).
+
+**Пример:** следующий запрос выбирает логи с понедельника по пятницу в часовом поясе `+02:00`:
 
 ```logsql
 _time:week_range[Mon, Fri] offset 2h
 ```
 
-The `week_range` filter can be combined with [`day_range` filter](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter) using [logical filters](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter). For example, the following query
-selects logs between `08:00` and `18:00` every day of the week excluding Sunday and Saturday:
+Фильтр `week_range` можно комбинировать с фильтром [`day_range`](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter) с помощью [логических фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
+
+**Пример:** следующий запрос выбирает логи с `08:00` до `18:00` каждый день недели, исключая воскресенье и субботу:
 
 ```logsql
 _time:week_range[Mon, Fri] _time:day_range[08:00, 18:00)
 ```
 
-Performance tip: it is recommended to specify a regular [time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) additionally to the `week_range` filter. For example, the following query selects logs
-between Monday and Friday for each week over the last 4 weeks:
+**Совет по производительности:** рекомендуется дополнительно указывать обычный [фильтр времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) вместе с фильтром `week_range`.
+
+**Пример:** следующий запрос выбирает логи с понедельника по пятницу для каждой недели за последние 4 недели:
 
 ```logsql
 _time:4w _time:week_range[Mon, Fri]
 ```
 
-See also:
+См. также:
 
-- [Day range filter](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter)
-- [Time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter)
-
+- [Фильтр диапазона дней](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter);
+- [Фильтр времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter).
