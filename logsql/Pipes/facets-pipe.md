@@ -1,44 +1,38 @@
-### facets pipe
+### Конвейер `facets`
 
-`<q> | facets` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns the most frequent values for every seen [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax). It also returns an estimated number of hits for every returned `field=value` pair.
+Конвейер `<q> | facets` возвращает **наиболее частые значения** для каждого встреченного [поля лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), полученного по запросу `<q>`. Также он выдаёт **оценку числа попаданий** (hits) для каждой пары `поле=значение`.
 
-For example, the following query returns the most frequent values for every seen log field across logs with the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) over the last hour:
+**Пример:** следующий запрос возвращает наиболее частые значения для всех полей логов, содержащих слово `error`, за последний час:
 
 ```logsql
 _time:1h error | facets
 ```
 
-It is possible to specify the number of most frequently seen values to return for each log field by using the `facets N` syntax. For example,
-the following query returns up to 3 most frequently seen values for each field across logs with the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) over the last hour:
+Можно указать **количество наиболее частых значений**, которые нужно вернуть для каждого поля лога, используя синтаксис `facets N`. Например, следующий запрос вернёт **до 3 наиболее частых значений** для каждого поля в логах с словом `error` за последний час:
 
 ```logsql
 _time:1h error | facets 3
 ```
 
-By default `facets` pipe doesn't return log fields with too many unique values, since this may require a lot of additional memory to track.
-The limit can be changed during the query via `max_values_per_field M` suffix. For example, the following query returns up to 15 most frequently seen
-field values across fields with up to 100000 unique values:
+По умолчанию конвейер `facets` **не возвращает поля логов с слишком большим числом уникальных значений** — это может потребовать значительного объёма дополнительной памяти для отслеживания. Лимит можно изменить в запросе с помощью суффикса `max_values_per_field M`. Например, следующий запрос вернёт до 15 наиболее частых значений полей, содержащих **не более 100 000 уникальных значений**:
 
 ```logsql
 _time:1h error | facets 15 max_values_per_field 100000
 ```
 
-By default `facets` pipe doesn't return log fields with too long values. The limit can be changed during query via `max_value_len K` suffix.
-For example, the following query returns the most frequent values for all the log fields containing values no longer than 100 bytes:
+По умолчанию `facets` **не возвращает поля логов со слишком длинными значениями**. Лимит можно изменить в запросе с помощью суффикса `max_value_len K`. Например, следующий запрос вернёт наиболее частые значения для всех полей логов, содержащих значения **не длиннее 100 байт**:
 
 ```logsql
 _time:1h error | facets max_value_len 100
 ```
 
-By default `facets` pipe doesn't return log fields, which contain a single constant value across all the selected logs, since such facets aren't interesting in most cases.
-Add `keep_const_fields` suffix to the `facets` pipe in order to get such fields:
+По умолчанию `facets` **не возвращает поля, содержащие единственное постоянное значение** во всех выбранных логах — такие фасеты в большинстве случаев не представляют интереса. Чтобы включить такие поля, добавьте суффикс `keep_const_fields`:
 
 ```logsql
 _time:1h error | facets keep_const_fields
 ```
 
-See also:
+**См. также:**
 
 - [`top`](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
 - [`field_names`](https://docs.victoriametrics.com/victorialogs/logsql/#field_names-pipe)
