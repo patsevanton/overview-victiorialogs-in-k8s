@@ -1,26 +1,25 @@
-### block_stats pipe
+### Конвейер `block_stats`
 
-`<q> | block_stats` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns the following stats for each field in every data block
-processed by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax):
+Конвейер `<q> | block_stats` ([конвейеры](https://docs.victoriametrics.com/victorialogs/logsql/#pipes)) возвращает следующую статистику для каждого поля в каждом блоке данных, обработанном запросом `<q>` ([синтаксис запросов](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax)):
 
-- `field` - [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) name
-- `rows` - the number of rows at the given `field`
-- `type` - internal storage type for the given `field`
-- `values_bytes` - on-disk size of the data for the given `field`
-- `bloom_bytes` - on-disk size of bloom filter data for the given `field`
-- `dict_bytes` - on-disk size of the dictionary data for the given `field`
-- `dict_items` - the number of unique values in the dictionary for the given `field`
-- `_stream` - the [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) for the given `field`
-- `part_path` - the path to the data part where the field data is stored
+- `field` — имя [поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model);
+- `rows` — количество строк для данного поля `field`;
+- `type` — внутренний тип хранения для данного поля `field`;
+- `values_bytes` — размер данных для данного поля `field` на диске;
+- `bloom_bytes` — размер данных фильтра Блума для данного поля `field` на диске;
+- `dict_bytes` — размер словарных данных для данного поля `field` на диске;
+- `dict_items` — количество уникальных значений в словаре для данного поля `field`;
+- `_stream` — [поток логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) для данного поля `field`;
+- `part_path` — путь к части данных, где хранятся данные поля.
 
-The `block_stats` pipe is needed mostly for debugging purposes.
-See, for example, [how to detect which log field occupies the most of the disk space](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space),
-or [how to detect which log stream occupies the most of the disk space](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-streams-occupy-the-most-of-disk-space).
+Конвейер `block_stats` в основном нужен для отладки.  
+Например, см.:
+- [как определить, какое поле логов занимает больше всего места на диске](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space);
+- [как определить, какой поток логов занимает больше всего места на диске](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-streams-occupy-the-most-of-disk-space).
 
-See also:
+См. также:
 
-- [`query_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe)
-- [`value_type` filter](https://docs.victoriametrics.com/victorialogs/logsql/#value_type-filter)
-- [`blocks_count` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#blocks_count-pipe)
-- [`len` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe)
-
+- конвейер [`query_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe);
+- фильтр [`value_type`](https://docs.victoriametrics.com/victorialogs/logsql/#value_type-filter);
+- конвейер [`blocks_count`](https://docs.victoriametrics.com/victorialogs/logsql/#blocks_count-pipe);
+- конвейер [`len`](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe).

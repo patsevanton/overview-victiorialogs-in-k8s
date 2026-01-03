@@ -1,64 +1,75 @@
-### collapse_nums pipe
+## Конвейер `collapse_nums`
 
-`<q> | collapse_nums at <field>` pipe replaces all the decimal and hexadecimal numbers at the given [`<field>`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-returned by the `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) with `<N>` placeholder.
-For example, if the `_msg` field contains `2024-10-20T12:34:56Z request duration 1.34s`, then it is replaced with `<N>-<N>-<N>T<N>:<N>:<N>Z request duration <N>.<N>s` by the following query:
+Конвейер `<q> | collapse_nums at <field>` заменяет все десятичные и шестнадцатеричные числа в указанном поле [`<field>`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), возвращаемом запросом `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), на заполнитель `<N>`.
+
+**Пример:** если поле `_msg` содержит строку `2024-10-20T12:34:56Z request duration 1.34s`, то после выполнения следующего запроса:
 
 ```logsql
 _time:5m | collapse_nums at _msg
 ```
 
-The `at ...` suffix can be omitted if `collapse_nums` is applied to [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) field.
-The following query is equivalent to the previous one:
+она будет преобразована в `<N>-<N>-<N>T<N>:<N>:<N>Z request duration <N>.<N>s`.
+
+Суффикс `at ...` можно опустить, если `collapse_nums` применяется к полю [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field). Следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | collapse_nums
 ```
 
-This functionality is useful for locating the most frequently seen log patterns across log messages with various decimal and hexadecimal numbers.
-This includes the following entities: timestamps, IP addresses, request durations, response sizes, [UUIDs](https://en.wikipedia.org/wiki/Universally_unique_identifier), trace IDs, user IDs, etc.
-Log messages with such entities become identical after applying `collapse_nums` pipe to them, so the [`top` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe) can be applied to them in order to get the most frequently
-seen patterns across log messages. For example, the following query returns top 5 the most frequently seen log patterns across log messages for the last hour:
+Эта функциональность полезна для поиска наиболее часто встречающихся шаблонов логов среди сообщений с различными числовыми значениями. К таким сущностям относятся:
+- временные метки (timestamps),
+- IP‑адреса,
+- длительность запросов (request durations),
+- размеры ответов (response sizes),
+- [UUID](https://en.wikipedia.org/wiki/Universally_unique_identifier),
+- идентификаторы трассировки (trace IDs),
+- идентификаторы пользователей (user IDs) и т. д.
+
+После применения конвейера `collapse_nums` сообщения с такими сущностями становятся идентичными, что позволяет использовать конвейер [`top`](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe) для выявления самых частых шаблонов. Например, следующий запрос возвращает **5 самых частых шаблонов** логов за последний час:
 
 ```logsql
 _time:1h | collapse_nums | top 5 by (_msg)
 ```
 
-`collapse_nums` can detect certain patterns in the collapsed numbers and replace them with the corresponding placeholders if `prettify` suffix is added to the `collapse_nums` pipe:
+### Улучшенное форматирование с `prettify`
 
-- `<N>-<N>-<N>-<N>-<N>` is replaced with `<UUID>` placeholder.
-- `<N>.<N>.<N>.<N>` is replaced with `<IP4>` placeholder.
-- `<N>:<N>:<N>` is replaced with `<TIME>` placeholder. Optional fractional seconds after the time are treated as a part of `<TIME>`.
-- `<N>-<N>-<N>` and `<N>/<N>/<N>` is replaced with `<DATE>` placeholder.
-- `<N>-<N>-<N>T<N>:<N>:<N>` and `<N>-<N>-<N> <N>:<N>:<N>` is replaced with `<DATETIME>` placeholder. Optional timezone after the datetime is treated as a part of `<DATETIME>`.
+Если к конвейеру `collapse_nums` добавить суффикс `prettify`, он сможет распознавать определённые шаблоны в сжатых числах и заменять их соответствующими заполнителями:
 
-For example, the [log message](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-`2edfed59-3e98-4073-bbb2-28d321ca71a7 - [2024/12/08 15:21:02] 10.71.20.32 GET /foo 200` is replaced with `<UUID> - [<DATETIME>] <IP4> GET /foo <N>`
-when the following query is executed:
+- `<N>-<N>-<N>-<N>-<N>` → `<UUID>`
+- `<N>.<N>.<N>.<N>` → `<IP4>`
+- `<N>:<N>:<N>` → `<TIME>` (дробные секунды опционально включаются в `<TIME>`)
+- `<N>-<N>-<N>` и `<N>/<N>/<N>` → `<DATE>`
+- `<N>-<N>-<N>T<N>:<N>:<N>` и `<N>-<N>-<N> <N>:<N>:<N>` → `<DATETIME>` (часовой пояс опционально включается в `<DATETIME>`)
+
+**Пример:** сообщение лога  
+`2edfed59-3e98-4073-bbb2-28d321ca71a7 - [2024/12/08 15:21:02] 10.71.20.32 GET /foo 200`  
+после выполнения запроса
 
 ```logsql
 _time:1h | collapse_nums prettify
 ```
 
-The patterns returned by `collapse_nums prettify` pipe can be used in [pattern match filter](https://docs.victoriametrics.com/victorialogs/logsql/#pattern-match-filter).
+преобразуется в `<UUID> - [<DATETIME>] <IP4> GET /foo <N>`.
 
-`collapse_nums` can miss some numbers or can collapse unexpected numbers. In this case [conditional `collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-collapse_nums) can be used
-for skipping such values and pre-processing them separately with [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe).
+Шаблоны, полученные с помощью `collapse_nums prettify`, можно использовать в [фильтре по шаблону](https://docs.victoriametrics.com/victorialogs/logsql/#pattern-match-filter).
 
-See also:
+### Условный `collapse_nums`
 
-- [conditional `collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-collapse_nums)
-- [pattern match filter](https://docs.victoriametrics.com/victorialogs/logsql/#pattern-match-filter)
-- [`replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
-- [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe)
+Если конвейер `collapse_nums` нужно применить лишь к части записей лога, добавьте условие `if (<filters>)` после `collapse_nums`. В `<filters>` могут быть любые [фильтры](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
 
-#### Conditional collapse_nums
-
-If the [`collapse_nums` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#collapse_nums-pipe) must be applied only to some [log entries](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
-then add `if (<filters>)` after `collapse_nums`.
-The `<filters>` can contain arbitrary [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters). For example, the following query collapses nums in the `foo` field only if the `user_type` field equals `admin`:
+**Пример:** следующий запрос сжимает числа в поле `foo` только для записей, где поле `user_type` равно `admin`:
 
 ```logsql
 _time:5m | collapse_nums if (user_type:=admin) at foo
 ```
 
+**Примечание:** `collapse_nums` может пропустить некоторые числа или сжать неожиданные значения. В таких случаях рекомендуется использовать **условный `collapse_nums`** либо предварительно обработать данные с помощью конвейера [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe).
+
+***
+
+### См. также:
+
+- [условный `collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-collapse_nums)
+- [фильтр по шаблону](https://docs.victoriametrics.com/victorialogs/logsql/#pattern-match-filter)
+- [`replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
+- [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe)

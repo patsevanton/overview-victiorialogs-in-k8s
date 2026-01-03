@@ -1,49 +1,46 @@
-### Word filter
+### Фильтр по слову
 
-The simplest LogsQL query consists of a single [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) to search in log messages. For example, the following query matches
-[log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) with `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) inside them:
+Самый простой запрос на языке LogsQL состоит из одного **[слова](https://docs.victoriametrics.com/victorialogs/logsql/#word)**, которое ищут в сообщениях журнала. Например, следующий запрос находит **[сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)**, содержащие внутри слово `error`:
 
 ```logsql
 error
 ```
 
-This query matches the following [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+Этот запрос соответствует таким **[сообщениям журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)**:
 
 - `error`
 - `an error happened`
 - `error: cannot open file`
 
-This query doesn't match the following log messages:
+Этот запрос **не** соответствует следующим сообщениям журнала:
 
-- `ERROR`, since the filter is case-sensitive by default. Use `i(error)` for this case. See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter) for details.
-- `multiple errors occurred`, since the `errors` word doesn't match `error` word. Use `error*` for this case. See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter) for details.
+- `ERROR` — поскольку по умолчанию фильтр чувствителен к регистру. Для учёта разных регистров используйте `i(error)`. Подробности см. в **[этой документации](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)**.
+- `multiple errors occurred` — поскольку слово `errors` не совпадает с `error`. Для поиска по префиксу используйте `error*`. Подробности см. в **[этой документации](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)**.
 
-By default the given [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) is searched in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-Specify the [field name](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) in front of the word and put a colon after it
-if it must be searched in the given field. For example, the following query returns log entries containing the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) in the `log.level` field:
+По умолчанию указанное **[слово](https://docs.victoriametrics.com/victorialogs/logsql/#word)** ищется в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
+
+Чтобы искать слово в конкретном поле, укажите **[имя поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)** перед словом и поставьте после него двоеточие. Например, следующий запрос возвращает записи журнала, содержащие слово `error` в поле `log.level`:
 
 ```logsql
 log.level:error
 ```
 
-Both the field name and the word in the query can contain arbitrary [utf-8](https://en.wikipedia.org/wiki/UTF-8)-encoded chars. For example:
+И имя поля, и слово в запросе могут содержать произвольные символы в кодировке **[UTF‑8](https://en.wikipedia.org/wiki/UTF-8)**. Например:
 
 ```logsql
 სფერო:τιμή
 ```
 
-Both the field name and the word in the query can be put inside quotes if they contain special chars, which may clash with the query syntax.
-For example, the following query searches for the ip `1.2.3.45` in the field `ip:remote`:
+Если имя поля или слово содержат специальные символы, которые могут конфликтовать с синтаксисом запроса, их можно заключить в кавычки. Например, следующий запрос ищет IP‑адрес `1.2.3.45` в поле `ip:remote`:
 
 ```logsql
 "ip:remote":"1.2.3.45"
 ```
 
-See also:
+См. также:
 
-- [Phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Exact filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-- [Prefix filter](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Substring filter](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
-
+- **[Фильтр по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)**
+- **[Точный фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)**
+- **[Фильтр по префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)**
+- **[Фильтр по подстроке](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter)**
+- **[Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)**

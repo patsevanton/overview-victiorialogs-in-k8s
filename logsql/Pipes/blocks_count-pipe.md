@@ -1,10 +1,9 @@
-### blocks_count pipe
+### blocks_count (конвейер)
 
-`<q> | blocks_count` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) counts the number of blocks with logs processed by `<q>`. This pipe is needed mostly for debugging.
+`<q> | blocks_count` [конвейер](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) подсчитывает количество блоков с логами, обработанных запросом `<q>`. Этот конвейер в основном нужен для отладки.
 
-See also:
+Смотрите также:
 
-- [`query_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe)
-- [`block_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe)
-- [`len` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe)
-
+- конвейер [`query_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe);
+- конвейер [`block_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe);
+- конвейер [`len`](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe).
