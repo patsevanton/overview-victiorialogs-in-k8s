@@ -15,12 +15,3 @@ _time:5m | stats avg(duration) avg_duration
 ```logsql
 _time:5m | stats avg(foo*)
 ```
-
-См. также:
-
-* [`median`](https://docs.victoriametrics.com/victorialogs/logsql/#median-stats)
-* [`quantile`](https://docs.victoriametrics.com/victorialogs/logsql/#quantile-stats)
-* [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-stats)
-* [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-stats)
-* [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-stats)
-* [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)

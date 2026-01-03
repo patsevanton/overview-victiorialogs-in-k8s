@@ -99,14 +99,6 @@ _time:5m | unpack_syslog from foo result_prefix "foo_"
   чтобы уменьшить количество записей, передаваемых в `unpack_syslog`.
   Подробности см. в [общих советах по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-См. также:
-
-* [Условный unpack_syslog](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-unpack_syslog)
-* [`unpack_json` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe)
-* [`unpack_logfmt` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe)
-* [`extract` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-
-
 
 ### Условный `unpack_syslog`
 

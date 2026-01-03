@@ -38,12 +38,3 @@ over the last 5 minutes:
 ```logsql
 _time:5m | stats by (host) json_values() sort by (_time desc) limit 3 as json_logs
 ```
-
-See also:
-
-- [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe)
-- [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats)
-- [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
-- [`row_any`](https://docs.victoriametrics.com/victorialogs/logsql/#row_any-stats)
-- [`values`](https://docs.victoriametrics.com/victorialogs/logsql/#values-stats)
-

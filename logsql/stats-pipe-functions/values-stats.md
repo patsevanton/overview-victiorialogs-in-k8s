@@ -14,11 +14,3 @@ _time:5m | stats values(ip) ips
 The returned IP addresses can be unrolled into distinct log entries with [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
 
 It is possible to get values for all the fields with common prefix via `values(prefix*)` syntax.
-
-See also:
-
-- [`json_values`](https://docs.victoriametrics.com/victorialogs/logsql/#json_values-stats)
-- [`uniq_values`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
-- [`count_empty`](https://docs.victoriametrics.com/victorialogs/logsql/#count_empty-stats)
-

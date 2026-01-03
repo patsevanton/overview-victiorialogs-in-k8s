@@ -20,11 +20,3 @@ _time:5m | stats row_max(duration, _time, path, duration) as time_and_path_with_
 ```
 
 It is possible to return all the fields starting with particular prefix by using `row_max(field, prefix*)` syntax.
-
-See also:
-
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-stats)
-- [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats)
-- [`row_any`](https://docs.victoriametrics.com/victorialogs/logsql/#row_any-stats)
-- [`json_values`](https://docs.victoriametrics.com/victorialogs/logsql/#json_values-stats)
-

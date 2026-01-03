@@ -32,10 +32,3 @@ _time:5m
   | unroll (buckets)
   | unpack_json from buckets
 ```
-
-See also:
-
-- [`quantile`](https://docs.victoriametrics.com/victorialogs/logsql/#quantile-stats)
-- [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe)
-- [`unpack_json` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe)
-

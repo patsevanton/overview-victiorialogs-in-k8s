@@ -10,15 +10,6 @@ _time:5m | unroll (timestamp, value)
 
 Если разворачиваемый JSON-массив содержит JSON-объекты, то может быть удобно использовать pipe [`unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe) для распаковки элементов массива в отдельные поля для дальнейшей обработки.
 
-См. также:
-
-* pipe [`unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe)
-* pipe [`unpack_words`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe)
-* pipe [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-* статистическая функция [`uniq_values`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
-* статистическая функция [`values`](https://docs.victoriametrics.com/victorialogs/logsql/#values-stats)
-
-
 
 ### Условный `unroll`
 

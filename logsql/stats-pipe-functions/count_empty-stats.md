@@ -14,8 +14,3 @@ _time:5m | stats count_empty(username) logs_with_missing_username
 ```logsql
 _time:5m | stats count_empty(foo*)
 ```
-
-См. также:
-
-* [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
-* [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)

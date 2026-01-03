@@ -26,12 +26,3 @@ _time:5m | stats uniq_values(ip) limit 100 as unique_ips_100
 Arbitrary subset of unique `ip` values is returned every time if the `limit` is reached.
 
 It is possible to find unique values for all the fields with common prefix via `uniq_values(prefix*)` syntax.
-
-See also:
-
-- [`uniq` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe)
-- [`values`](https://docs.victoriametrics.com/victorialogs/logsql/#values-stats)
-- [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)
-- [`count_uniq_hash`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq_hash-stats)
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
-

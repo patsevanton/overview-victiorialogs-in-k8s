@@ -82,14 +82,6 @@ _time:5m | unpack_logfmt from foo result_prefix "foo_"
   чтобы уменьшить количество записей, передаваемых в `unpack_logfmt`.
   Подробнее см. в [общих советах по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-См. также:
-
-* [Условный unpack_logfmt](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-unpack_logfmt)
-* [pipe `unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe)
-* [pipe `unpack_syslog`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_syslog-pipe)
-* [pipe `extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-
----
 
 #### Условный unpack_logfmt
 

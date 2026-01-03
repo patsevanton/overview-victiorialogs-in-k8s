@@ -29,13 +29,3 @@ For example, the following query returns the number of logs with at least a sing
 ```logsql
 _time:5m | stats count(foo*)
 ```
-
-See also:
-
-- [`rate`](https://docs.victoriametrics.com/victorialogs/logsql/#rate-stats)
-- [`rate_sum`](https://docs.victoriametrics.com/victorialogs/logsql/#rate_sum-stats)
-- [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)
-- [`count_empty`](https://docs.victoriametrics.com/victorialogs/logsql/#count_empty-stats)
-- [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-stats)
-- [`avg`](https://docs.victoriametrics.com/victorialogs/logsql/#avg-stats)
-

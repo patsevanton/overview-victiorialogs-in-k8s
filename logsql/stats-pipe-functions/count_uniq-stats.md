@@ -22,11 +22,3 @@ _time:5m | stats count_uniq(ip) limit 1_000_000 as ips_1_000_000
 ```
 
 Если допустимо подсчитать приблизительное количество уникальных значений, можно использовать [`count_uniq_hash`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq_hash-stats) — более быструю альтернативу `count_uniq`.
-
-См. также:
-
-* [`count_uniq_hash`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq_hash-stats)
-* [`uniq_values`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
-* [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
-
-

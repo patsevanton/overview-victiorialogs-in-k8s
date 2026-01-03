@@ -18,11 +18,3 @@ See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsq
 It is possible to calculate the maximum value across all the fields with common prefix via `max(prefix*)` syntax.
 
 [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats) function can be used for obtaining other fields with the maximum duration.
-
-See also:
-
-- [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
-- [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-stats)
-- [`quantile`](https://docs.victoriametrics.com/victorialogs/logsql/#quantile-stats)
-- [`avg`](https://docs.victoriametrics.com/victorialogs/logsql/#avg-stats)
-

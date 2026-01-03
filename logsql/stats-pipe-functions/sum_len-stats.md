@@ -11,9 +11,3 @@ _time:5m | stats sum_len(_msg) messages_len
 ```
 
 It is possible to find the sum of byte lengths for all the fields with common prefix via `sum_len(prefix*)` syntax.
-
-See also:
-
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
-- [`len` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe)
-

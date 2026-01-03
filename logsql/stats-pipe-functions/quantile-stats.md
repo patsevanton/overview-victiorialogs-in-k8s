@@ -20,12 +20,3 @@ Use `quantile(phi, some_field) if (some_field:*) as min_value_without_empty_stri
 See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) for more details.
 
 It is possible to calculate the quantile across all the fields with common prefix via `quantile(phi, prefix*)` syntax.
-
-See also:
-
-- [`histogram`](https://docs.victoriametrics.com/victorialogs/logsql/#histogram-stats)
-- [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-stats)
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-stats)
-- [`median`](https://docs.victoriametrics.com/victorialogs/logsql/#median-stats)
-- [`avg`](https://docs.victoriametrics.com/victorialogs/logsql/#avg-stats)
-

@@ -20,11 +20,3 @@ _time:5m | stats row_min(duration, _time, path, duration) as time_and_path_with_
 ```
 
 It is possible to return all the fields starting with particular prefix by using `row_min(field, prefix*)` syntax.
-
-See also:
-
-- [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-stats)
-- [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
-- [`row_any`](https://docs.victoriametrics.com/victorialogs/logsql/#row_any-stats)
-- [`json_values`](https://docs.victoriametrics.com/victorialogs/logsql/#json_values-stats)
-

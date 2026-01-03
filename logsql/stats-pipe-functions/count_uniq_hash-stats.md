@@ -15,9 +15,3 @@ _time:5m | stats count_uniq_hash(ip) unique_ips_count
 ```logsql
 _time:5m | stats count_uniq_hash(host, path) unique_host_path_pairs
 ```
-
-См. также:
-
-* [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)
-* [`uniq_values`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
-* [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)

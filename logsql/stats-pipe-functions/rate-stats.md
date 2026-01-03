@@ -7,9 +7,3 @@ For example, the following query returns the average per-second rate of logs wit
 ```logsql
 _time:5m error | stats rate()
 ```
-
-See also:
-
-- [`rate_sum`](https://docs.victoriametrics.com/victorialogs/logsql/#rate_sum-stats)
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
-

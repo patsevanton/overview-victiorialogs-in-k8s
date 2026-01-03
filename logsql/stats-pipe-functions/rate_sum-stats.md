@@ -11,9 +11,3 @@ _time:5m | stats rate_sum(bytes_sent)
 ```
 
 It is possible to calculate the average per-second rate of the sum over all the fields starting with a particular prefix by using `rate_sum(prefix*)` syntax.
-
-See also:
-
-- [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-stats)
-- [`rate`](https://docs.victoriametrics.com/victorialogs/logsql/#rate-stats)
-

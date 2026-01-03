@@ -18,11 +18,3 @@ See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsq
 It is possible to find the minimum across all the fields with common prefix via `min(prefix*)` syntax.
 
 [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats) function can be used for obtaining other fields with the minimum duration.
-
-See also:
-
-- [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats)
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-stats)
-- [`quantile`](https://docs.victoriametrics.com/victorialogs/logsql/#quantile-stats)
-- [`avg`](https://docs.victoriametrics.com/victorialogs/logsql/#avg-stats)
-

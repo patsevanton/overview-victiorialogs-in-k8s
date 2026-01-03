@@ -20,10 +20,3 @@ _time:5m | stats row_any(_time, path) as time_and_path_sample
 ```
 
 It is possible to return all the fields starting with particular prefix by using `row_any(prefix*)` syntax.
-
-See also:
-
-- [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
-- [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats)
-- [`json_values`](https://docs.victoriametrics.com/victorialogs/logsql/#json_values-stats)
-

@@ -16,9 +16,3 @@ Use `median(some_field) if (some_field:*) as min_value_without_empty_string` syn
 See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) for more details.
 
 It is possible to calculate the median across all the fields with common prefix via `median(prefix*)` syntax.
-
-See also:
-
-- [`quantile`](https://docs.victoriametrics.com/victorialogs/logsql/#quantile-stats)
-- [`avg`](https://docs.victoriametrics.com/victorialogs/logsql/#avg-stats)
-

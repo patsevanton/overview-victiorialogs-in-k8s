@@ -35,8 +35,3 @@ _time:5m | unpack_words from text as words drop_duplicates
 ```logsql
 _time:5m | unpack_words as words | unroll words | top 5 (words)
 ```
-
-См. также:
-
-* pipe [`unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe)
-* pipe [`split`](https://docs.victoriametrics.com/victorialogs/logsql/#split-pipe)
