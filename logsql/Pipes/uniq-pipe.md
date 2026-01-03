@@ -1,48 +1,49 @@
-### uniq pipe
+### pipe `uniq`
 
-`<q> | uniq by (field1, ..., fieldN)` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns unique values for the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over the logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax). For example, the following LogsQL query
-returns unique values for `ip` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over logs for the last 5 minutes:
+Пайп
+`<q> | uniq by (field1, ..., fieldN)`
+возвращает уникальные значения для указанных [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+по логам, возвращаемым [запросом](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>`.
+Например, следующий запрос LogsQL возвращает уникальные значения поля лога `ip`
+за последние 5 минут:
 
 ```logsql
 _time:5m | uniq by (ip)
 ```
 
-It is possible to specify multiple fields inside `by(...)` clause. In this case all the unique sets for the given fields
-are returned. For example, the following query returns all the unique `(host, path)` pairs for the logs over the last 5 minutes:
+Внутри выражения `by(...)` можно указать несколько полей. В этом случае будут возвращены все уникальные наборы значений для заданных полей.
+Например, следующий запрос возвращает все уникальные пары `(host, path)` по логам за последние 5 минут:
 
 ```logsql
 _time:5m | uniq by (host, path)
 ```
 
-The unique entries are returned in arbitrary order. Use [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe) in order to sort them if needed.
+Уникальные записи возвращаются в произвольном порядке. При необходимости их можно отсортировать с помощью пайпа [`sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe).
 
-Add `with hits` after `uniq by (...)` in order to return the number of matching logs for each field value:
+Добавьте `with hits` после `uniq by (...)`, чтобы вернуть количество совпадающих логов для каждого значения поля:
 
 ```logsql
 _time:5m | uniq by (host) with hits
 ```
 
-Unique entries are stored in memory during query execution. Big number of unique selected entries may require a lot of memory.
-Sometimes it is enough to return up to `N` unique entries. This can be done by adding `limit N` after `by (...)` clause.
-This allows limiting memory usage. For example, the following query returns up to 100 unique `(host, path)` pairs for the logs over the last 5 minutes:
+Уникальные значения хранятся в памяти во время выполнения запроса. Большое количество уникальных выбранных значений может требовать значительного объёма памяти.
+Иногда достаточно вернуть не более `N` уникальных значений. Это можно сделать, добавив `limit N` после выражения `by (...)`. Это позволяет ограничить использование памяти.
+Например, следующий запрос возвращает до 100 уникальных пар `(host, path)` по логам за последние 5 минут:
 
 ```logsql
 _time:5m | uniq by (host, path) limit 100
 ```
 
-If the `limit` is reached, then arbitrary subset of unique values can be returned. The `hits` calculation doesn't work when the `limit` is reached.
+Если лимит `limit` достигнут, может быть возвращено произвольное подмножество уникальных значений. Подсчёт `hits` не работает, если лимит был достигнут.
 
-The `by` keyword can be skipped in `uniq ...` pipe. For example, the following query is equivalent to the previous one:
+Ключевое слово `by` в пайпе `uniq ...` можно опустить. Например, следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | uniq (host, path) limit 100
 ```
 
-See also:
+См. также:
 
-- [`uniq_values` stats function](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
-- [`top` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-
+* статистическая функция [`uniq_values`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
+* пайп [`top`](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
+* пайп [`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
