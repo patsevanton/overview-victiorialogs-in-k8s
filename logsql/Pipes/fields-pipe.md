@@ -1,29 +1,29 @@
-### fields pipe
+### Конвейер `fields` (выбор полей)
 
-By default all the [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) are returned in the response.
-It is possible to select the given set of log fields with `| fields field1, ..., fieldN` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes). For example, the following query selects only `host`
-and [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) fields from logs for the last 5 minutes:
+По умолчанию в ответе возвращаются **все поля лога** (см. [модель данных](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)).
+
+Выбрать конкретный набор полей лога можно с помощью конвейера `| fields поле1, ..., полеN` (см. [конвейеры](https://docs.victoriametrics.com/victorialogs/logsql/#pipes)).
+
+Например, следующий запрос выбирает из логов за последние 5 минут **только поля** `host` и [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
 ```logsql
 _time:5m | fields host, _msg
 ```
 
-`keep` can be used instead of `fields` for convenience. For example, the following query is equivalent to the previous one:
+Для удобства вместо `fields` можно использовать `keep`. Следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | keep host, _msg
 ```
 
-It is possible to use wildcard prefixes in the list of fields to keep. For example, the following query keeps all the fields with names starting with `foo` prefix,
-while drops the rest of the fields:
+В списке полей допускается использовать **шаблоны с подстановкой** (wildcard). Например, следующий запрос оставит **все поля, имена которых начинаются с префикса `foo`**, а остальные поля удалит:
 
 ```logsql
 _time:5m | fields foo*
 ```
 
-See also:
+См. также:
 
-- [`copy` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#copy-pipe)
-- [`rename` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#rename-pipe)
-- [`delete` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#delete-pipe)
-
+- конвейер [`copy`](https://docs.victoriametrics.com/victorialogs/logsql/#copy-pipe);
+- конвейер [`rename`](https://docs.victoriametrics.com/victorialogs/logsql/#rename-pipe);
+- конвейер [`delete`](https://docs.victoriametrics.com/victorialogs/logsql/#delete-pipe).

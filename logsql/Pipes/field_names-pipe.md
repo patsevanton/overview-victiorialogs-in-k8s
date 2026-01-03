@@ -1,19 +1,17 @@
-### field_names pipe
+### Конвейер `field_names`
 
-`<q> | field_names` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns all the names of [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-with an estimated number of logs for each field name returned from `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+`<q> | field_names` [конвейер (pipe)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) возвращает все имена [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) вместе с оценочным количеством записей логов для каждого имени поля, полученных по запросу `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
 
-For example, the following query returns all the field names with the number of matching logs over the last 5 minutes:
+Например, следующий запрос вернёт все имена полей с количеством соответствующих записей логов за последние 5 минут:
 
 ```logsql
 _time:5m | field_names
 ```
 
-Field names are returned in arbitrary order. Use [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe) in order to sort them if needed.
+Имена полей возвращаются в произвольном порядке. Если требуется их отсортировать, используйте [конвейер `sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe).
 
-See also:
+Смотрите также:
 
-- [`field_values` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#field_values-pipe)
-- [`facets` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#facets-pipe)
-- [`uniq` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe)
-
+- [конвейер `field_values`](https://docs.victoriametrics.com/victorialogs/logsql/#field_values-pipe);
+- [конвейер `facets`](https://docs.victoriametrics.com/victorialogs/logsql/#facets-pipe);
+- [конвейер `uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe).
