@@ -7,11 +7,12 @@ grafana:
     hosts:
       - grafana.apatsev.org.ru
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
-    tls:
-      - hosts:
-          - grafana.apatsev.org.ru
-        secretName: grafana-tls
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      # cert-manager.io/cluster-issuer: letsencrypt-prod
+    # tls:
+    #   - hosts:
+    #       - grafana.apatsev.org.ru
+    #     secretName: grafana-tls
 defaultDatasources:
   extra:
     - name: victoriametrics-logs
@@ -37,7 +38,8 @@ vmcluster:
       enabled: true
       ingressClassName: nginx
       annotations:
-        cert-manager.io/cluster-issuer: letsencrypt-prod
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        # cert-manager.io/cluster-issuer: letsencrypt-prod
       hosts:
         - vmselect.apatsev.org.ru
       # tls:
