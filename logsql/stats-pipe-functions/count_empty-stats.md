@@ -1,23 +1,21 @@
-### count_empty stats
+### статистика `count_empty`
 
-`count_empty(field1, ..., fieldN)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) calculates the number of logs with empty `(field1, ..., fieldN)` tuples.
+`count_empty(field1, ..., fieldN)` — это [stats-pipe функция](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions), которая вычисляет количество логов с пустыми кортежами `(field1, ..., fieldN)`.
 
-For example, the following query calculates the number of logs with empty `username` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-during the last 5 minutes:
+Например, следующий запрос вычисляет количество логов с пустым [полем](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `username` за последние 5 минут:
 
 ```logsql
 _time:5m | stats count_empty(username) logs_with_missing_username
 ```
 
-It is possible to calculate the number of logs with empty fields with common prefix via `count_empty(prefix*)` syntax. For example, the following query
-calculates the number of logs with empty fields with `foo` prefix during the last 5 minutes:
+Также можно вычислять количество логов с пустыми полями с общим префиксом, используя синтаксис `count_empty(prefix*)`. Например, следующий запрос
+вычисляет количество логов с пустыми полями с префиксом `foo` за последние 5 минут:
 
 ```logsql
 _time:5m | stats count_empty(foo*)
 ```
 
-See also:
+См. также:
 
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
-- [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)
-
+* [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats)
+* [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)
