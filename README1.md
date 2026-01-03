@@ -143,7 +143,7 @@ helm upgrade --install victoria-logs-collector \
 
 ### 4) VM K8s Stack (метрики, Grafana)
 
-Пример установки стека метрик и Grafana:
+Пример установки victoria-metrics-k8s-stack c Grafana:
 
 ```bash
 helm upgrade --install vmks \
