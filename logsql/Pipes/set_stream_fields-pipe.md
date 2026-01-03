@@ -1,29 +1,24 @@
-### set_stream_fields pipe
+### Конвейер `set_stream_fields`
 
-The `| set_stream_fields field1, ..., fieldN` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes)
-sets the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-as [`_stream` fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
+Конвейер `| set_stream_fields поле1, ..., полеN` задаёт указанные [поля логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) в качестве полей [`_stream`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
 
-For example, if the logs returned by `_time:5m` [filter](https://docs.victoriametrics.com/victorialogs/logsql/#filters) have `host="foo"` and `path="/bar"` fields,
-then the following query sets `_stream` field to `{host="foo", path="/bar"}`:
+Например, если в логах, возвращённых фильтром `_time:5m`, присутствуют поля `host="foo"` и `path="/bar"`, то следующий запрос установит поле `_stream` равным `{host="foo", path="/bar"}`:
 
 ```logsql
 _time:5m | set_stream_fields host, path
 ```
 
-See also:
+См. также:
 
-- [conditional `set_stream_fields`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-set_stream_fields)
-- [`format` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe)
+- [условный `set_stream_fields`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-set_stream_fields)
+- [конвейер `format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe)
 
-#### Conditional set_stream_fields
+#### Условный `set_stream_fields`
 
-The [`set_stream_fields` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#set_stream_fields-pipe) can be applied to a subset of input logs
-which match the given [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters), by using `if (...)` after the `set_stream_fields`.
-For example, the following query updates [`_stream` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields)
-only for logs with the `host="foobar"` field, while leaving the original `_stream` value for the rest of the logs:
+Конвейер [`set_stream_fields`](https://docs.victoriametrics.com/victorialogs/logsql/#set_stream_fields-pipe) можно применить лишь к подмножеству входных логов, соответствующих заданным [фильтрам](https://docs.victoriametrics.com/victorialogs/logsql/#filters), — для этого после `set_stream_fields` используется конструкция `if (...)`.
+
+Например, следующий запрос обновит поле [`_stream`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) **только** для логов с полем `host="foobar"`, оставив исходное значение `_stream` для остальных логов:
 
 ```logsql
 _time:5m | set_stream_fields if (host:="foobar") host, app
 ```
-

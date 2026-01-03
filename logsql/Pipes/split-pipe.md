@@ -1,38 +1,35 @@
-### split pipe
+### Разделение строки (split pipe)
 
-The `<q> | split <separator> from <src_field> as <dst_field>` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) splits `<src_field>` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-obtained from `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) results into `<dst_field>` as a JSON array, by using the given `<separator>`.
+Конструкция  
+```
+<q> | split <separator> from <src_field> as <dst_field>
+```  
+разделяет поле журнала `<src_field>` (полученное из результатов запроса `<q>`) на элементы по заданному разделителю `<separator>` и сохраняет результат в поле `<dst_field>` в виде JSON‑массива.
 
-For example, the following query splits [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) by `,` and stores the results into `items` field:
-
+**Пример:** следующий запрос разделяет сообщения журнала по символу `,` и сохраняет результаты в поле `items`:
 ```logsql
 _time:5m | split "," from _msg as items
 ```
 
-The `as <dst_field>` part is optional. If it is missing, then the result is stored in the `<src_field>` specified in `from <src_field>`.
-For example, the following query stores the split result into `_msg` field:
+- Часть `as <dst_field>` **необязательна**. Если она отсутствует, результат записывается в поле `<src_field>`, указанное в `from <src_field>`.  
+  **Пример:** результат разделения сохраняется в поле `_msg`:
+  ```logsql
+  _time:5m | split "," from _msg
+  ```
 
-```logsql
-_time:5m | split "," from _msg
-```
+- Часть `from <src_field>` **также необязательна**. Если она не указана, в качестве исходного поля используется `_msg`.  
+  **Пример:** эквивалентный предыдущему запрос:
+  ```logsql
+  _time:5m | split ","
+  ```
 
-The `from <src_field>` part is optional. If it is missing, then the `_msg` field is used as a source field. The following query is equivalent to the previous one:
+Для развёртывания JSON‑массива с результатами разделения удобно использовать оператор [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).  
 
-```logsql
-_time:5m | split ","
-```
-
-It is convenient to use [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe) for unrolling the JSON array with the split results.
-For example, the following query returns top 5 most frequently seen comma-separated items across [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-for the last 5 minutes:
-
+**Пример:** следующий запрос возвращает 5 наиболее часто встречающихся элементов, разделённых запятой, в сообщениях журнала за последние 5 минут:
 ```logsql
 _time:5m | split "," as items | unroll items | top 5 (items)
 ```
 
-See also:
-
+**См. также:**
 - [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe)
 - [`unpack_words` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe)
-
-
