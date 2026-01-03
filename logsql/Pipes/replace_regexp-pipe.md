@@ -1,54 +1,54 @@
-### replace_regexp pipe
+### Конвейер `replace_regexp`
 
-`<q> | replace_regexp ("regexp", "replacement") at field` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) replaces all the substrings matching the given `regexp` with the given `replacement`
-in the given [`field`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) over all the logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+Конструкция  
+```
+<q> | replace_regexp ("regexp", "replacement") at field
+```
+[конвейер](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) заменяет все подстроки, соответствующие заданному регулярному выражению `regexp`, на строку `replacement` в указанном поле [`field`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) для всех логов, возвращённых запросом `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
 
-The `regexp` must contain regular expression with [RE2 syntax](https://github.com/google/re2/wiki/Syntax).
-The `replacement` may contain `$N` or `${N}` placeholders, which are substituted with the `N-th` capturing group in the `regexp`.
+- Регулярное выражение `regexp` должно соответствовать синтаксису [RE2](https://github.com/google/re2/wiki/Syntax).
+- В строке замены `replacement` могут использоваться плейсхолдеры `$N` или `${N}`, которые подставляются значениями `N`-й захватывающей группы из `regexp`.
 
-For example, the following query replaces all the substrings starting with `host-` and ending with `-foo` with the contents between `host-` and `-foo` in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) for logs over the last 5 minutes:
+**Пример:** следующий запрос заменяет все подстроки, начинающиеся с `host-` и заканчивающиеся на `-foo`, на содержимое между `host-` и `-foo` в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) для логов за последние 5 минут:
 
 ```logsql
 _time:5m | replace_regexp ("host-(.+?)-foo", "$1") at _msg
 ```
 
-The `at _msg` part can be omitted if the replacement occurs in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-The following query is equivalent to the previous one:
+Часть `at _msg` можно опустить, если замена производится в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field). Следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | replace_regexp ("host-(.+?)-foo", "$1")
 ```
 
-The number of replacements can be limited with `limit N` at the end of `replace_regexp`. For example, the following query replaces only the first `password: ...` substring
-ending with whitespace with empty substring at the [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `baz`:
+Количество замен можно ограничить с помощью `limit N` в конце `replace_regexp`. Например, следующий запрос заменяет только первую подстроку `password: ...`, заканчивающуюся пробелом, на пустую строку в поле лога `baz`:
 
 ```logsql
 _time:5m | replace_regexp ('password: [^ ]+', '') at baz limit 1
 ```
 
-Performance tips:
+### Советы по производительности
 
-- It is recommended to use the [`replace` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe) instead of `replace_regexp` if possible, since it works faster.
-- It is recommended to use more specific [log filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters) in order to reduce the number of log entries that are passed to `replace_regexp`.
-  See [general performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips) for details.
+- По возможности используйте [конвейер `replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe) вместо `replace_regexp`, так как он работает быстрее.
+- Рекомендуется применять более конкретные [фильтры логов](https://docs.victoriametrics.com/victorialogs/logsql/#filters), чтобы уменьшить число записей, передаваемых в `replace_regexp`.  
+  Подробнее — в разделе [общих советов по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-See also:
+### См. также
 
-- [Conditional replace_regexp](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-replace_regexp)
-- [`replace` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
-- [`collapse_nums` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#collapse_nums-pipe)
-- [`format` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe)
-- [`extract` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-- [`decolorize` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#decolorize-pipe)
+- [Условный `replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-replace_regexp)
+- [Конвейер `replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
+- [Конвейер `collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#collapse_nums-pipe)
+- [Конвейер `format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe)
+- [Конвейер `extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
+- [Конвейер `decolorize`](https://docs.victoriametrics.com/victorialogs/logsql/#decolorize-pipe)
 
-#### Conditional replace_regexp
+#### Условный `replace_regexp`
 
-If the [`replace_regexp` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe) must be applied only to some [log entries](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
-then add `if (<filters>)` after `replace_regexp`.
-The `<filters>` can contain arbitrary [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters). For example, the following query replaces `password: ...` substrings ending with whitespace
-with `***` in the `foo` field only if the `user_type` field equals `admin`:
+Если конвейер [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe) должен применяться лишь к некоторым [записям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), добавьте `if (<filters>)` после `replace_regexp`.  
+В `<filters>` могут быть указаны произвольные [фильтры](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+
+**Пример:** следующий запрос заменяет подстроки `password: ...`, заканчивающиеся пробелом, на `***` в поле `foo` — но только если поле `user_type` равно `admin`:
 
 ```logsql
 _time:5m | replace_regexp if (user_type:=admin) ("password: [^ ]+", "***") at foo
 ```
-
