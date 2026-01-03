@@ -10,8 +10,3 @@
     | stats by (rand_num) count() hits
     | sort by (rand_num)
 ```
-
-См. также:
-
-- [Функция `rand()` в конвейере `math`](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
-- [Конвейер `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)

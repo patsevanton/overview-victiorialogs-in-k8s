@@ -52,13 +52,6 @@ _time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' from foo skip_empty_
 
 Для повышения производительности запросов рекомендуется использовать конвейер [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe) вместо `extract_regexp`.
 
-### См. также:
-
-- [Условный `extract_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-extract_regexp)
-- [`extract` (конвейер)](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-- [`replace_regexp` (конвейер)](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe)
-- [`unpack_json` (конвейер)](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe)
-
 ## Условный `extract_regexp`
 
 Если некоторые записи журнала нужно пропустить в конвейере `extract_regexp`, добавьте `if (<filters>)` после слова `extract_regexp`.

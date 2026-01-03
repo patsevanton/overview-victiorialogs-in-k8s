@@ -20,8 +20,3 @@ _time:1h error | stats by (host) count() logs_count | where logs_count:> 1_000
 ```logsql
 _time:1h error | stats by (host) count() logs_count | logs_count:> 1_000
 ```
-
-Смотрите также:
-
-- [конвейер `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [конвейер `sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)

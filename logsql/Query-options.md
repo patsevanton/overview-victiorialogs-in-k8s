@@ -105,5 +105,3 @@ user_id:in(_time:2024-12Z | keep user_id) | count()
 ```logsql
 options(allow_partial_response=true) _time:5m
 ```
-
-См. также: [документация по частичным ответам](https://docs.victoriametrics.com/victorialogs/querying/#partial-responses).

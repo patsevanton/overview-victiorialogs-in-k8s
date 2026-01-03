@@ -9,9 +9,3 @@ _time:5m | field_names
 ```
 
 Имена полей возвращаются в произвольном порядке. Если требуется их отсортировать, используйте [конвейер `sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe).
-
-Смотрите также:
-
-- [конвейер `field_values`](https://docs.victoriametrics.com/victorialogs/logsql/#field_values-pipe);
-- [конвейер `facets`](https://docs.victoriametrics.com/victorialogs/logsql/#facets-pipe);
-- [конвейер `uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe).

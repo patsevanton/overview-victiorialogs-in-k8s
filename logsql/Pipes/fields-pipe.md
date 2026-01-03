@@ -21,9 +21,3 @@ _time:5m | keep host, _msg
 ```logsql
 _time:5m | fields foo*
 ```
-
-См. также:
-
-- конвейер [`copy`](https://docs.victoriametrics.com/victorialogs/logsql/#copy-pipe);
-- конвейер [`rename`](https://docs.victoriametrics.com/victorialogs/logsql/#rename-pipe);
-- конвейер [`delete`](https://docs.victoriametrics.com/victorialogs/logsql/#delete-pipe).

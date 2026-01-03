@@ -19,10 +19,3 @@ _time:5m | field_values user_id limit 10
 ```
 
 Если лимит достигнут, набор возвращаемых значений будет случайным. Кроме того, для повышения производительности количество соответствующих логов для каждого возвращённого значения обнуляется.
-
-Смотрите также:
-
-- конвейер [`field_names`](https://docs.victoriametrics.com/victorialogs/logsql/#field_names-pipe);
-- конвейер [`facets`](https://docs.victoriametrics.com/victorialogs/logsql/#facets-pipe);
-- конвейер [`top`](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe);
-- конвейер [`uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe).

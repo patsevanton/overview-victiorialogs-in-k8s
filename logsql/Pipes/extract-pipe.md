@@ -150,11 +150,3 @@ _time:5m | extract if (ip:"") "ip=<ip> "
 
 **Альтернатива:** использовать `keep_original_fields` (см. выше).
 
-
-
-## См. также
-
-- Формат шаблона для `extract`;
-- Условное извлечение;
-- Оператор `extract_regexp` (извлечение по регулярным выражениям);
-- Операторы `unpack_json`, `unpack_logfmt`, `split`, `math` и др.

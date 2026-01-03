@@ -31,10 +31,3 @@ _time:1h error | facets max_value_len 100
 ```logsql
 _time:1h error | facets keep_const_fields
 ```
-
-**См. также:**
-
-- [`top`](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
-- [`field_names`](https://docs.victoriametrics.com/victorialogs/logsql/#field_names-pipe)
-- [`field_values`](https://docs.victoriametrics.com/victorialogs/logsql/#field_values-pipe)
-

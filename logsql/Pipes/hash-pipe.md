@@ -11,8 +11,3 @@
 ```logsql
 _time:5m | hash(user_id) as user_id_hash
 ```
-
-См. также:
-
-- конвейер [`math`](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe);
-- конвейер [`filter`](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe).

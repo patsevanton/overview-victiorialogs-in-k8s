@@ -35,12 +35,6 @@ _time:5m | total_stats count(username, password) total_logs_with_username_or_pas
 _time:5m | total_stats count(foo*)
 ```
 
-См. также:
-
-- [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats);
-- [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-total_stats);
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-total_stats).
-
 ### max в total_stats
 
 Функция `max(field1, ..., fieldN)` в пайпе [`total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions) возвращает общее максимальное значение среди всех указанных [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
@@ -52,12 +46,6 @@ _time:5m | total_stats max(duration) total_max_duration
 ```
 
 Можно вычислить общее максимальное значение для всех полей с общим префиксом с помощью синтаксиса `max(prefix*)`.
-
-См. также:
-
-- [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-total_stats);
-- [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats);
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats).
 
 ### min в total_stats
 
@@ -71,11 +59,6 @@ _time:5m | total_stats min(duration) total_min_duration
 
 Можно найти общее минимальное значение для всех полей с общим префиксом с помощью синтаксиса `min(prefix*)`.
 
-См. также:
-
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-total_stats);
-- [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats);
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats).
 
 ### sum в total_stats
 
@@ -88,9 +71,3 @@ _time:5m | total_stats sum(duration) total_sum_duration
 ```
 
 Можно найти общую сумму для всех полей с общим префиксом с помощью синтаксиса `sum(prefix*)`.
-
-См. также:
-
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats);
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-total_stats);
-- [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-total_stats).

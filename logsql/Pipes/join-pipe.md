@@ -44,9 +44,3 @@ _time:1d {app="app1"} | stats by (user) count() app1_hits
 - [Условные `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) обычно выполняются быстрее.  
   Как правило, они требуют меньше оперативной памяти, чем эквивалентная труба `join`.
 
-См. также:
-
-- [фильтр подзапроса](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter)
-- [труба `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [условные `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters)
-- [труба `filter`](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe)

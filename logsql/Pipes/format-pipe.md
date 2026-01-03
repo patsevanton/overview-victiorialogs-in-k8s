@@ -93,13 +93,6 @@ _time:5m | format "<field1><field2>" as foo skip_empty_results
 
 **Совет по производительности:** рекомендуется использовать более конкретные [фильтры логов](https://docs.victoriametrics.com/victorialogs/logsql/#filters), чтобы уменьшить количество записей лога, передаваемых в `format`. Подробнее см. в разделе [общие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-**См. также:**
-
-- [Условное форматирование](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-format)
-- [Труба `replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
-- [Труба `replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe)
-- [Труба `extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-
 #### Условное форматирование
 
 Если [труба `format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe) должна применяться только к некоторым [записям лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), добавьте `if (<фильтры>)` сразу после слова `format`.  

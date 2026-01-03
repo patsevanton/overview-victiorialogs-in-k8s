@@ -15,8 +15,3 @@ _time:5m | first 10 by (request_duration)
 ```logsql
 _time:1h | first 3 by (request_duration) partition by (host)
 ```
-
-Смотрите также:
-
-- конвейер `last` ([документация](https://docs.victoriametrics.com/victorialogs/logsql/#last-pipe));
-- конвейер `sort` ([документация](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)).
