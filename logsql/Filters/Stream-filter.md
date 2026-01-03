@@ -1,47 +1,43 @@
-### Stream filter
+### Фильтр потоков
 
-VictoriaLogs provides an optimized way to select logs, which belong to particular [log streams](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
-This can be done via `{...}` filter, which may contain arbitrary
-[Prometheus-compatible label selector](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#filtering)
-over fields associated with [log streams](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
-For example, the following query selects [log entries](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-with `app` field equal to `nginx`:
+VictoriaLogs предоставляет оптимизированный способ выбора логов, относящихся к конкретным **[потокам логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields)**.
+
+Это делается с помощью фильтра `{...}`, который может содержать произвольный **[селектор меток, совместимый с Prometheus](https://docs.victoriametrics.com/victoriametrics/keyconcepts/#filtering)**, применяемый к полям, связанным с **[потоками логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields)**.
+
+Например, следующий запрос выбирает **[записи логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)**, у которых поле `app` равно `nginx`:
 
 ```logsql
 {app="nginx"}
 ```
 
-This query is equivalent to the following [`exact` filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter) query, but the upper query usually works much faster:
+Этот запрос эквивалентен следующему запросу с **[фильтром точного совпадения (`exact`)](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)**, однако верхний вариант обычно работает значительно быстрее:
 
 ```logsql
 app:="nginx"
 ```
 
-The stream filter supports `{label in (v1,...,vN)}` and `{label not_in (v1,...,vN)}` syntax.
-It is equivalent to `{label=~"v1|...|vN"}` and `{label!~"v1|...|vN"}` respectively. The `v1`, ..., `vN` are properly escaped inside the regexp.
-For example, `{app in ("nginx", "foo.bar")}` is equivalent to `{app=~"nginx|foo\\.bar"}` - note that the `.` char is properly escaped.
+Фильтр потока поддерживает синтаксис `{label in (v1,...,vN)}` и `{label not_in (v1,...,vN)}`.  
+Он эквивалентен `{label=~"v1|...|vN"}` и `{label!~"v1|...|vN"}` соответственно. Значения `v1`, ..., `vN` корректно экранируются внутри регулярного выражения.
 
-It is allowed to add `_stream:` prefix in front of `{...}` filter in order to make clear that the filtering is performed
-on the [`_stream` log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields).
-The following filter is equivalent to `{app="nginx"}`:
+Например, `{app in ("nginx", "foo.bar")}` эквивалентно `{app=~"nginx|foo\\.bar"}` — обратите внимание, что символ `.` корректно экранирован.
+
+Разрешается добавлять префикс `_stream:` перед фильтром `{...}`, чтобы явно указать, что фильтрация выполняется по **[полю лога `_stream`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields)**.  
+Следующий фильтр эквивалентен `{app="nginx"}`:
 
 ```logsql
 _stream:{app="nginx"}
 ```
 
-Performance tips:
+**Советы по производительности:**
 
-- It is recommended to use the most specific `{...}` filter matching the smallest number of log streams,
-  which needs to be scanned by the rest of filters in the query.
+- Рекомендуется использовать максимально конкретный фильтр `{...}`, который соответствует наименьшему числу потоков логов — это сократит объём данных, сканируемых остальными фильтрами в запросе.
 
-- While LogsQL supports arbitrary number of `{...}` filters at any level of [logical filters](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter),
-  it is recommended specifying a single `{...}` filter at the top level of the query.
+- Хотя LogsQL поддерживает произвольное число фильтров `{...}` на любом уровне **[логических фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)**, рекомендуется указывать **единственный** фильтр `{...}` на верхнем уровне запроса.
 
-- See [other performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+- См. также **[другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips)**.
 
-See also:
+**См. также:**
 
-- [`_stream_id` filter](https://docs.victoriametrics.com/victorialogs/logsql/#_stream_id-filter)
-- [Time filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter)
-- [Exact filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-
+- **[Фильтр `_stream_id`](https://docs.victoriametrics.com/victorialogs/logsql/#_stream_id-filter)**
+- **[Временной фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter)**
+- **[Фильтр точного совпадения](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)**

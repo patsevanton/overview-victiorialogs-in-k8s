@@ -1,44 +1,40 @@
-### Range filter
+### Фильтр диапазона (range filter)
 
-If you need to filter log message by some field containing only numeric values, then the `range()` filter can be used.
-For example, if the `request.duration` field contains the request duration in seconds, then the following LogsQL query can be used
-for searching for log entries with request durations exceeding 4.2 seconds:
+Если нужно отфильтровать сообщения журнала по полю, содержащему **только числовые значения**, можно использовать фильтр `range()`.
+
+Например, если поле `request.duration` хранит длительность запроса в секундах, для поиска записей журнала с длительностью более $4{,}2$ секунды подойдёт такой запрос на языке LogsQL:
 
 ```logsql
 request.duration:range(4.2, Inf)
 ```
 
-This query can be shortened by using the [range comparison filter](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter):
+Этот запрос можно сократить, используя [фильтр сравнения диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter):
 
 ```logsql
 request.duration:>4.2
 ```
 
-The lower and the upper bounds of the `range(lower, upper)` are excluded by default. If they must be included, then substitute the corresponding
-parentheses with square brackets. For example:
+Нижняя и верхняя границы в `range(нижняя, верхняя)` по умолчанию **исключаются**. Если их нужно включить, замените соответствующие круглые скобки на квадратные:
 
-- `range[1, 10)` includes `1` in the matching range
-- `range(1, 10]` includes `10` in the matching range
-- `range[1, 10]` includes `1` and `10` in the matching range
+- `range[1, 10)` — включает `1` в диапазон совпадения;
+- `range(1, 10]` — включает `10` в диапазон совпадения;
+- `range[1, 10]` — включает и `1`, и `10` в диапазон совпадения.
 
-The range boundaries can contain any [supported numeric values](https://docs.victoriametrics.com/victorialogs/logsql/#numeric-values).
+Границы диапазона могут содержать любые [поддерживаемые числовые значения](https://docs.victoriametrics.com/victorialogs/logsql/#numeric-values).
 
-Note that the `range()` filter doesn't match [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-with non-numeric values alongside numeric values. For example, `range(1, 10)` doesn't match `the request took 4.2 seconds`
-[log message](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), since the `4.2` number is surrounded by other text.
-Extract the numeric value from the message with [`extract` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe) and then apply the `range()` [filter pipe](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe) to the extracted field.
+**Важно:** фильтр `range()` **не сопоставляет** [поля журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) с нечисловыми значениями наряду с числовыми. Например, `range(1, 10)` не подойдёт для сообщения журнала `the request took 4.2 seconds`, поскольку число `4.2` окружено другим текстом.
 
-Performance tips:
+Чтобы решить эту проблему, извлеките числовое значение из сообщения с помощью конвейера [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe), а затем примените фильтр `range()` к извлечённому полю.
 
-- It is better to query pure numeric [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-  instead of extracting numeric field from text field via [transformations](https://docs.victoriametrics.com/victorialogs/logsql/#transformations) at query time.
-- See [other performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+**Советы по производительности:**
 
-See also:
+- Лучше запрашивать **чисто числовое поле** вместо извлечения числового поля из текстового поля с помощью [преобразований](https://docs.victoriametrics.com/victorialogs/logsql/#transformations) во время выполнения запроса.
+- См. [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-- [Range comparison filter](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter)
-- [IPv4 range filter](https://docs.victoriametrics.com/victorialogs/logsql/#ipv4-range-filter)
-- [String range filter](https://docs.victoriametrics.com/victorialogs/logsql/#string-range-filter)
-- [Length range filter](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
+**См. также:**
 
+- [Фильтр сравнения диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter);
+- [Фильтр диапазона IPv4](https://docs.victoriametrics.com/victorialogs/logsql/#ipv4-range-filter);
+- [Строковый фильтр диапазона](https://docs.victoriametrics.com/victorialogs/logsql/#string-range-filter);
+- [Фильтр диапазона длины](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter);
+- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).

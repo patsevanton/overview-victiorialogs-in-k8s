@@ -1,41 +1,34 @@
-### Subquery filter
+### Фильтр с подзапросом
 
-Sometimes it is needed to select logs with [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) matching values
-selected by another [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) (aka subquery). LogsQL provides such an ability with the following filters:
+Иногда требуется отобрать логи, в которых значения [полей](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) совпадают со значениями, полученными в результате другого [запроса](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) (так называемого *подзапроса*). В LogsQL для этого предусмотрены следующие фильтры:
 
-- `field:in(<subquery>)` - it returns logs with `field` values matching the values returned by the `<subquery>`.
-  For example, the following query selects all the logs for the last 5 minutes for users,
-  who visited pages with `admin` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) in the `path` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-  during the last day:
+- `field:in(<подзапрос>)` — возвращает логи, в которых значения поля `field` совпадают со значениями, возвращёнными `<подзапросом>`.  
+  Например, следующий запрос выбирает все логи за последние 5 минут для пользователей, которые за последний день посещали страницы, содержащие слово `admin` в поле `path`:
 
   ```logsql
   _time:5m AND user_id:in(_time:1d AND path:admin | fields user_id)
   ```
 
-- `field:contains_all(<subquery>)` - it returns logs with `field` values containing all the [words](https://docs.victoriametrics.com/victorialogs/logsql/#word) and phrases returned by the `<subquery>`.
-  For example, the following query selects all the logs for the last 5 minutes, which contain all the `user_id` values from admin logs over the last day
-  in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+- `field:contains_all(<подзапрос>)` — возвращает логи, в которых значение поля `field` содержит **все** слова и фразы, возвращённые `<подзапросом>`.  
+  Например, следующий запрос выбирает все логи за последние 5 минут, которые содержат **все** значения `user_id` из административных логов за последний день в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
   ```logsql
   _time:5m _msg:contains_all(_time:1d is_admin:true | fields user_id)
   ```
 
-- `field:contains_any(<subquery>)` - it returns logs with the `field` values containing at least one [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) or phrase returned by the `<subquery>`.
-  For example, the following query selects all the logs for the last 5 minutes, which contain at least one `user_id` value from admin logs over the last day
-  in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+- `field:contains_any(<подзапрос>)` — возвращает логи, в которых значение поля `field` содержит **хотя бы одно** слово или фразу, возвращённую `<подзапросом>`.  
+  Например, следующий запрос выбирает все логи за последние 5 минут, которые содержат **хотя бы одно** значение `user_id` из административных логов за последний день в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
   ```logsql
   _time:5m _msg:contains_any(_time:1d is_admin:true | fields user_id)
   ```
 
-The `<subquery>` must end with either [`fields` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) or [`uniq` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe) containing a single field name,
-so VictoriaLogs could use values of this field for matching the given filter.
+`<подзапрос>` должен завершаться либо конвейером [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe), либо конвейером [`uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe), содержащим имя **одного** поля. Это нужно, чтобы VictoriaLogs могла использовать значения этого поля для сопоставления с заданным фильтром.
 
-See also:
+См. также:
 
-- [`in` filter](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter)
-- [`contains_all` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
-- [`contains_any` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter)
-- [`join` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)
-- [`union` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#union-pipe)
-
+- фильтр [`in`](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter);
+- фильтр [`contains_all`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter);
+- фильтр [`contains_any`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter);
+- конвейер [`join`](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe);
+- конвейер [`union`](https://docs.victoriametrics.com/victorialogs/logsql/#union-pipe).

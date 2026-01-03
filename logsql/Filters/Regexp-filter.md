@@ -1,67 +1,72 @@
-### Regexp filter
+## Фильтр по регулярным выражениям
 
-LogsQL supports regular expression filter with [RE2 syntax](https://github.com/google/re2/wiki/Syntax) via `~"regex"` syntax.
-The `regex` can be put in one of the supported quotes according to [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
-For example, the following query returns all the log messages containing `err` or `warn` substrings:
+LogsQL поддерживает фильтрацию по регулярным выражениям (с синтаксисом **RE2**) через конструкцию `~"regex"`.
+
+Регулярное выражение `regex` можно заключать в любые поддерживаемые кавычки — см. [документацию по строковым литералам](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
+
+**Пример:** следующий запрос вернёт все сообщения журнала, содержащие подстроки `err` или `warn`:
 
 ```logsql
 ~"err|warn"
 ```
 
-The query matches the following [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), which contain either `err` or `warn` substrings:
+Этот запрос совпадет со следующими [сообщениями журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), содержащими `err` или `warn`:
 
 - `error: cannot read data`
 - `2 warnings have been raised`
 - `data transferring finished`
 
-The query doesn't match the following log messages:
+Запрос **не совпадет** со следующими сообщениями:
 
-- `ERROR: cannot open file`, since the `ERROR` word is in uppercase letters. Use `~"(?i)(err|warn)"` query for case-insensitive regexp search.
-  See [these docs](https://github.com/google/re2/wiki/Syntax) for details. See also [case-insensitive filter docs](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter).
-- `it is warmer than usual`, since it doesn't contain neither `err` nor `warn` substrings.
+- `ERROR: cannot open file` — потому что слово `ERROR` написано заглавными буквами. Для поиска без учёта регистра используйте запрос `~"(?i)(err|warn)"`.  
+  Подробнее см. в [документации по RE2](https://github.com/google/re2/wiki/Syntax) и в разделе о [фильтрах без учёта регистра](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter).
+- `it is warmer than usual` — потому что в нём нет ни `err`, ни `warn`.
 
-If the regexp contains double quotes, then either put `\` in front of double quotes or put the regexp inside single quotes. For example, the following regexp searches
-logs matching `"foo":"(bar|baz)"` regexp:
+### Экранирование кавычек и обратных слешей
+
+Если регулярное выражение содержит двойные кавычки, их нужно либо экранировать обратным слешем `\`, либо заключить выражение в одинарные кавычки. Например, следующий запрос ищет логи, соответствующие регулярному выражению `"foo":"(bar|baz)"`:
 
 ```logsql
 ~'"foo":"(bar|baz)"'
 ```
 
-The `\` char inside the regexp must be encoded as `\\`. For example, the following query searches for logs with `a.b` substring inside them:
+Символ `\` внутри регулярного выражения должен быть записан как `\\`. Например, следующий запрос ищет логи, содержащие подстроку `a.b`:
 
 ```logsql
 ~"a\\.b"
 ```
 
-It is recommended to use the [substring filter](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter) when a substring search is needed.
+### Применение фильтра к конкретному полю
 
-By default the regexp filter is applied to the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-Specify the needed [field name](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) in front of the filter
-in order to apply it to the given field. For example, the following query matches `event.original` field containing either `err` or `warn` substrings:
+По умолчанию фильтр по регулярному выражению применяется к полю [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
+
+Чтобы применить фильтр к определённому полю, укажите имя поля перед фильтром. Например, следующий запрос ищет в поле `event.original` подстроки `err` или `warn`:
 
 ```logsql
 event.original:~"err|warn"
 ```
 
-If the field name contains special chars, which may clash with the query syntax, then it may be put into quotes according to [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
-For example, the following query matches `event:original` field containing either `err` or `warn` substrings:
+Если имя поля содержит специальные символы, которые могут конфликтовать с синтаксисом запроса, его можно заключить в кавычки — см. [документацию по строковым литералам](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
+
+**Пример:** запрос для поля `event:original`:
 
 ```logsql
 "event:original":~"err|warn"
 ```
 
-Performance tips:
+## Советы по производительности
 
-- Prefer combining simple [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) with [logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) instead of using regexp filter.
-  For example, the `~"error|warning"` query can be substituted with `error OR warning` query, which usually works much faster.
-  Note that the `~"error|warning"` matches `errors` as well as `warnings` [words](https://docs.victoriametrics.com/victorialogs/logsql/#word), while `error OR warning` matches
-  only the specified [words](https://docs.victoriametrics.com/victorialogs/logsql/#word). See also [multi-exact filter](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter).
-- Prefer moving the regexp filter to the end of the [logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter), so lighter filters are executed first.
-- Prefer using `="some prefix"*` instead of `~"^some prefix"`, since the [`exact prefix` filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-prefix-filter) works much faster than the regexp filter.
-- See [other performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+- **Предпочитайте простые фильтры.** Вместо регулярного выражения комбинируйте [фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) с [логическим фильтром](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).  
+  Например, запрос `~"error|warning"` можно заменить на `error OR warning` — он обычно работает значительно быстрее.  
+  **Важно:** `~"error|warning"` совпадет с `errors` и `warnings`, а `error OR warning` — только с точными словами. См. также [фильтр по нескольким точным значениям](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter).
 
-See also:
+- **Ставьте регулярный фильтр в конец.** Перемещайте фильтр по регулярному выражению в конец [логического фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter), чтобы сначала выполнялись более лёгкие фильтры.
 
-- [Case-insensitive filter](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
+- **Используйте фильтр по префиксу.** Вместо `~"^some prefix"` предпочитайте `="some prefix"*` — [фильтр по точному префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#exact-prefix-filter) работает намного быстрее регулярного выражения.
 
+- См. также [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+
+## См. также
+
+- [Фильтр без учёта регистра](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)
+- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

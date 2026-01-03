@@ -1,20 +1,21 @@
-### String range filter
+### Фильтр диапазона строк
 
-If you need to filter log message by some field with string values in some range, then `string_range()` filter can be used.
-For example, the following LogsQL query matches log entries with `user.name` field starting from `A` and `B` chars:
+Если вам нужно отфильтровать сообщения журнала по какому‑либо полю со строковыми значениями в определённом диапазоне, можно использовать фильтр `string_range()`.
+
+Например, следующий запрос на языке LogsQL подберёт записи журнала, у которых поле `user.name` начинается с символов `A` или `B`:
 
 ```logsql
 user.name:string_range(A, C)
 ```
 
-The `string_range()` includes the lower bound, while excluding the upper bound. This simplifies querying distinct sets of logs.
-For example, the `user.name:string_range(C, E)` would match `user.name` fields, which start from `C` and `D` chars.
+Фильтр `string_range()` включает нижнюю границу диапазона и исключает верхнюю. Это упрощает формирование запросов для выборки непересекающихся наборов логов.
 
-See also:
+Например, запрос `user.name:string_range(C, E)` подберёт поля `user.name`, начинающиеся с символов `C` или `D`.
 
-- [Range comparison filter](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter)
-- [Range filter](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter)
-- [IPv4 range filter](https://docs.victoriametrics.com/victorialogs/logsql/#ipv4-range-filter)
-- [Length range filter](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
+См. также:
 
+- [Фильтр сравнения диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter)
+- [Фильтр диапазона](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter)
+- [Фильтр диапазона IPv4](https://docs.victoriametrics.com/victorialogs/logsql/#ipv4-range-filter)
+- [Фильтр диапазона длины](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter)
+- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
