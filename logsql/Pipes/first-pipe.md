@@ -1,25 +1,22 @@
-### first pipe
+### Конвейер `first`
 
-`<q> | first N by (fields)` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) returns the first `N` logs from `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) after sorting them
-by the given [`fields`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Конвейер `<q> | first N by (fields)` ([документация](https://docs.victoriametrics.com/victorialogs/logsql/#pipes)) возвращает первые `$N$` записей журнала из запроса `<q>` ([синтаксис запросов](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax)) после их сортировки по указанным полям (`fields`) ([модель данных](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)).
 
-For example, the following query returns the first 10 logs with the smallest value of `request_duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over the last 5 minutes:
+**Пример.** Следующий запрос возвращает первые 10 записей журнала с наименьшим значением поля `request_duration` за последние 5 минут:
 
 ```logsql
 _time:5m | first 10 by (request_duration)
 ```
 
-It is possible to return up to `N` logs individually for each group of logs with the same set of [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
-by enumerating the set of these fields in `partition by (...)`.
-For example, the following query returns up to 3 logs with the smallest `request_duration` for each host over the last hour:
+Можно вернуть до `$N$` записей индивидуально для каждой группы записей с одинаковым набором полей, перечислив этот набор в `partition by (...)`.
+
+**Пример.** Следующий запрос возвращает до 3 записей с наименьшим `request_duration` для каждого хоста за последний час:
 
 ```logsql
 _time:1h | first 3 by (request_duration) partition by (host)
 ```
 
-See also:
+Смотрите также:
 
-- [`last` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#last-pipe)
-- [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-
+- конвейер `last` ([документация](https://docs.victoriametrics.com/victorialogs/logsql/#last-pipe));
+- конвейер `sort` ([документация](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)).

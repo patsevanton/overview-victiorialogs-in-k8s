@@ -1,29 +1,27 @@
-### filter pipe
+### Конвейер фильтрации (filter pipe)
 
-The `<q> | filter ...` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) filters logs returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) with the given [filter](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+Конструкция `<q> | filter ...` [конвейер (pipe)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) фильтрует логи, возвращённые запросом `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), с помощью указанного [фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
 
-For example, the following query returns `host` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) values
-if the number of log messages with the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) for them over the last hour exceeds `1_000`:
+Например, следующий запрос возвращает значения поля `host` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), если за последний час количество сообщений с словом `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) для них превышает `1 000`:
 
 ```logsql
 _time:1h error | stats by (host) count() logs_count | filter logs_count:> 1_000
 ```
 
-It is allowed to use `where` prefix instead of `filter` prefix for convenience. For example, the following query is equivalent to the previous one:
+Для удобства вместо префикса `filter` можно использовать префикс `where`. Например, следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:1h error | stats by (host) count() logs_count | where logs_count:> 1_000
 ```
 
-It is allowed to omit `filter` prefix if the used filters do not clash with [pipe names](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
-So the following query is equivalent to the previous one:
+Префикс `filter` можно опустить, если используемые фильтры не конфликтуют с [названиями конвейеров (pipe names)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).  
+Так, следующий запрос эквивалентен предыдущим:
 
 ```logsql
 _time:1h error | stats by (host) count() logs_count | logs_count:> 1_000
 ```
 
-See also:
+Смотрите также:
 
-- [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-
+- [конвейер `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
+- [конвейер `sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
