@@ -46,12 +46,3 @@ log.level:i(error)
   [фильтр фразы](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
   и [фильтр префикса](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
   перед регистронезависимым фильтром.
-* См. также [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
-
-#### См. также
-
-* [`contains_common_case` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter)
-* [Фильтр слова](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-* [Фильтр фразы](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-* [Точный фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-* [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

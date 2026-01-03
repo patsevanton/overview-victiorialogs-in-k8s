@@ -11,11 +11,3 @@ user.name:string_range(A, C)
 Фильтр `string_range()` включает нижнюю границу диапазона и исключает верхнюю. Это упрощает формирование запросов для выборки непересекающихся наборов логов.
 
 Например, запрос `user.name:string_range(C, E)` подберёт поля `user.name`, начинающиеся с символов `C` или `D`.
-
-См. также:
-
-- [Фильтр сравнения диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter)
-- [Фильтр диапазона](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter)
-- [Фильтр диапазона IPv4](https://docs.victoriametrics.com/victorialogs/logsql/#ipv4-range-filter)
-- [Фильтр диапазона длины](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

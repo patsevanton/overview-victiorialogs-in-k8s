@@ -34,8 +34,3 @@ _time:day_range[08:00, 18:00) offset 2h
 ```logsql
 _time:1w _time:day_range[08:00, 18:00)
 ```
-
-См. также:
-
-* [Фильтр недельного диапазона](https://docs.victoriametrics.com/victorialogs/logsql/#week-range-filter)
-* [Фильтр по времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter)

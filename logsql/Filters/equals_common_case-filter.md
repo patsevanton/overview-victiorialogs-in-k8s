@@ -22,8 +22,3 @@
 
 Если вам нужно найти логи, в которых поля лога **содержат** слова или фразы с «обычным регистром»,
 используйте фильтр [`contains_common_case`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter).
-
-См. также:
-
-* [регистронезависимый фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)
-* [`contains_common_case` фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#contains_common_case-filter)

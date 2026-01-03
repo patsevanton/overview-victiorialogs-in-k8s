@@ -9,9 +9,3 @@ VictoriaLogs автоматически определяет типы для з�
 ```logsql
 user_id:value_type(uint64)
 ```
-
-См. также:
-
-- конвейер [`block_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe);
-- конвейер [`query_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe);
-- [логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).

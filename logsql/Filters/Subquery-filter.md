@@ -24,11 +24,3 @@
   ```
 
 `<подзапрос>` должен завершаться либо конвейером [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe), либо конвейером [`uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe), содержащим имя **одного** поля. Это нужно, чтобы VictoriaLogs могла использовать значения этого поля для сопоставления с заданным фильтром.
-
-См. также:
-
-- фильтр [`in`](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter);
-- фильтр [`contains_all`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter);
-- фильтр [`contains_any`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter);
-- конвейер [`join`](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe);
-- конвейер [`union`](https://docs.victoriametrics.com/victorialogs/logsql/#union-pipe).

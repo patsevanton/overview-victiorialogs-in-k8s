@@ -16,10 +16,3 @@
 Но он **не подойдёт** для `EXAMPLE message`, поскольку подстрока `AMPL` здесь записана заглавными буквами. В таком случае используйте фильтр [`~"(?i)ampl"`](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter) — он учитывает регистр нечувствительно. Обратите внимание, что фильтр без учёта регистра может работать значительно медленнее, чем чувствительный к регистру.
 
 **Совет по производительности:** отдавайте предпочтение [фильтру по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) и [фильтру по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter), поскольку фильтр по подстроке может работать довольно медленно.
-
-См. также:
-
-- [Фильтр по шаблону](https://docs.victoriametrics.com/victorialogs/logsql/#pattern-match-filter)
-- [Фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Фильтр по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Фильтр по регулярному выражению](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter)

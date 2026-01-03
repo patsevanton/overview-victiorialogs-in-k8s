@@ -27,8 +27,3 @@ _stream_id:in(0000007b000001c850d9950ea6196b1a4812081265faa1c7, 1230007b456701c8
 ```logsql
 _stream_id:in(_time:5m error | fields _stream_id)
 ```
-
-См. также:
-
-- [фильтр с подзапросом](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter)
-- [фильтр по потоку](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)

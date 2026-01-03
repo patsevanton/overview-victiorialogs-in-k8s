@@ -29,12 +29,3 @@ event.original:seq(error, "open file")
 ```logsql
 "event:original":seq(error, "open file")
 ```
-
-**См. также:**
-
-- [Фильтр сопоставления с образцом (Pattern match filter)](https://docs.victoriametrics.com/victorialogs/logsql/#pattern-match-filter)
-- [Фильтр `contains_all`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
-- [Фильтр слов (Word filter)](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Фильтр фраз (Phrase filter)](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Точный фильтр (Exact filter)](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-- [Логический фильтр (Logical filter)](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

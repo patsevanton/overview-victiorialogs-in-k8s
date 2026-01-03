@@ -36,13 +36,3 @@ log.დონე:="შეცდომა"
 ```logsql
 "log:level":="error"
 ```
-
-См. также:
-
-- [Фильтр равенства полей](https://docs.victoriametrics.com/victorialogs/logsql/#eq_field-filter)
-- [Фильтр точного префикса](https://docs.victoriametrics.com/victorialogs/logsql/#exact-prefix-filter)
-- [Множественный точный фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter)
-- [Фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Фильтр по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Фильтр по префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

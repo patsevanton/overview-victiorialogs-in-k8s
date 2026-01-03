@@ -30,11 +30,3 @@ request.duration:>4.2
 
 - Лучше запрашивать **чисто числовое поле** вместо извлечения числового поля из текстового поля с помощью [преобразований](https://docs.victoriametrics.com/victorialogs/logsql/#transformations) во время выполнения запроса.
 - См. [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
-
-**См. также:**
-
-- [Фильтр сравнения диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter);
-- [Фильтр диапазона IPv4](https://docs.victoriametrics.com/victorialogs/logsql/#ipv4-range-filter);
-- [Строковый фильтр диапазона](https://docs.victoriametrics.com/victorialogs/logsql/#string-range-filter);
-- [Фильтр диапазона длины](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter);
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).

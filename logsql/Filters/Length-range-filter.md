@@ -37,8 +37,3 @@ len_range(5, inf)
 ```logsql
 foo:len_range(10, 20)
 ```
-
-Смотрите также:
-
-- [Фильтр по диапазону](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

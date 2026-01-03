@@ -20,9 +20,3 @@ foo OR "bar baz"
 
 Внутрь фильтра `contains_any(...)` можно передавать произвольный [запрос](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), чтобы выполнять сопоставление по результатам этого запроса. Подробности см. в [этой документации](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter).
 
-См. также:
-
-* [фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-* [фильтр по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-* [фильтр `in`](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter)
-* [фильтр `contains_all`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)

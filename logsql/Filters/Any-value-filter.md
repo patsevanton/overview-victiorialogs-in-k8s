@@ -7,10 +7,3 @@
 ```logsql
 host.hostname:*
 ```
-
-Смотрите также:
-
-- [Фильтр «без операции»](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter)
-- [Фильтр пустого значения](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter)
-- [Фильтр по префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

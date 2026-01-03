@@ -7,8 +7,3 @@
 - `field_name:in(*)` — особый случай для фильтра [`in()`](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter);
 - `field_name:contains_any(*)` — особый случай для фильтра [`contains_any()`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter);
 - `field_name:contains_all(*)` — особый случай для фильтра [`contains_all()`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter).
-
-См. также:
-
-- [Фильтр для пустого значения](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter);
-- [Фильтр для любого значения](https://docs.victoriametrics.com/victorialogs/logsql/#any-value-filter).

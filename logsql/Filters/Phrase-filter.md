@@ -53,11 +53,3 @@ event.original:"cannot open file"
 ```logsql
 "some:message":"cannot open file"
 ```
-
-См. также:
-
-- [Точный фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-- [Фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Фильтр по префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Фильтр по подстроке](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

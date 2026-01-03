@@ -24,11 +24,3 @@ pattern_match("user_id=<N>, ip=<IP4>, time=<DATETIME>")
 ```
 
 Если нужно сопоставить **всё** значение поля `_msg`, используйте фильтр `pattern_match_full("шаблон")`.
-
-См. также:
-
-- [Конвейер `collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#collapse_nums-pipe)
-- [Фильтр последовательности](https://docs.victoriametrics.com/victorialogs/logsql/#sequence-filter)
-- [Фильтр фраз](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Фильтр подстроки](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

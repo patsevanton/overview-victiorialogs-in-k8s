@@ -49,8 +49,3 @@ _time:week_range[Mon, Fri] _time:day_range[08:00, 18:00)
 ```logsql
 _time:4w _time:week_range[Mon, Fri]
 ```
-
-См. также:
-
-- [Фильтр диапазона дней](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter);
-- [Фильтр времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter).

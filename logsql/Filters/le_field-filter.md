@@ -10,9 +10,3 @@ duration:le_field(max_duration)
 ```
 
 Полезный совет: используйте `NOT duration:le_field(max_duration)`, чтобы найти логи, в которых `duration` превышает `max_duration`.
-
-Смотрите также:
-
-- [фильтр сравнения диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter);
-- фильтр [`lt_field`](https://docs.victoriametrics.com/victorialogs/logsql/#lt_field-filter);
-- фильтр [`eq_field`](https://docs.victoriametrics.com/victorialogs/logsql/#eq_field-filter).

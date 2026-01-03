@@ -33,11 +33,3 @@ _stream:{app="nginx"}
 - Рекомендуется использовать максимально конкретный фильтр `{...}`, который соответствует наименьшему числу потоков логов — это сократит объём данных, сканируемых остальными фильтрами в запросе.
 
 - Хотя LogsQL поддерживает произвольное число фильтров `{...}` на любом уровне **[логических фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)**, рекомендуется указывать **единственный** фильтр `{...}` на верхнем уровне запроса.
-
-- См. также **[другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips)**.
-
-**См. также:**
-
-- **[Фильтр `_stream_id`](https://docs.victoriametrics.com/victorialogs/logsql/#_stream_id-filter)**
-- **[Временной фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter)**
-- **[Фильтр точного совпадения](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)**

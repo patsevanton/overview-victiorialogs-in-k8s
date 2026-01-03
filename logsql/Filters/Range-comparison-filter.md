@@ -15,10 +15,3 @@ response_size:>10KiB
 ```logsql
 username:<"John"
 ```
-
-См. также:
-
-- [Фильтр диапазона строк](https://docs.victoriametrics.com/victorialogs/logsql/#string-range-filter);
-- [Фильтр диапазона](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter);
-- Фильтр [`le_field`](https://docs.victoriametrics.com/victorialogs/logsql/#le_field-filter);
-- Фильтр [`lt_field`](https://docs.victoriametrics.com/victorialogs/logsql/#lt_field-filter).

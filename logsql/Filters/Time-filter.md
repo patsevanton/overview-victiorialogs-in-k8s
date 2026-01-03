@@ -64,10 +64,3 @@ _time:1h AND error
   Например, `_time:1h` обычно выполняется быстрее, чем `_time:5h`.
 - Хотя LogsQL поддерживает произвольное количество фильтров `_time:...` на любом уровне [логических фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter), рекомендуется указывать **один** фильтр `_time` на верхнем уровне запроса.
 - Смотрите также [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
-
-## См. также
-
-- [Фильтр по дню](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter)
-- [Фильтр по неделе](https://docs.victoriametrics.com/victorialogs/logsql/#week-range-filter)
-- [Фильтр по потоку](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)
-- [Фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)

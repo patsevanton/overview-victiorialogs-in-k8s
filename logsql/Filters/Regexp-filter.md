@@ -63,10 +63,3 @@ event.original:~"err|warn"
 - **Ставьте регулярный фильтр в конец.** Перемещайте фильтр по регулярному выражению в конец [логического фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter), чтобы сначала выполнялись более лёгкие фильтры.
 
 - **Используйте фильтр по префиксу.** Вместо `~"^some prefix"` предпочитайте `="some prefix"*` — [фильтр по точному префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#exact-prefix-filter) работает намного быстрее регулярного выражения.
-
-- См. также [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
-
-## См. также
-
-- [Фильтр без учёта регистра](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

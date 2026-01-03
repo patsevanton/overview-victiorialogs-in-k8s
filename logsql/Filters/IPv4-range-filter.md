@@ -44,10 +44,3 @@ user.ip:ipv4_range("1.2.3.4")
 
 - Предпочитайте запросы к **чистому IPv4‑полю** вместо извлечения IPv4 из текстового поля с помощью преобразований ([transformations](https://docs.victoriametrics.com/victorialogs/logsql/#transformations)) во время выполнения запроса.
 - Смотрите [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
-
-### См. также
-
-- [Фильтр диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter)
-- [Фильтр строковых диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#string-range-filter)
-- [Фильтр диапазонов длины](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

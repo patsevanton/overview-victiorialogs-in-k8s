@@ -21,8 +21,3 @@
 
 Если вам нужно найти логи, в которых поля лога **равны** словам или фразам с общим регистром,
 используйте фильтр [`equals_common_case`](https://docs.victoriametrics.com/victorialogs/logsql/#equals_common_case-filter).
-
-См. также:
-
-* [регистронезависимый фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)
-* [фильтр `equals_common_case`](https://docs.victoriametrics.com/victorialogs/logsql/#equals_common_case-filter)

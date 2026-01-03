@@ -37,11 +37,3 @@ log.დონე:="შეცდომა"*
 ```logsql
 "log:level":="err"*
 ```
-
-См. также:
-
-- [Фильтр точного совпадения](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-- [Фильтр префикса](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Фильтр слова](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Фильтр фразы](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

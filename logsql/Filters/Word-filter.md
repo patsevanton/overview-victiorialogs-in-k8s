@@ -36,11 +36,3 @@ log.level:error
 ```logsql
 "ip:remote":"1.2.3.45"
 ```
-
-См. также:
-
-- **[Фильтр по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)**
-- **[Точный фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)**
-- **[Фильтр по префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)**
-- **[Фильтр по подстроке](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter)**
-- **[Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)**
