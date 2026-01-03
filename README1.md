@@ -160,7 +160,7 @@ helm upgrade --install vmks \
  Для получения пароля admin от Grafana необходимо:
 
 ```bash
-# Откройте http://grafana.example.org/ (в зависимости от Ingress/Egress)
+# Откройте http://grafana.apatsev.org.ru/
 kubectl get secret vmks-grafana -n vmks -o jsonpath='{.data.admin-password}' | base64 --decode; echo
 ```
 
