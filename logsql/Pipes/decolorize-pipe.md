@@ -1,26 +1,24 @@
-### decolorize pipe
+### Труба `decolorize`
 
-`<q> | decolorize <field>` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) drops [ANSI color codes](https://en.wikipedia.org/wiki/ANSI_escape_code)
-from the given [`<field>`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) across all the logs returned by [`<q>` query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+Конструкция `<q> | decolorize <field>` [труба (pipe)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) удаляет [ANSI‑коды цветов](https://en.wikipedia.org/wiki/ANSI_escape_code) из указанного поля [`<field>`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) во всех логах, возвращённых запросом [`<q>`](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
 
-The `<field>` may be omitted if ANSI color codes must be dropped from the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-For example, the following query drops ANSI color codes from all the `_msg` fields over the logs for the last 5 minutes:
+Поле `<field>` можно опустить, если требуется удалить ANSI‑коды цветов из поля [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
+
+Например, следующий запрос удаляет ANSI‑коды цветов из всех полей `_msg` в логах за последние 5 минут:
 
 ```logsql
 _time:5m | decolorize
 ```
 
-This query is equivalent to the following query:
+Этот запрос эквивалентен такому:
 
 ```logsql
 _time:5m | decolorize _msg
 ```
 
-It is recommended to drop ANSI color codes at the data ingestion stage according to [these docs](https://docs.victoriametrics.com/victorialogs/data-ingestion/#decolorizing).
-This simplifies further querying of the logs without the need to apply `| decolorize` pipe to them.
+Рекомендуется удалять ANSI‑коды цветов на этапе приёма данных — см. [соответствующую документацию](https://docs.victoriametrics.com/victorialogs/data-ingestion/#decolorizing). Это упростит последующие запросы к логам: не придётся добавлять к ним трубу `| decolorize`.
 
-See also:
+См. также:
 
-- [`replace` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
-- [`replace_regexp` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe)
-
+- труба [`replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe);
+- труба [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe).
