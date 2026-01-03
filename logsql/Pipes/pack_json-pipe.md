@@ -1,45 +1,38 @@
-### pack_json pipe
+### Конвейер `pack_json`
 
-`<q> | pack_json as field_name` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) packs all the [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) of every log
-entry returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) into JSON object and stores it as a string in the given `field_name`.
+Конструкция `<q> | pack_json as field_name` [конвейер (pipe)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) упаковывает все [поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) каждой записи журнала, возвращённой запросом `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), в объект JSON и сохраняет его в виде строки в указанное поле `field_name`.
 
-For example, the following query packs all the fields into JSON object and stores it into [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-for logs over the last 5 minutes:
+Например, следующий запрос упаковывает все поля в объект JSON и сохраняет результат в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) для журналов за последние 5 минут:
 
 ```logsql
 _time:5m | pack_json as _msg
 ```
 
-The `as _msg` part can be omitted if packed JSON object is stored into [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-The following query is equivalent to the previous one:
+Часть `as _msg` можно опустить, если упакованный объект JSON сохраняется в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field). Следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | pack_json
 ```
 
-If only a subset of fields must be packed into JSON, then it must be listed inside `fields (...)` after `pack_json`. For example, the following query builds JSON with `foo` and `bar` fields
-only and stores the result in `baz` field:
+Если необходимо упаковать в JSON лишь часть полей, их следует перечислить внутри `fields (...)` после `pack_json`. Например, следующий запрос создаёт JSON только с полями `foo` и `bar` и сохраняет результат в поле `baz`:
 
 ```logsql
 _time:5m | pack_json fields (foo, bar) as baz
 ```
 
-It is possible to pass field prefixes into `fields (...)` in order to pack only the fields, which start with the given prefixes.
-For example, the following query builds JSON with all the fields, which start with either `foo.` or `bar.`:
+В `fields (...)` можно передавать префиксы полей, чтобы упаковать только те поля, которые начинаются с указанных префиксов. Например, следующий запрос создаёт JSON со всеми полями, начинающимися на `foo.` или `bar.`:
 
 ```logsql
 _time:5m | pack_json fields (foo.*, bar.*) as baz
 ```
 
-The `pack_json` doesn't modify or delete other fields. If you do not need them, then add [`| fields ...`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) after the `pack_json` pipe. For example, the following query
-leaves only the `foo` field with the original log fields packed into JSON:
+Конвейер `pack_json` не изменяет и не удаляет другие поля. Если они не нужны, добавьте [`| fields ...`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) после `pack_json`. Например, следующий запрос оставляет только поле `foo`, в котором исходные поля журнала упакованы в JSON:
 
 ```logsql
 _time:5m | pack_json as foo | fields foo
 ```
 
-See also:
+Смотрите также:
 
-- [`pack_logfmt` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pack_logfmt-pipe)
-- [`unpack_json` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe)
-
+- конвейер [`pack_logfmt`](https://docs.victoriametrics.com/victorialogs/logsql/#pack_logfmt-pipe);
+- конвейер [`unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe).

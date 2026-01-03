@@ -1,45 +1,48 @@
-### pack_logfmt pipe
+### Конвейер `pack_logfmt`
 
-`<q> | pack_logfmt as field_name` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) packs all the [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) for every log entry
-returned by `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) into [logfmt](https://brandur.org/logfmt) message and stores it as a string in the given `field_name`.
+Конструкция  
+```
+<q> | pack_logfmt as field_name
+```  
+[конвейер](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) упаковывает все [поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) каждой записи журнала, возвращённой запросом `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), в сообщение формата [logfmt](https://brandur.org/logfmt) и сохраняет его в виде строки в указанном поле `field_name`.
 
-For example, the following query packs all the fields into [logfmt](https://brandur.org/logfmt) message and stores it
-into [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) for logs over the last 5 minutes:
+**Пример.** Следующий запрос упаковывает все поля в сообщение формата [logfmt](https://brandur.org/logfmt) и сохраняет результат в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) для журналов за последние 5 минут:
 
 ```logsql
 _time:5m | pack_logfmt as _msg
 ```
 
-The `as _msg` part can be omitted if packed message is stored into [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-The following query is equivalent to the previous one:
+Часть `as _msg` можно опустить, если упакованное сообщение сохраняется в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field). Следующий запрос эквивалентен предыдущему:
 
 ```logsql
 _time:5m | pack_logfmt
 ```
 
-If only a subset of fields must be packed into [logfmt](https://brandur.org/logfmt), then it must be listed inside `fields (...)` after `pack_logfmt`.
-For example, the following query builds [logfmt](https://brandur.org/logfmt) message with `foo` and `bar` fields only and stores the result in `baz` field:
+Если нужно упаковать в [logfmt](https://brandur.org/logfmt) лишь подмножество полей, их следует перечислить внутри `fields (...)` после `pack_logfmt`.
+
+**Пример.** Нижеприведённый запрос формирует сообщение [logfmt](https://brandur.org/logfmt), включающее только поля `foo` и `bar`, и сохраняет результат в поле `baz`:
 
 ```logsql
 _time:5m | pack_logfmt fields (foo, bar) as baz
 ```
 
-It is possible to pass field prefixes into `fields (...)` in order to pack only the fields, which start with the given prefixes.
-For example, the following query builds `logfmt` message with all the fields, which start with either `foo.` or `bar.`:
+В `fields (...)` можно передавать префиксы полей — тогда будут упакованы лишь те поля, которые начинаются с указанных префиксов.
+
+**Пример.** Следующий запрос строит сообщение `logfmt`, включающее все поля, начинающиеся с `foo.` или `bar.`:
 
 ```logsql
 _time:5m | pack_logfmt fields (foo.*, bar.*) as baz
 ```
 
-The `pack_logfmt` doesn't modify or delete other fields. If you do not need them, then add [`| fields ...`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) after the `pack_logfmt` pipe. For example, the following query
-leaves only the `foo` field with the original log fields packed into [logfmt](https://brandur.org/logfmt):
+Конвейер `pack_logfmt` не изменяет и не удаляет другие поля. Если они не нужны, добавьте [`| fields ...`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) после `pack_logfmt`.
+
+**Пример.** Нижеприведённый запрос оставляет только поле `foo`, при этом исходные поля журнала упакованы в формат [logfmt](https://brandur.org/logfmt):
 
 ```logsql
 _time:5m | pack_logfmt as foo | fields foo
 ```
 
-See also:
+**См. также:**
 
-- [`pack_json` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pack_json-pipe)
-- [`unpack_logfmt` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe)
-
+- конвейер [`pack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#pack_json-pipe);
+- конвейер [`unpack_logfmt`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe).
