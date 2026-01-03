@@ -1,4 +1,3 @@
-## Sorting
+## Сортировка
 
-By default VictoriaLogs doesn't sort the returned results for performance reasons. Use [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe) for sorting the results.
-
+По умолчанию VictoriaLogs не сортирует возвращаемые результаты — это сделано для повышения производительности. Чтобы отсортировать результаты, используйте конвейер [`sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe).

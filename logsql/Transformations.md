@@ -1,19 +1,29 @@
-## Transformations
+## Преобразования
 
-LogsQL supports the following transformations on the log entries selected with [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters):
+LogsQL поддерживает следующие преобразования для записей журнала, отобранных с помощью [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters):
 
-- Extracting arbitrary text from [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) according to the provided pattern.
-  See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe) for details.
-- Unpacking JSON fields from [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model). See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe).
-- Unpacking [logfmt](https://brandur.org/logfmt) fields from [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model). See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe).
-- Unpacking [Syslog](https://en.wikipedia.org/wiki/Syslog) messages from [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model). See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_syslog-pipe).
-- Creating a new field from existing [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) according to the provided format. See [`format` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe).
-- Replacing substrings in the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
-  See [`replace` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe) and [`replace_regexp` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe) docs.
-- Creating a new field according to math calculations over existing [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model). See [`math` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe).
+- **Извлечение произвольного текста** из [полей журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) по заданному шаблону.  
+  Подробнее см. в [документации по оператору `extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe).
 
-See also [other pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes), which can be applied to the selected logs.
+- **Распаковка полей JSON** из [полей журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).  
+  См. [документацию по оператору `unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe).
 
-It is also possible to perform various transformations on the [selected log entries](https://docs.victoriametrics.com/victorialogs/logsql/#filters) at client side
-with `jq`, `awk`, `cut`, etc. Unix commands according to [these docs](https://docs.victoriametrics.com/victorialogs/querying/#command-line).
+- **Распаковка полей в формате logfmt** из [полей журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).  
+  См. [документацию по оператору `unpack_logfmt`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe).
 
+- **Распаковка сообщений Syslog** из [полей журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).  
+  См. [документацию по оператору `unpack_syslog`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_syslog-pipe).
+
+- **Создание нового поля** на основе существующих [полей журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) по заданному формату.  
+  См. оператор [`format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe).
+
+- **Замена подстрок** в указанном [поле журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).  
+  См. документацию по операторам [`replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe) и [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe).
+
+- **Создание нового поля** на основе математических вычислений над существующими [полями журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).  
+  См. оператор [`math`](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe).
+
+Также см. [другие операторы (pipes)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes), которые можно применять к отобранным записям журнала.
+
+Кроме того, можно выполнять различные преобразования **на стороне клиента** для [отобранных записей журнала](https://docs.victoriametrics.com/victorialogs/logsql/#filters) с помощью утилит командной строки Unix: `jq`, `awk`, `cut` и др.  
+Подробнее см. в [разделе о запросах из командной строки](https://docs.victoriametrics.com/victorialogs/querying/#command-line).

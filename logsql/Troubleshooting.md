@@ -1,29 +1,34 @@
-## Troubleshooting
+Ниже — перевод раздела **Troubleshooting** из документации VictoriaLogs.
 
-LogsQL works well for most use cases when set up right. But sometimes you will see slow queries. The most common reason is querying too many logs without enough filtering.
-Always **be specific** when you build your queries.
 
-Use these steps to help you understand your query and improve its speed.
 
-### Check how many logs your query matches
+## Устранение неполадок (Troubleshooting)
 
-You can do this by putting the [`| count()`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats) after every filter or pipe that might change the number of rows.
+LogsQL хорошо работает в большинстве сценариев при правильной настройке. Однако иногда вы можете сталкиваться с медленными запросами. Самая частая причина — запрос слишком большого количества логов без достаточной фильтрации.
+Всегда **будьте максимально конкретны** при построении запросов.
 
-Suppose you have the following query, which executes slowly:
+Используйте шаги ниже, чтобы понять, как работает ваш запрос, и повысить его скорость.
+
+
+
+### Проверьте, сколько логов соответствует вашему запросу
+
+Это можно сделать, добавляя [`| count()`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats) после каждого фильтра или pipe, который может менять количество строк.
+
+Предположим, у вас есть следующий запрос, который выполняется медленно:
 
 ```logsql
 _time:5m host:"api-" level:error "database" | stats by (app) count()
 ```
 
-Substitute all the [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) in the query with `| count()` and
-run the updated query to see the total number of matching logs:
+Замените все [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) в запросе на `| count()` и выполните обновлённый запрос, чтобы увидеть общее количество совпадающих логов:
 
 ```logsql
 _time:5m host:"api-" level:error "database" | count()
 ```
 
-An example output (obtained via [vlogscli](https://docs.victoriametrics.com/victorialogs/querying/vlogscli/), but you can use
-[any supported querying method](https://docs.victoriametrics.com/victorialogs/querying/)):
+Пример вывода (получен через [vlogscli](https://docs.victoriametrics.com/victorialogs/querying/vlogscli/), но можно использовать
+[любой поддерживаемый способ выполнения запросов](https://docs.victoriametrics.com/victorialogs/querying/)):
 
 ```bash
 executing [_time:5m level:error database host:"api-" | stats count(*) as "count(*)"]...; duration: 0.474s
@@ -32,14 +37,14 @@ executing [_time:5m level:error database host:"api-" | stats count(*) as "count(
 }
 ```
 
-So the given filters match 19,217,008 logs and the matching takes 0.474 seconds.
+Это означает, что указанные фильтры совпадают с 19 217 008 логами, а выполнение заняло 0.474 секунды.
 
-If the execution time is high, try reordering your filters. Put the most selective and cheapest conditions first.
-Filters run one after another, so an early filter that removes a lot of logs will make later filters faster to run.
-For more tips, see the [Performance Tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+Если время выполнения велико, попробуйте изменить порядок фильтров. Размещайте самые селективные и «дешёвые» условия первыми.
+Фильтры выполняются последовательно, поэтому ранний фильтр, который отсекает большое количество логов, ускорит выполнение последующих фильтров.
+Дополнительные рекомендации см. в разделе [Performance Tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-If you are not sure which filter is the most selective or the most expensive, you can add `| count()` after each filter while removing the rest of filters.
-This helps you see how many logs each filter matches and gives you an idea about their performance:
+Если вы не уверены, какой фильтр наиболее селективный или самый дорогой, можно добавлять `| count()` после каждого фильтра, убирая остальные.
+Это позволит увидеть, сколько логов соответствует каждому фильтру, и оценить их производительность:
 
 ```logsql
 _time:5m level:error | count()
@@ -53,46 +58,59 @@ _time:5m host:"api-" | count()
 _time:5m "database" | count()
 ```
 
-The [`_time` filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) is the essential one - if it is missing, then VictoriaLogs literally scans all the logs stored in the database.
-The `_time` filter allows reducing the amount of logs to scan to the given time range only. Note that [Web UI for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/#web-ui)
-and [Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/integrations/grafana/) automatically set the `_time` filter to the selected time range,
-so there is no need to specify it manually in the query.
+Фильтр [`_time`](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) является обязательным: если его нет, VictoriaLogs буквально сканирует **все** логи, хранящиеся в базе данных.
+Фильтр `_time` позволяет ограничить объём сканируемых данных заданным временным диапазоном.
 
-### Test stream filters in the query
+Обратите внимание: [Web UI VictoriaLogs](https://docs.victoriametrics.com/victorialogs/querying/#web-ui) и
+[плагин Grafana для VictoriaLogs](https://docs.victoriametrics.com/victorialogs/integrations/grafana/)
+автоматически устанавливают `_time` в соответствии с выбранным временным интервалом, поэтому указывать его вручную не требуется.
 
-If the query doesn't contain [log stream filters](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter), VictoriaLogs needs to read and scan all the data blocks on the selected time range.
-If you add a [log stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter), like this:
+
+
+### Проверяйте использование stream-фильтров в запросе
+
+Если запрос не содержит [фильтров по потокам логов (log stream filters)](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter), VictoriaLogs вынужден читать и сканировать все блоки данных в выбранном временном диапазоне.
+
+Если же вы добавите stream-фильтр, например:
 
 ```logsql
 {app="nginx"}
 ```
 
-Then VictoriaLogs skips all the data blocks that do not match this stream filter. This is much faster. So, having a good log stream filter is important for query performance.
+то VictoriaLogs пропустит все блоки данных, которые не соответствуют этому фильтру. Это значительно быстрее, поэтому корректные stream-фильтры крайне важны для производительности.
 
-However, if your [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) has a stream field like `app="nginx"` but you write your filter as:
+Однако если ваш [log stream](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) содержит поле `app="nginx"`, а вы напишете фильтр так:
 
 ```logsql
 app:=nginx
 ```
 
-Then VictoriaLogs treats it as a regular ["exact match" filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter) and scans all the data blocks, so it will not be as fast as the corresponding stream filter.
-Make sure to use the correct stream filter syntax. See [stream filters docs](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter) for details.
+VictoriaLogs будет трактовать его как обычный
+["точный фильтр совпадения"](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
+и всё равно будет сканировать все блоки данных. Такой запрос будет заметно медленнее, чем аналогичный stream-фильтр.
 
-### Check the number of unique log streams
+Убедитесь, что вы используете правильный синтаксис stream-фильтров. Подробности см. в
+[документации по stream-фильтрам](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter).
 
-Log stream filters can help improve query performance, but they are not a magic fix for everything. Watch out for the following common problems:
 
-- If you have too many log streams, and each stream only covers a few logs, query performance can drop significantly.
-- If the log stream you are searching in covers a large number of logs (e.g., hundreds of millions and more), searching in that stream can be slow.
 
-To check the number of log streams on the given time range, keep only the time filter and add `| count_uniq(_stream_id)` at the end of the query (see [`count_uniq` docs](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)).
-For example, to see how many log streams you have in the last day:
+### Проверьте количество уникальных log stream’ов
+
+Stream-фильтры помогают повысить производительность, но они не являются универсальным решением. Обратите внимание на типичные проблемы:
+
+* Если у вас слишком много log stream’ов, и каждый из них содержит лишь небольшое количество логов, производительность запросов может сильно снизиться.
+* Если log stream, в котором вы ищете, содержит очень большое количество логов (например, сотни миллионов и больше), поиск в таком потоке может быть медленным.
+
+Чтобы проверить количество log stream’ов за заданный период, оставьте только фильтр по времени и добавьте `| count_uniq(_stream_id)` в конец запроса
+(см. документацию [`count_uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats)).
+
+Например, чтобы узнать, сколько log stream’ов было за последний день:
 
 ```logsql
 _time:1d | count_uniq(_stream_id)
 ```
 
-The result could be:
+Результат может быть таким:
 
 ```
 {
@@ -100,15 +118,17 @@ The result could be:
 }
 ```
 
-This means that the logs over the last day contain 954 unique log streams.
+Это означает, что за последний день логи содержали 954 уникальных log stream’а.
 
-The following query returns top 10 log streams with the biggest number of log entries (it uses [`top` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)):
+Следующий запрос возвращает топ-10 log stream’ов с наибольшим количеством лог-записей
+(используется pipe [`top`](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)):
 
 ```logsql
 _time:1d | top 10 by (_stream)
 ```
 
-The following query returns the number of unique log streams and the number of logs for the `{app="nginx"}` [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter) over the last day:
+А следующий запрос возвращает количество уникальных log stream’ов и общее число логов
+для stream-фильтра `{app="nginx"}` за последний день:
 
 ```logsql
 _time:1d {app="nginx"}
@@ -117,26 +137,33 @@ _time:1d {app="nginx"}
       count() as logs
 ```
 
-It uses [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe).
+Здесь используется pipe [`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe).
 
-Streams with small number of logs usually happen when one or more stream fields have too many different values.
-In these cases it is better to remove those fields from the set of log stream fields - see [these docs](https://docs.victoriametrics.com/victorialogs/keyconcepts/#high-cardinality).
+Stream’ы с малым числом логов обычно возникают, когда одно или несколько stream-полей имеют слишком много различных значений.
+В таких случаях лучше удалить эти поля из набора stream-полей. См. документацию по
+[высокой кардинальности](https://docs.victoriametrics.com/victorialogs/keyconcepts/#high-cardinality).
 
-### Identify the most costly parts of the query
 
-To see which parts of your logs take up the most space or slow down searches, you can use the [`block_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe).
-It returns detailed per-block statistics for your data.
 
-Start with your usual query. Then add the pipe `| keep <field list> | block_stats`:
+### Определите самые «дорогие» части запроса
+
+Чтобы понять, какие части логов занимают больше всего места или замедляют поиск, можно использовать pipe
+[`block_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe).
+Он возвращает детальную статистику по каждому блоку данных.
+
+Начните с вашего обычного запроса, затем добавьте `| keep <список_полей> | block_stats`:
 
 ```logsql
 _time:1d | keep kubernetes.pod_name, kubernetes.pod_namespace | block_stats
 ```
 
-The [`keep` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) keeps only the enumerated log fields and removes the others, so you get statistics just for the fields you care about.
-Include every field that appears in [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters) or [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) of the analyzed query.
+Pipe [`keep`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) оставляет только перечисленные поля логов и удаляет все остальные,
+что позволяет получить статистику только по интересующим вас полям.
+Включайте все поля, которые используются в [фильтрах](https://docs.victoriametrics.com/victorialogs/logsql/#filters) или
+[pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) анализируемого запроса.
 
-Sometimes, the raw numbers returned by `stats` pipe are still too detailed to be useful. You can add the [`stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe) to summarize the numbers:
+Иногда «сырые» данные, возвращаемые `block_stats`, слишком детальны. В этом случае можно добавить pipe
+[`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe) для агрегации:
 
 ```logsql
 _time:1d
@@ -148,24 +175,31 @@ _time:1d
   | sort by (values_bytes_on_disk) desc
 ```
 
-Example output:
+Пример вывода:
 
 ```
 values_bytes_on_disk: 561  field: kubernetes.pod_name       rows: 172
 values_bytes_on_disk: 101  field: kubernetes.pod_namespace  rows: 172
 ```
 
-Summing up value bytes and rows lets you see, at a glance, which fields occupy the most disk space or force VictoriaLogs to scan more data.
+Суммирование размера значений и количества строк позволяет быстро увидеть,
+какие поля занимают больше всего места на диске или заставляют VictoriaLogs сканировать больше данных.
 
-When you know which fields are expensive, you can decide whether to drop the noisy field from the query, split it out, or change your filters to avoid reading extra data.
+Поняв, какие поля наиболее «дорогие», вы можете решить:
+удалить ли шумное поле из запроса, вынести его отдельно или изменить фильтры, чтобы избежать чтения лишних данных.
 
-You can find more details here: [How to determine which log fields occupy the most of disk space?](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space).
+Дополнительные детали см. здесь:
+[Как определить, какие поля логов занимают больше всего места на диске?](https://docs.victoriametrics.com/victorialogs/faq/#how-to-determine-which-log-fields-occupy-the-most-of-disk-space).
 
-It might be useful to add the [`query_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe) to the end of the query in order to understand how much data of different types the query reads and processes.
+Также может быть полезно добавить pipe
+[`query_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe)
+в конец запроса, чтобы понять, сколько данных разных типов читает и обрабатывает запрос.
 
-### Profile pipes incrementally
 
-Suppose you need to profile and optimize the following query:
+
+### Профилируйте pipes поэтапно
+
+Предположим, вам нужно профилировать и оптимизировать следующий запрос:
 
 ```logsql
 _time:5m -"cannot open file" error
@@ -173,22 +207,23 @@ _time:5m -"cannot open file" error
   | top 5 by (uid)
 ```
 
-Drop all the [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) from the query and leave only
-the [time range filter](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) like `_time:5m`.
-This query returns all the logs on the given time range. If the query is executed
-via [the built-in web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui) or
-via [the Grafana plugin for VictoriaLogs](https://docs.victoriametrics.com/victorialogs/integrations/grafana/),
-then just leave `*` in the query input field, since both the web UI and Grafana plugin for VictoriaLogs automatically filter
-logs on the selected time range. Add [`| count()`](https://docs.victoriametrics.com/victorialogs/logsql/#count-stats) at the end of the query and measure the time it takes to execute.
-This is the worst-case time needed for executing the query. The query also returns the number of logs, which need to be processed
-in the worst case during query execution:
+Удалите все [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) и оставьте только
+[фильтр по времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter), например `_time:5m`.
+
+Если запрос выполняется через
+[встроенный Web UI](https://docs.victoriametrics.com/victorialogs/querying/#web-ui)
+или через
+[плагин Grafana для VictoriaLogs](https://docs.victoriametrics.com/victorialogs/integrations/grafana/),
+достаточно оставить `*` в поле запроса, так как временной диапазон будет применён автоматически.
+
+Добавьте `| count()` и измерьте время выполнения — это худший возможный сценарий по времени и объёму данных:
 
 ```logsql
 _time:5m | count()
 ```
 
-Then add filters from the original query one by one and measure the resulting query performance. Try different filters from the original
-query, leaving the filter that executes faster for each step.
+Затем добавляйте фильтры из исходного запроса по одному и измеряйте производительность.
+Пробуйте разные фильтры, оставляя на каждом шаге тот, который выполняется быстрее:
 
 ```logsql
 _time:5m error | count()
@@ -198,28 +233,31 @@ _time:5m error | count()
 _time:5m error -"cannot open file" | count()
 ```
 
-If you hit some slow filter, try replacing it with faster and more specific filter.
-See [the performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips) for details.
-For example, the slow `-"cannot open file"` filter can be replaced with the faster [`contains_any(phrase1, ..., phraseN)`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter)
-filter where `phrase1`, ..., `phraseN` are phrases seen in the logs you want to select:
+Если какой-то фильтр оказывается медленным, попробуйте заменить его на более быстрый и специфичный.
+См. [performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+
+Например, медленный фильтр `-"cannot open file"` можно заменить более быстрым
+[`contains_any(phrase1, ..., phraseN)`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter),
+где `phrase1`, …, `phraseN` — фразы, встречающиеся в нужных логах:
 
 ```logsql
 _time:5m error contains_any("access denied", "unauthorized", "403") | count()
 ```
 
-After all the needed filters are added to the query, look at the number of matching logs.
-If the number is too big (e.g. exceeds tens of millions), then, probably, more specific
-filters can be added to the query in order to reduce the number of logs to process
-by the [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
-For example, adding [phrase filters](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) on constant string parts
-from the [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe) pattern can significantly reduce the number of logs
-to process by the `extract` pipe:
+После добавления всех необходимых фильтров посмотрите на количество совпадающих логов.
+Если оно слишком велико (например, десятки миллионов и больше), стоит добавить более точные фильтры,
+чтобы уменьшить объём данных, обрабатываемых [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
+
+Например, добавление
+[phrase-фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
+по постоянным частям строки из шаблона [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
+может значительно сократить объём данных:
 
 ```logsql
 _time:5m error contains_any("access denied", "unauthorized", "403") "user_id=(" | count()
 ```
 
-Then add pipes from the original query one by one and measure the query duration for each step:
+Затем добавляйте pipes из исходного запроса по одному, каждый раз измеряя время выполнения:
 
 ```logsql
 _time:5m error contains_any("access denied", "unauthorized", "403") "user_id=("
@@ -234,13 +272,16 @@ _time:5m error contains_any("access denied", "unauthorized", "403") "user_id=("
   | count()
 ```
 
-If the query becomes slow or starts using a lot of RAM after adding the next filter or pipe, you will know exactly which part of the query to fix.
+Если после добавления очередного фильтра или pipe запрос становится медленным или начинает потреблять много RAM,
+вы точно будете знать, какую часть запроса нужно оптимизировать.
 
-It might be useful to add the [`query_stats` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe) to the end of the query in order to understand how much data of different types the query reads and processes.
+Также полезно добавить pipe
+[`query_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#query_stats-pipe)
+в конец запроса, чтобы понять, какие объёмы данных и каких типов он читает и обрабатывает.
 
-If you find a slow filter or pipe, try these ideas:
+Если вы нашли медленный фильтр или pipe, попробуйте следующие подходы:
 
-- Regex matching and JSON parsing are expensive. Use faster alternatives if you can. See [performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
-- Sorting without a limit with [`sort` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe) stores all logs in memory. Add a `limit` or reduce the input number of logs.
-- High-cardinality functions like [`count_uniq()`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats) track every unique value in memory. Think how to reduce the number of unique values to track.
-- Large group counts in [`stats by (...)`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-fields) can use a lot of memory. Filter or transform your data to reduce the number of groups.
+* Сопоставление по regex и парсинг JSON — дорогие операции. По возможности используйте более быстрые альтернативы (см. performance tips).
+* Сортировка без ограничения (`sort` без `limit`) сохраняет все логи в памяти. Добавьте `limit` или уменьшите входной объём данных.
+* Функции с высокой кардинальностью, такие как [`count_uniq()`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq-stats), хранят в памяти все уникальные значения. Подумайте, как сократить их количество.
+* Большое число групп в [`stats by (...)`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-fields) может потреблять много памяти. Отфильтруйте или трансформируйте данные, чтобы уменьшить число групп.

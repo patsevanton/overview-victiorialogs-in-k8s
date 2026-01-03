@@ -1,7 +1,8 @@
-## Limiters
+## Ограничители (Limiters)
 
-LogsQL provides the following [pipes](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) for limiting the number of returned log entries:
+LogsQL предоставляет следующие **конвейеры** (*pipes*), позволяющие ограничивать объём возвращаемых записей журнала:
 
-- [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) and [`delete`](https://docs.victoriametrics.com/victorialogs/logsql/#delete-pipe) pipes allow limiting the set of [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) to return.
-- [`limit` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#limit-pipe) allows limiting the number of log entries to return.
+- Конвейеры [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe) и [`delete`](https://docs.victoriametrics.com/victorialogs/logsql/#delete-pipe) позволяют ограничить набор **полей журнала** (*log fields*), которые будут возвращены в результате запроса.  
+  *(Пояснение: поля журнала — это отдельные атрибуты каждой записи, например `timestamp`, `level`, `message`, `service_name` и т. д.)*
 
+- Конвейер [`limit`](https://docs.victoriametrics.com/victorialogs/logsql/#limit-pipe) позволяет ограничить **количество** возвращаемых записей журнала.

@@ -1,9 +1,12 @@
-## String literals
+## Строковые литералы
 
-LogsQL supports the following string literals:
+LogsQL поддерживает следующие виды строковых литералов:
 
-- `"double quoted"`. Double quote and backslash inside such a string must be escaped with `\`: `"escape\"doublequote and \\ backslash"`.
-  Double-quoted strings may contain special sequences such as `\n`, `\t`, `\f`, `\x8c`, etc. They are decoded according to [these docs](https://go.dev/ref/spec#String_literals).
-- `'single quoted'`. Single quote and backslash inside such a string must be escaped with `\`: `'escape\'singlequote and \\ backslash'`.
-- ``` `backtick quoted` ```. Strings with backslashes, double quotes and single quotes shouldn't be escaped inside backtick-quoted strings.
+- **`"в двойных кавычках"`**. Внутри такой строки символы двойной кавычки и обратной косой черты **должны быть экранированы** с помощью `\`:  
+  `"escape\"doublequote and \\ backslash"`.  
+  Строки в двойных кавычках могут содержать специальные последовательности, такие как `\n`, `\t`, `\f`, `\x8c` и др. Они декодируются согласно [документации Go](https://go.dev/ref/spec#String_literals).
 
+- **`'в одинарных кавычках'`**. Внутри такой строки символы одинарной кавычки и обратной косой черты **должны быть экранированы** с помощью `\`:  
+  `'escape\'singlequote and \\ backslash'`.
+
+- **`` `в обратных кавычках` ``**. В строках, заключённых в обратные кавычки, **не нужно экранировать** ни обратные косые черты, ни двойные, ни одинарные кавычки.

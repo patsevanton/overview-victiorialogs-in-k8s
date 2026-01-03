@@ -1,12 +1,12 @@
-## Comments
+## Комментарии
 
-LogsQL query may contain comments at any place. The comment starts with `#` and continues until the end of the current line.
-Example query with comments:
+Запрос на языке LogsQL может содержать комментарии в любом месте. Комментарий начинается с символа `#` и продолжается до конца текущей строки.
+
+Пример запроса с комментариями:
 
 ```logsql
-error                               # find logs with `error` word
-  | stats by (_stream) count() logs # then count the number of logs per `_stream` label
-  | sort by (logs) desc             # then sort by the found logs in descending order
-  | limit 5                         # and show top 5 streams with the biggest number of logs
+error                               # найти логи, содержащие слово `error`
+  | stats by (_stream) count() logs # затем подсчитать количество логов для каждой метки `_stream`
+  | sort by (logs) desc             # затем отсортировать по количеству найденных логов в порядке убывания
+  | limit 5                         # и показать топ‑5 потоков с наибольшим числом логов
 ```
-

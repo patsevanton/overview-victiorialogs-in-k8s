@@ -1,4 +1,3 @@
-## Stream context
+## Контекст потока
 
-See [`stream_context` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stream_context-pipe).
-
+См. конвейер [`stream_context`](https://docs.victoriametrics.com/victorialogs/logsql/#stream_context-pipe).

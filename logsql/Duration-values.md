@@ -1,18 +1,17 @@
-## Duration values
+## Значения длительности
 
-LogsQL accepts duration values with the following suffixes at places where the duration is allowed:
+LogsQL поддерживает значения длительности с следующими суффиксами — в тех местах, где длительность разрешена:
 
-- `ns` - nanoseconds. For example, `123ns`.
-- `µs` - microseconds. For example, `1.23µs`.
-- `ms` - milliseconds. For example, `1.23456ms`
-- `s` - seconds. For example, `1.234s`
-- `m` - minutes. For example, `1.5m`
-- `h` - hours. For example, `1.5h`
-- `d` - days. For example, `1.5d`
-- `w` - weeks. For example, `1w`
-- `y` - years as 365 days. For example, `1.5y`
+- `ns` — наносекунды. Например: `123ns`.
+- `µs` — микросекунды. Например: `1.23µs`.
+- `ms` — миллисекунды. Например: `1.23456ms`.
+- `s` — секунды. Например: `1.234s`.
+- `m` — минуты. Например: `1.5m`.
+- `h` — часы. Например: `1.5h`.
+- `d` — дни. Например: `1.5d`.
+- `w` — недели. Например: `1w`.
+- `y` — годы (как 365 дней). Например: `1.5y`.
 
-Multiple durations can be combined. For example, `1h33m55s`.
+Несколько значений длительности можно комбинировать. Например: `1h33m55s`.
 
-Internally duration values are converted into nanoseconds.
-
+Внутри системы все значения длительности преобразуются в наносекунды.
