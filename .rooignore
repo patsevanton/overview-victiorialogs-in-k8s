@@ -12,7 +12,9 @@ net.tf
 nginx-log-generator.yaml
 OOMKilled_alert.yaml
 python-log-generator.yaml
-
+README1-введение.md
+README1-Заключение.md
+README.md
 .rooignore
 stress1.yaml
 stress2.yaml
