@@ -19,9 +19,3 @@ error | head
 По умолчанию строки выбираются в произвольном порядке — это сделано для повышения производительности, поэтому при каждом выполнении запроса выше может возвращаться разный набор логов.
 
 Чтобы гарантировать одинаковый порядок логов перед применением `limit ...`, можно использовать [пайп `sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe).
-
-См. также:
-
-- [пайп `sample`](https://docs.victoriametrics.com/victorialogs/logsql/#sample-pipe)
-- [пайп `sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-- [пайп `offset`](https://docs.victoriametrics.com/victorialogs/logsql/#offset-pipe)

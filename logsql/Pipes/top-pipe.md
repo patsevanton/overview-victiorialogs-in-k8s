@@ -35,13 +35,3 @@ _time:5m | top 10 by (ip) rank
 ```logsql
 _time:5m | top 10 by (ip) rank as position
 ```
-
-**См. также:**
-
-- конвейер [`first`](https://docs.victoriametrics.com/victorialogs/logsql/#first-pipe)
-- конвейер [`last`](https://docs.victoriametrics.com/victorialogs/logsql/#last-pipe)
-- конвейер [`facets`](https://docs.victoriametrics.com/victorialogs/logsql/#facets-pipe)
-- конвейер [`uniq`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe)
-- конвейер [`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- конвейер [`sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-- функция статистики [`histogram`](https://docs.victoriametrics.com/victorialogs/logsql/#histogram-stats)

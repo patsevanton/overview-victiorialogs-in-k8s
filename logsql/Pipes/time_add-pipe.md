@@ -21,8 +21,3 @@ _time:5m | time_add -1h
 ```logsql
 _time:5m | time_add 1w at transaction_time
 ```
-
-Смотрите также:
-
-- [Фильтр `_time`](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter).
-- [Опция `time_offset`](https://docs.victoriametrics.com/victorialogs/logsql/#query-options).

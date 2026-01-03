@@ -5,7 +5,7 @@
 - `q1 AND q2` — отбирает записи журнала, которые возвращаются **и** `q1`, **и** `q2`. С помощью операции `AND` можно объединить произвольное число [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters).  
   Например, `error AND file AND app` находит [сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), которые одновременно содержат слова `error`, `file` и `app`.  
   Операция `AND` часто используется в запросах LogsQL, поэтому допускается опускать слово `AND`.  
-  Например, `error file app` эквивалентно `error AND file AND app`. См. также фильтр [`contains_all`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter).
+  Например, `error file app` эквивалентно `error AND file AND app`. 
 
 - `q1 OR q2` — объединяет записи журнала, возвращаемые `q1` **или** `q2`. С помощью операции `OR` можно объединить произвольное число [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters).  
   Например, `error OR warning OR info` находит [сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), которые содержат **хотя бы одно** из слов: `error`, `warning` или `info`. См. также фильтр [`contains_any`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter).

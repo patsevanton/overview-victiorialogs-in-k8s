@@ -30,7 +30,3 @@ _time:5m error | stream_context before 10 time_window 1w
 ```
 
 Конвейер `| stream_context` должен располагаться первым — сразу после [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
-
-См. также:
-
-* [stream filter](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter)

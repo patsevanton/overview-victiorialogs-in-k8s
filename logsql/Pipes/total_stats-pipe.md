@@ -66,13 +66,6 @@ _time:1d
     | math round((hits / total_hits)*100) as hits_percent
 ```
 
-### См. также:
-- [Функции конвейера `total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions)
-- [`total_stats` по полям](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-by-fields)
-- Конвейер [`running_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
-- Конвейер [`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- Конвейер [`sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-
 ## `total_stats` по полям
 
 Для вычисления **независимой общей статистики по группам полей лога** используется следующий синтаксис LogsQL:
@@ -106,7 +99,3 @@ _time:5m
 ```logsql
 _time:5m | total_stats (host, path) count() total_logs, sum(hits) total_hits
 ```
-
-### См. также:
-- [Конвейер `total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
-- [Функции конвейера `total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions)

@@ -82,9 +82,3 @@ _time:5m | math round(request_duration, 1e9) as request_duration_nsecs | format 
 ```logsql
 _time:5m | eval (duration_secs * 1000) as duration_msecs
 ```
-
-### См. также
-
-- Конвейер [`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe);
-- Конвейер [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe);
-- Конвейер [`format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe).

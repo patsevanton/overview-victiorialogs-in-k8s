@@ -40,25 +40,6 @@ _time:5m | count() logs_total, count_uniq(_stream) streams_total
 _time:5m | count(), count_uniq(_stream)
 ```
 
-См. также:
-
-* [функции пайпа `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-* [статистика по полям](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-fields)
-* [статистика по временным бакетам](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets)
-* [статистика по временным бакетам с учётом смещения часового пояса](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-time-buckets-with-timezone-offset)
-* [статистика по бакетам полей](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-field-buckets)
-* [статистика по IPv4-бакетам](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-ipv4-buckets)
-* [статистика с дополнительными фильтрами](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters)
-* [`running_stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
-* [`total_stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
-* [`math` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe)
-* [`sort` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-* [`uniq` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#uniq-pipe)
-* [`top` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
-* [`join` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)
-
-
-
 ### Статистика по полям
 
 Следующий синтаксис LogsQL может использоваться для вычисления независимых статистик по группам полей логов:
@@ -83,16 +64,6 @@ _time:5m | stats by (host, path) count() logs_total, count_uniq(ip) ips_total
 ```logsql
 _time:5m | stats (host, path) count() logs_total, count_uniq(ip) ips_total
 ```
-
-См. также:
-
-* [`stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-* [функции `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-* [`row_min`](https://docs.victoriametrics.com/victorialogs/logsql/#row_min-stats)
-* [`row_max`](https://docs.victoriametrics.com/victorialogs/logsql/#row_max-stats)
-* [`row_any`](https://docs.victoriametrics.com/victorialogs/logsql/#row_any-stats)
-
-
 
 ### Статистика по временным бакетам
 
@@ -200,9 +171,3 @@ _time:5m | stats
 ```
 
 Если ни одна входная строка не соответствует фильтру `if (...)`, то для соответствующей функции статистики будет возвращено значение `0`.
-
-См. также:
-
-* [`stats` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-* [функции `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)
-* [`join` пайп](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe)

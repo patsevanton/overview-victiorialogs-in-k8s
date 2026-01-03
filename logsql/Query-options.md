@@ -16,7 +16,6 @@ options(concurrency=2) _time:1d | count_uniq(user_id)
 
 Опция `concurrency` применяется индивидуально к каждому узлу `vlstorage` в [кластере VictoriaLogs](https://docs.victoriametrics.com/victorialogs/cluster/).
 
-См. также: [опция запроса `parallel_readers`](https://docs.victoriametrics.com/victorialogs/logsql/#parallel_readers-query-option).
 
 ### Опция `parallel_readers`
 

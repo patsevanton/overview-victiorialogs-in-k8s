@@ -68,19 +68,6 @@ _time:5m | unpack_json from foo result_prefix "foo_"
   чтобы уменьшить количество записей, передаваемых в `unpack_json`.
   Подробности см. в [общих советах по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-### См. также
-
-* [Условный `unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-unpack_json)
-* [`unpack_logfmt` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe)
-* [`unpack_syslog` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_syslog-pipe)
-* [`extract` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-* [`split` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#split-pipe)
-* [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe)
-* [`pack_json` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pack_json-pipe)
-* [`pack_logfmt` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pack_logfmt-pipe)
-
-
-
 #### Условный `unpack_json`
 
 Если [`unpack_json` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe) должен применяться только к некоторым [лог-записям](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),

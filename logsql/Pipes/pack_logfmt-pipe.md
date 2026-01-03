@@ -41,8 +41,3 @@ _time:5m | pack_logfmt fields (foo.*, bar.*) as baz
 ```logsql
 _time:5m | pack_logfmt as foo | fields foo
 ```
-
-**См. также:**
-
-- конвейер [`pack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#pack_json-pipe);
-- конвейер [`unpack_logfmt`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe).

@@ -7,7 +7,3 @@
 ```logsql
 _time:1h error | sample 100
 ```
-
-См. также:
-
-- Канал [`limit`](https://docs.victoriametrics.com/victorialogs/logsql/#limit-pipe)

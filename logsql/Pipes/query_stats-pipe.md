@@ -23,8 +23,3 @@
   Может использоваться для расчёта различных показателей по статистике запроса с помощью конвейера [`math`](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe).
 
 Этот конвейер полезен для анализа и оптимизации медленных запросов.
-
-Смотрите также:
-
-- конвейер [`block_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#block_stats-pipe);
-- [устранение неполадок с запросами](https://docs.victoriametrics.com/victorialogs/logsql/#troubleshooting).

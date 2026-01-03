@@ -41,9 +41,3 @@ _time:5m | uniq by (host, path) limit 100
 ```logsql
 _time:5m | uniq (host, path) limit 100
 ```
-
-См. также:
-
-* статистическая функция [`uniq_values`](https://docs.victoriametrics.com/victorialogs/logsql/#uniq_values-stats)
-* пайп [`top`](https://docs.victoriametrics.com/victorialogs/logsql/#top-pipe)
-* пайп [`stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)

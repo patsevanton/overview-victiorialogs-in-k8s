@@ -62,14 +62,6 @@ _time:1d
     | running_stats sum(hits) as running_hits
 ```
 
-## См. также:
-
-- [Функции конвейера `running_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe-functions)
-- [`running_stats` по полям](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-by-fields)
-- [Конвейер `total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe)
-- [Конвейер `stats`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe)
-- [Конвейер `sort`](https://docs.victoriametrics.com/victorialogs/logsql/#sort-pipe)
-
 ## `running_stats` по полям
 
 Для вычисления **независимых накапливаемых статистик** по группам полей лога используется следующий синтаксис LogsQL:
@@ -97,8 +89,3 @@ _time:5m
 ```logsql
 _time:5m | running_stats (host, path) count() running_logs, sum(hits) running_hits
 ```
-
-## См. также:
-
-- [Конвейер `running_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe)
-- [Функции конвейера `running_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe-functions)

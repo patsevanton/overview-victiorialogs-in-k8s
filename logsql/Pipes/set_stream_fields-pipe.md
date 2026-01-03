@@ -8,11 +8,6 @@
 _time:5m | set_stream_fields host, path
 ```
 
-См. также:
-
-- [условный `set_stream_fields`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-set_stream_fields)
-- [конвейер `format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe)
-
 #### Условный `set_stream_fields`
 
 Конвейер [`set_stream_fields`](https://docs.victoriametrics.com/victorialogs/logsql/#set_stream_fields-pipe) можно применить лишь к подмножеству входных логов, соответствующих заданным [фильтрам](https://docs.victoriametrics.com/victorialogs/logsql/#filters), — для этого после `set_stream_fields` используется конструкция `if (...)`.

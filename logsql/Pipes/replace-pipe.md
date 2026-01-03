@@ -22,13 +22,6 @@ _time:5m | replace ('foo', 'bar') at baz limit 1
 
 **Совет по производительности:** рекомендуется использовать более конкретные [фильтры логов](https://docs.victoriametrics.com/victorialogs/logsql/#filters), чтобы уменьшить число записей логов, передаваемых в `replace`. Подробнее см. в разделе [общие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-**См. также:**
-
-- [Условная замена](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-replace)
-- [pipe `replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe)
-- [`collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#collapse_nums-pipe)
-- [pipe `format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe)
-- [pipe `extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
 
 #### Условная замена
 

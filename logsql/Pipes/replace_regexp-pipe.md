@@ -33,15 +33,6 @@ _time:5m | replace_regexp ('password: [^ ]+', '') at baz limit 1
 - Рекомендуется применять более конкретные [фильтры логов](https://docs.victoriametrics.com/victorialogs/logsql/#filters), чтобы уменьшить число записей, передаваемых в `replace_regexp`.  
   Подробнее — в разделе [общих советов по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
-### См. также
-
-- [Условный `replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#conditional-replace_regexp)
-- [Конвейер `replace`](https://docs.victoriametrics.com/victorialogs/logsql/#replace-pipe)
-- [Конвейер `collapse_nums`](https://docs.victoriametrics.com/victorialogs/logsql/#collapse_nums-pipe)
-- [Конвейер `format`](https://docs.victoriametrics.com/victorialogs/logsql/#format-pipe)
-- [Конвейер `extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-- [Конвейер `decolorize`](https://docs.victoriametrics.com/victorialogs/logsql/#decolorize-pipe)
-
 #### Условный `replace_regexp`
 
 Если конвейер [`replace_regexp`](https://docs.victoriametrics.com/victorialogs/logsql/#replace_regexp-pipe) должен применяться лишь к некоторым [записям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), добавьте `if (<filters>)` после `replace_regexp`.  

@@ -65,12 +65,6 @@ _time:5m | running_stats min(duration) running_min_duration
 
 Можно найти текущее минимальное значение среди всех полей с общим префиксом, используя синтаксис `min(prefix*)`.
 
-**См. также:**
-
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-running_stats)
-- [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-running_stats)
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-running_stats)
-
 ### sum в `running_stats`
 
 Функция `sum(field1, ..., fieldN)` в конвейере [`running_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#running_stats-pipe-functions) вычисляет текущую (нарастающую) сумму числовых значений среди всех указанных [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).

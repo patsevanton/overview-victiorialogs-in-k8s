@@ -56,4 +56,4 @@ log.level:err*
 
 - Предпочитайте комбинировать [фильтры по словам](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) и [фильтры по фразам](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) через [логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) вместо фильтра по префиксу.
 - При использовании [логического фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) ставьте [фильтры по словам](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) и [фильтры по фразам](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) перед фильтром по префиксу.
-- Смотрите также [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+

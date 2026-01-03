@@ -9,8 +9,3 @@
 ```logsql
 _time:5m error | union (_time:1h panic)
 ```
-
-Смотрите также:
-
-- [поток `join`](https://docs.victoriametrics.com/victorialogs/logsql/#join-pipe);
-- [фильтр с подзапросом (subquery filter)](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter).

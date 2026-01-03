@@ -29,7 +29,3 @@ _time:5m | split "," from _msg as items
 ```logsql
 _time:5m | split "," as items | unroll items | top 5 (items)
 ```
-
-**См. также:**
-- [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe)
-- [`unpack_words` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe)

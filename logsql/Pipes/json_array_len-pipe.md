@@ -19,8 +19,3 @@ _time:5m | unpack_words _msg as words | json_array_len(words) as words_count | f
 - `unpack_words _msg as words` — разбиение текста сообщения `_msg` на слова и сохранение результата в поле `words` (см. конвейер [`unpack_words`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe));
 - `json_array_len(words) as words_count` — вычисление числа элементов в массиве `words` и сохранение в `words_count`;
 - `first 5 (words_count desc)` — отбор первых 5 записей с максимальным значением `words_count` (см. конвейер [`first`](https://docs.victoriametrics.com/victorialogs/logsql/#first-pipe)).
-
-**См. также:**
-- конвейер [`len`](https://docs.victoriametrics.com/victorialogs/logsql/#len-pipe);
-- конвейер [`unpack_words`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_words-pipe);
-- конвейер [`first`](https://docs.victoriametrics.com/victorialogs/logsql/#first-pipe).

@@ -35,9 +35,3 @@ _time:5m | rename foo* as *
 ```logsql
 _time:5m | rename * as foo*
 ```
-
-Смотрите также:
-
-- конвейер [`copy` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#copy-pipe);
-- конвейер [`fields` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe);
-- конвейер [`delete` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#delete-pipe).
