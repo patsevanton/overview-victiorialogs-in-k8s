@@ -1,33 +1,31 @@
-### Multi-exact filter
+### Фильтр «множественного точного совпадения» (multi‑exact filter)
 
-Sometimes it is needed to locate log messages with a field containing one of the given values. This can be done with multiple [exact filters](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-combined into a single [logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter). For example, the following query matches log messages with `log.level` field
-containing either `error` or `fatal` exact values:
+Иногда требуется найти сообщения журнала (логи), в которых определённое поле содержит одно из заданных значений. Это можно сделать с помощью нескольких **[фильтров точного совпадения](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)**, объединённых в единый **[логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)**.
+
+Например, следующий запрос подберёт сообщения журнала, в поле `log.level` которых содержится *точно* одно из значений: `error` или `fatal`:
 
 ```logsql
 log.level:(="error" OR ="fatal")
 ```
 
-While this solution works OK, LogsQL provides simpler and faster solution for this case - the `in()` filter.
+Хотя такое решение работает, в LogsQL есть более простой и быстрый способ для этого случая — фильтр `in()`.
 
 ```logsql
 log.level:in("error", "fatal")
 ```
 
-It works very fast for long lists passed to `in()`.
+Этот фильтр работает очень быстро, даже если в `in()` передаётся длинный список значений.
 
-There is a special case - `in(*)` - this filter matches all the logs. See [no-op filter docs](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter) for details.
+Есть особый случай — `in(*)`. Такой фильтр сопоставляется со *всеми* логами. Подробнее см. в документации по **[фильтру без действия (no‑op filter)](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter)**.
 
-It is possible to pass arbitrary [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) inside `in(...)` filter in order to match against the results of this query.
-See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter) for details.
+Внутри фильтра `in(...)` можно передать произвольный **[запрос](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax)**, чтобы сопоставлять значения с результатами этого запроса. Подробности — в документации по **[фильтру с подзапросом (subquery filter)](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter)**.
 
-See also:
+См. также:
 
-- [`contains_any` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter)
-- [`contains_all` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
-- [Exact filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-- [Word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)
-- [Prefix filter](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
-
+- фильтр **`contains_any`** [документация](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter)
+- фильтр **`contains_all`** [документация](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
+- **[Фильтр точного совпадения (Exact filter)](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)**
+- **[Слово‑фильтр (Word filter)](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)**
+- **[Фраза‑фильтр (Phrase filter)](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)**
+- **[Префикс‑фильтр (Prefix filter)](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)**
+- **[Логический фильтр (Logical filter)](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)**

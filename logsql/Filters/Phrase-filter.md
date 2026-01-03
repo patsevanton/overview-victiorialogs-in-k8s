@@ -1,63 +1,63 @@
-### Phrase filter
+### Фильтр по фразе
 
-If you need to search for log messages with the specific phrase inside them, then just wrap the phrase into quotes according to [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
-The phrase can contain any chars, including whitespace, punctuation, parens, etc. They are taken into account during the search.
-For example, the following query matches [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-with `ssh: login fail` phrase inside them:
+Если вам нужно найти в логах сообщения, содержащие определённую фразу, просто заключите эту фразу в кавычки — согласно [документации](https://docs.victoriametrics.com/victorialogs/logsql/#string-literals).
+
+Фраза может включать любые символы — в том числе пробелы, знаки препинания, скобки и т. д. Все они учитываются при поиске.
+
+Например, следующий запрос найдёт [сообщения логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), содержащие фразу `ssh: login fail`:
 
 ```logsql
 "ssh: login fail"
 ```
 
-This query matches the following [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+Этот запрос совпадет со следующими [сообщениями логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
 
 - `ERROR: ssh: login fail for user "foobar"`
 - `ssh: login fail!`
 
-This query doesn't match the following log messages:
+Этот запрос **не совпадет** со следующими сообщениями логов:
 
-- `ssh login fail`, since the message misses `:` char just after the `ssh`.
-  Use `seq("ssh", "login", "fail")` query if log messages with the sequence of these words must be found. See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#sequence-filter) for details.
-- `login fail: ssh error`, since the message doesn't contain the full phrase requested in the query. If you need matching a message
-  with all the [words](https://docs.victoriametrics.com/victorialogs/logsql/#word) listed in the query, then use `ssh AND login AND fail` query. See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) for details.
-- `ssh: login failed`, since the message ends with `failed` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) instead of `fail` word. Use `"ssh: login fail"*` query for this case.
-  See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter) for details.
-- `SSH: login fail`, since the `SSH` word is in capital letters. Use `i("ssh: login fail")` for case-insensitive search.
-  See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter) for details.
+- `ssh login fail` — в сообщении отсутствует символ `:` сразу после `ssh`.  
+  Если нужно найти сообщения с последовательностью этих слов, используйте запрос `seq("ssh", "login", "fail")`. Подробнее — в [документации](https://docs.victoriametrics.com/victorialogs/logsql/#sequence-filter).
+- `login fail: ssh error` — в сообщении нет полной фразы, указанной в запросе.  
+  Если нужно найти сообщение, содержащее **все** [слова](https://docs.victoriametrics.com/victorialogs/logsql/#word) из запроса, используйте `ssh AND login AND fail`. Подробнее — в [документации](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
+- `ssh: login failed` — в сообщении слово `failed`, а не `fail`.  
+  Для такого случая используйте запрос `"ssh: login fail"*`. Подробнее — в [документации](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter).
+- `SSH: login fail` — слово `SSH` написано заглавными буквами.  
+  Для поиска без учёта регистра используйте `i("ssh: login fail")`. Подробнее — в [документации](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter).
 
-If the phrase contains double quotes, then either put `\` in front of double quotes or put the phrase inside single quotes. For example, the following filter searches
-logs with `"foo":"bar"` phrase:
+Если фраза содержит двойные кавычки, поставьте перед ними обратный слэш `\` либо заключите всю фразу в одинарные кавычки. Например, следующий фильтр ищет логи с фразой `"foo":"bar"`:
 
 ```logsql
 '"foo":"bar"'
 ```
 
-By default the given phrase is searched in the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
-Specify the [field name](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) in front of the phrase and put a colon after it
-if it must be searched in the given field. For example, the following query returns log entries containing the `cannot open file` phrase in the `event.original` field:
+По умолчанию указанная фраза ищется в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
+
+Чтобы искать фразу в конкретном поле, укажите имя поля перед фразой и поставьте после него двоеточие. Например, следующий запрос вернёт записи логов, содержащие фразу `cannot open file` в поле `event.original`:
 
 ```logsql
 event.original:"cannot open file"
 ```
 
-Both the field name and the phrase can contain arbitrary [utf-8](https://en.wikipedia.org/wiki/UTF-8)-encoded chars. For example:
+И имя поля, и фраза могут содержать любые символы в кодировке [UTF‑8](https://en.wikipedia.org/wiki/UTF-8). Например:
 
 ```logsql
 შეტყობინება:"Το αρχείο δεν μπορεί να ανοίξει"
 ```
 
-The field name can be put inside quotes if it contains special chars, which may clash with the query syntax.
-For example, the following query searches for the `cannot open file` phrase in the field `some:message`:
+Имя поля можно заключить в кавычки, если оно содержит специальные символы, которые могут конфликтовать с синтаксисом запроса.
+
+Например, следующий запрос ищет фразу `cannot open file` в поле `some:message`:
 
 ```logsql
 "some:message":"cannot open file"
 ```
 
-See also:
+См. также:
 
-- [Exact filter](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-- [Word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
-- [Prefix filter](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
-- [Substring filter](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
-
+- [Точный фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
+- [Фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter)
+- [Фильтр по префиксу](https://docs.victoriametrics.com/victorialogs/logsql/#prefix-filter)
+- [Фильтр по подстроке](https://docs.victoriametrics.com/victorialogs/logsql/#substring-filter)
+- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

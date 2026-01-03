@@ -1,17 +1,14 @@
-### No-op filter
+### Фильтр‑заглушка (no‑op filter)
 
-Sometimes it is needed to apply e.g. `no-op` filter to the given [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
-which does nothing, e.g. it matches any logs, even if they do not contain the given log field.
+Иногда требуется применить, например, фильтр‑заглушку (`no‑op`) к заданному [полю лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), который ничего не делает — то есть он сопоставляет любые логи, даже если они не содержат указанное поле лога.
 
-The following options are supported for no-op flter:
+Для фильтра‑заглушки поддерживаются следующие варианты:
 
-- `field_name:in(*)` - a special case for the [`in()` filter](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter)
-- `field_name:contains_any(*)` - a special case for the [`contains_any()` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter)
-- `field_name:contains_all(*)` - a special case for the [`contains_all()` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter)
+- `field_name:in(*)` — особый случай для фильтра [`in()`](https://docs.victoriametrics.com/victorialogs/logsql/#multi-exact-filter);
+- `field_name:contains_any(*)` — особый случай для фильтра [`contains_any()`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter);
+- `field_name:contains_all(*)` — особый случай для фильтра [`contains_all()`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter).
 
-See also:
+См. также:
 
-- [Empty value filter](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter)
-- [Any value filter](https://docs.victoriametrics.com/victorialogs/logsql/#any-value-filter)
-
-
+- [Фильтр для пустого значения](https://docs.victoriametrics.com/victorialogs/logsql/#empty-value-filter);
+- [Фильтр для любого значения](https://docs.victoriametrics.com/victorialogs/logsql/#any-value-filter).
