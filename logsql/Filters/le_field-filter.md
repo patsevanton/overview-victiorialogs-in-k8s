@@ -1,19 +1,18 @@
-### le_field filter
+### Фильтр `le_field`
 
-Sometimes it is needed to find logs where one [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) value doesn't exceed the other field value.
-This can be done with `field1:le_field(field2)` filter.
+Иногда требуется найти логи, в которых значение одного [поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) не превышает значение другого поля.  
+Это можно сделать с помощью фильтра `field1:le_field(field2)`.
 
-For example, the following query matches logs where `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) doesn't exceed the `max_duration` field:
+Например, следующий запрос отбирает логи, в которых значение поля `duration` [поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) не превышает значения поля `max_duration`:
 
 ```logsql
 duration:le_field(max_duration)
 ```
 
-Quick tip: use `NOT duration:le_field(max_duration)` for finding logs where `duration` exceeds the `max_duration`.
+Полезный совет: используйте `NOT duration:le_field(max_duration)`, чтобы найти логи, в которых `duration` превышает `max_duration`.
 
-See also:
+Смотрите также:
 
-- [range comparison filter](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter)
-- [`lt_field` filter](https://docs.victoriametrics.com/victorialogs/logsql/#lt_field-filter)
-- [`eq_field` filter](https://docs.victoriametrics.com/victorialogs/logsql/#eq_field-filter)
-
+- [фильтр сравнения диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter);
+- фильтр [`lt_field`](https://docs.victoriametrics.com/victorialogs/logsql/#lt_field-filter);
+- фильтр [`eq_field`](https://docs.victoriametrics.com/victorialogs/logsql/#eq_field-filter).

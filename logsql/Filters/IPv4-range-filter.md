@@ -1,50 +1,53 @@
-### IPv4 range filter
+### Фильтр диапазонов IPv4
 
-If you need to filter log message by some field containing only [IPv4](https://en.wikipedia.org/wiki/Internet_Protocol_version_4) addresses such as `1.2.3.4`,
-then the `ipv4_range()` filter can be used. For example, the following query matches log entries with `user.ip` address in the range `[127.0.0.0 - 127.255.255.255]`:
+Если требуется отфильтровать сообщения журнала по полю, содержащему **только** IPv4‑адреса (например, `1.2.3.4`), можно использовать фильтр `ipv4_range()`.
+
+Например, следующий запрос отбирает записи журнала, где адрес в поле `user.ip` попадает в диапазон `[127.0.0.0 – 127.255.255.255]`:
 
 ```logsql
 user.ip:ipv4_range(127.0.0.0, 127.255.255.255)
 ```
 
-The `ipv4_range()` accepts also IPv4 subnetworks in [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).
-For example, the following query is equivalent to the query above:
+Функция `ipv4_range()` также поддерживает IPv4‑подсети в нотации **CIDR** (Classless Inter‑Domain Routing).
+
+Например, следующий запрос эквивалентен предыдущему:
 
 ```logsql
 user.ip:ipv4_range("127.0.0.0/8")
 ```
 
-If you need matching a single IPv4 address, then just put it inside `ipv4_range()`. For example, the following query matches `1.2.3.4` IP
-at `user.ip` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model):
+Если нужно сопоставить **единственный** IPv4‑адрес, просто передайте его в `ipv4_range()`. Например, этот запрос отбирает IP‑адрес `1.2.3.4` в поле `user.ip`:
 
 ```logsql
 user.ip:ipv4_range("1.2.3.4")
 ```
 
-Note that the `ipv4_range()` doesn't match a string with IPv4 address if this string contains other text. For example, `ipv4_range("127.0.0.0/24")`
-doesn't match `request from 127.0.0.1: done` [log message](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field),
-since the `127.0.0.1` ip is surrounded by other text. Extract the IP from the message with [`extract` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe)
-and then apply the `ipv4_range()` [filter pipe](https://docs.victoriametrics.com/victorialogs/logsql/#filter-pipe) to the extracted field.
+**Важно:** `ipv4_range()` **не сопоставляет** строку с IPv4‑адресом, если в ней есть другой текст.
 
-Hints:
+Например, `ipv4_range("127.0.0.0/24")` **не найдёт** запись журнала `request from 127.0.0.1: done`, поскольку IP‑адрес `127.0.0.1` окружён другим текстом.
 
-- If you need to search for [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) containing the given `X.Y.Z.Q` IPv4 address,
-  then `"X.Y.Z.Q"` query can be used. See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter) for details.
-- If you need to search for [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) containing
-  at least a single IPv4 address out of the given list, then `"ip1" OR "ip2" ... OR "ipN"` query can be used. See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) for details.
-- If you need to find log entries with the `ip` field in multiple ranges, then use `ip:(ipv4_range(range1) OR ipv4_range(range2) ... OR ipv4_range(rangeN))` query.
-  See [these docs](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) for details.
+Чтобы решить эту задачу:
+1. Извлеките IP‑адрес из сообщения с помощью конвейера [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe).
+2. Примените фильтр `ipv4_range()` к извлечённому полю.
 
-Performance tips:
+### Полезные советы
 
-- It is better querying pure IPv4 [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-  instead of extracting IPv4 from text field via [transformations](https://docs.victoriametrics.com/victorialogs/logsql/#transformations) at query time.
-- See [other performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+- Если нужно найти **сообщения журнала**, содержащие конкретный IPv4‑адрес `X.Y.Z.Q`, используйте запрос `"X.Y.Z.Q"`. Подробнее — в [документации по фильтрам фраз](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter).
+- Если требуется найти сообщения, содержащие **хотя бы один** IPv4‑адрес из списка, используйте запрос `"ip1" OR "ip2" ... OR "ipN"`. Подробнее — в [документации по логическим фильтрам](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
+- Чтобы найти записи с полем `ip` в **нескольких диапазонах**, используйте запрос:  
+  ```
+  ip:(ipv4_range(range1) OR ipv4_range(range2) ... OR ipv4_range(rangeN))
+  ```
+  Подробнее — в [документации по логическим фильтрам](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
 
-See also:
+### Советы по производительности
 
-- [Range filter](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter)
-- [String range filter](https://docs.victoriametrics.com/victorialogs/logsql/#string-range-filter)
-- [Length range filter](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter)
-- [Logical filter](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)
+- Предпочитайте запросы к **чистому IPv4‑полю** вместо извлечения IPv4 из текстового поля с помощью преобразований ([transformations](https://docs.victoriametrics.com/victorialogs/logsql/#transformations)) во время выполнения запроса.
+- Смотрите [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
 
+### См. также
+
+- [Фильтр диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#range-filter)
+- [Фильтр строковых диапазонов](https://docs.victoriametrics.com/victorialogs/logsql/#string-range-filter)
+- [Фильтр диапазонов длины](https://docs.victoriametrics.com/victorialogs/logsql/#length-range-filter)
+- [Логический фильтр](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter)

@@ -1,19 +1,68 @@
-### lt_field filter
+## Фильтр `lt_field` в VictoriaLogs (LogSQL)
 
-Sometimes it is needed to find logs where one [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) value is smaller than the other field value.
-This can be done with `field1:lt_field(field2)` filter.
+### Суть и назначение
 
-For example, the following query matches logs where `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) is smaller than the `max_duration` field:
+Фильтр `lt_field` (сокращение от *less than field* — «меньше чем поле») позволяет **сравнивать значения двух полей в одной лог‑записи**. Он отбирает те записи, где значение первого поля **строго меньше** значения второго поля.
 
+### Синтаксис
+
+```
+поле1:lt_field(поле2)
+```
+
+- `поле1` — поле, значение которого проверяется на «меньше».
+- `поле2` — поле, с которым происходит сравнение.
+
+### Пример
+
+Запрос:
 ```logsql
 duration:lt_field(max_duration)
 ```
 
-Quick tip: use `NOT duration:lt_field(max_duration)` for finding logs where `duration` is bigger or equal to the `max_duration`.
+**Что делает:**  
+Находит все лог‑записи, где значение поля `duration` (например, фактическая длительность операции) **строго меньше** значения поля `max_duration` (например, максимально допустимой длительности).
 
-See also:
+**Результат:**  
+Только те строки, где `duration < max_duration`.
 
-- [range comparison filter](https://docs.victoriametrics.com/victorialogs/logsql/#range-comparison-filter)
-- [`le_field` filter](https://docs.victoriametrics.com/victorialogs/logsql/#le_field-filter)
-- [`eq_field` filter](https://docs.victoriametrics.com/victorialogs/logsql/#eq_field-filter)
+### Обратный случай (больше или равно)
 
+Чтобы найти записи, где `duration` **больше или равно** `max_duration`, используйте отрицание:
+
+```logsql
+NOT duration:lt_field(max_duration)
+```
+
+**Почему это работает:**  
+- `duration:lt_field(max_duration)` → `duration < max_duration`
+- `NOT (duration < max_duration)` → `duration >= max_duration`
+
+### Связанные фильтры
+
+- `le_field` (*less than or equal field*) — «меньше или равно»:  
+  ```logsql
+  duration:le_field(max_duration)  # duration <= max_duration
+  ```
+- `eq_field` (*equal field*) — «равно»:  
+  ```logsql
+  duration:eq_field(max_duration)  # duration == max_duration
+  ```
+- Фильтры диапазона (`range comparison filter`) — для сравнения с константами (например, `duration > 1000`).
+
+### Важные нюансы
+
+1. **Типы данных**  
+   Поля должны быть сопоставимы по типу (например, оба — числа). Если типы не совпадают, результат сравнения может быть неочевидным.
+
+2. **Отсутствие поля**  
+   Если одно из полей отсутствует в записи, сравнение, как правило, вернёт `false` (запись не попадёт в результат).
+
+3. **Производительность**  
+   Сравнение полей может быть медленнее, чем сравнение с константой, особенно на больших объёмах данных.
+
+### Итог
+
+- Используйте `поле1:lt_field(поле2)` для отбора записей, где `поле1 < поле2`.
+- Для обратного условия (`>=`) применяйте `NOT`.
+- Для `<=` и `==` есть специальные фильтры: `le_field` и `eq_field`.

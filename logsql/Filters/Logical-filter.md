@@ -1,56 +1,45 @@
-### Logical filter
+### Логический фильтр
 
-Basic LogsQL [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters) can be combined into more complex filters with the following logical operations:
+Базовые фильтры LogsQL [фильтры](https://docs.victoriametrics.com/victorialogs/logsql/#filters) можно объединять в более сложные с помощью следующих логических операций:
 
-- `q1 AND q2` - matches common log entries returned by both `q1` and `q2`. Arbitrary number of [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters) can be combined with `AND` operation.
-  For example, `error AND file AND app` matches [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field),
-  which simultaneously contain `error`, `file` and `app` [words](https://docs.victoriametrics.com/victorialogs/logsql/#word).
-  The `AND` operation is frequently used in LogsQL queries, so it is allowed to skip the `AND` word.
-  For example, `error file app` is equivalent to `error AND file AND app`. See also [`contains_all` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter).
+- `q1 AND q2` — отбирает записи журнала, которые возвращаются **и** `q1`, **и** `q2`. С помощью операции `AND` можно объединить произвольное число [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters).  
+  Например, `error AND file AND app` находит [сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), которые одновременно содержат слова `error`, `file` и `app`.  
+  Операция `AND` часто используется в запросах LogsQL, поэтому допускается опускать слово `AND`.  
+  Например, `error file app` эквивалентно `error AND file AND app`. См. также фильтр [`contains_all`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_all-filter).
 
-- `q1 OR q2` - merges log entries returned by both `q1` and `q2`. Arbitrary number of [filters](https://docs.victoriametrics.com/victorialogs/logsql/#filters) can be combined with `OR` operation.
-  For example, `error OR warning OR info` matches [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field),
-  which contain at least one of `error`, `warning` or `info` [words](https://docs.victoriametrics.com/victorialogs/logsql/#word). See also [`contains_any` filter](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter).
+- `q1 OR q2` — объединяет записи журнала, возвращаемые `q1` **или** `q2`. С помощью операции `OR` можно объединить произвольное число [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters).  
+  Например, `error OR warning OR info` находит [сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), которые содержат **хотя бы одно** из слов: `error`, `warning` или `info`. См. также фильтр [`contains_any`](https://docs.victoriametrics.com/victorialogs/logsql/#contains_any-filter).
 
-- `NOT q` - returns all the log entries except of those which match `q`. For example, `NOT info` returns all the
-  [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field),
-  which do not contain `info` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word). The `NOT` operation is frequently used in LogsQL queries, so it is allowed substituting `NOT` with `-` and `!` in queries.
-  For example, `-info` and `!info` are equivalent to `NOT info`.
-  The `!` must be used instead of `-` in front of [`=`](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter)
-  and [`~`](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter) filters like `!=` and `!~`.
+- `NOT q` — возвращает все записи журнала, **кроме** тех, что соответствуют `q`. Например, `NOT info` возвращает все [сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), которые **не содержат** слово `info`.  
+  Операция `NOT` часто используется в запросах LogsQL, поэтому в запросах допускается заменять `NOT` на `-` и `!`.  
+  Например, `-info` и `!info` эквивалентны `NOT info`.  
+  Символ `!` **должен** использоваться вместо `-` перед фильтрами [`=`](https://docs.victoriametrics.com/victorialogs/logsql/#exact-filter) и [`~`](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter), например `!=` и `!~`.
 
-The `NOT` operation has the highest priority, `AND` has the middle priority and `OR` has the lowest priority.
-The priority order can be changed with parentheses. For example, `NOT info OR debug` is interpreted as `(NOT info) OR debug`,
-so it matches [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field),
-which do not contain `info` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word), while it also matches messages with `debug` word (which may contain the `info` word).
-This is not what most users expect. In this case the query can be rewritten to `NOT (info OR debug)`,
-which correctly returns log messages without `info` and `debug` [words](https://docs.victoriametrics.com/victorialogs/logsql/#word).
+**Приоритет операций:**  
+- `NOT` имеет наивысший приоритет,  
+- `AND` — средний,  
+- `OR` — наименьший.  
 
-LogsQL supports arbitrary complex logical queries with arbitrary mix of `AND`, `OR` and `NOT` operations and parentheses.
+Порядок приоритетов можно изменить с помощью скобок. Например, `NOT info OR debug` интерпретируется как `(NOT info) OR debug`, то есть отбирает [сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), которые не содержат слово `info`, а также сообщения со словом `debug` (которые могут содержать и `info`).  
+Это не всегда соответствует ожиданиям пользователя. В таком случае запрос можно переписать как `NOT (info OR debug)` — он корректно вернёт сообщения журнала **без** слов `info` и `debug`.
 
-By default logical filters apply to the [`_msg` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-unless the inner filters explicitly specify the needed [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) via `field_name:filter` syntax.
-For example, `(error OR warn) AND host.hostname:host123` is interpreted as `(_msg:error OR _msg:warn) AND host.hostname:host123`.
+LogsQL поддерживает произвольно сложные логические запросы с любым сочетанием операций `AND`, `OR`, `NOT` и скобок.
 
-It is possible to specify a single [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) for multiple filters
-with the following syntax:
+**По умолчанию** логические фильтры применяются к полю [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field), если внутренние фильтры явно не указывают нужное [поле журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) с помощью синтаксиса `имя_поля:фильтр`.  
+Например, `(error OR warn) AND host.hostname:host123` интерпретируется как `(_msg:error OR _msg:warn) AND host.hostname:host123`.
+
+Можно указать одно [поле журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) для нескольких фильтров с помощью следующего синтаксиса:
 
 ```logsql
-field_name:(q1 OR q2 OR ... qN)
+имя_поля:(q1 OR q2 OR ... qN)
 ```
 
-For example, `log.level:error OR log.level:warning OR log.level:info` can be substituted with the shorter query: `log.level:(error OR warning OR info)`.
+Например, `log.level:error OR log.level:warning OR log.level:info` можно заменить более коротким запросом: `log.level:(error OR warning OR info)`.
 
-Performance tips:
+**Советы по производительности:**
 
-- VictoriaLogs executes logical operations from the left to the right, so it is recommended moving the most specific
-  and the fastest filters (such as [word filter](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) and [phrase filter](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)) to the left,
-  while moving less specific and the slowest filters (such as [regexp filter](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter) and [case-insensitive filter](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter))
-  to the right. For example, if you need to find [log messages](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-  with the `error` word, which match some `/foo/(bar|baz)` regexp,
-  it is better from performance PoV to use the query `error ~"/foo/(bar|baz)"` instead of `~"/foo/(bar|baz)" error`.
+- VictoriaLogs выполняет логические операции **слева направо**, поэтому рекомендуется размещать **наиболее специфичные и быстрые** фильтры (такие как [фильтр по слову](https://docs.victoriametrics.com/victorialogs/logsql/#word-filter) и [фильтр по фразе](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter)) **слева**, а **менее специфичные и медленные** (такие как [фильтр по регулярному выражению](https://docs.victoriametrics.com/victorialogs/logsql/#regexp-filter) и [фильтр без учёта регистра](https://docs.victoriametrics.com/victorialogs/logsql/#case-insensitive-filter)) — **справа**.  
+  Например, если нужно найти [сообщения журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) со словом `error`, которые соответствуют регулярному выражению `/foo/(bar|baz)`, с точки зрения производительности лучше использовать запрос `error ~"/foo/(bar|baz)"`, а не `~"/foo/(bar|baz)" error`.  
+  **Наиболее специфичный фильтр** — это тот, который отбирает наименьшее число записей журнала по сравнению с другими фильтрами.
 
-  The most specific filter means that it matches the lowest number of log entries comparing to other filters.
-
-- See [other performance tips](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
-
+- См. [другие советы по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
