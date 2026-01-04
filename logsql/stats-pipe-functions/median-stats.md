@@ -1,18 +1,17 @@
-### median stats
+### медианные статистики
 
-`median(field1, ..., fieldN)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) calculates the estimated [median](https://en.wikipedia.org/wiki/Median) value across
-the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Функция конвейера статистики `median(field1, ..., fieldN)` ([stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)) вычисляет оценочное значение [медианы](https://en.wikipedia.org/wiki/Median) по указанным [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 
-For example, the following query return median for the `duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over logs for the last 5 minutes:
+Например, следующий запрос возвращает медиану для [поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `duration`
+по логам за последние 5 минут:
 
 ```logsql
 _time:5m | stats median(duration) median_duration
 ```
 
-The `median(some_field)` function works with string values for the `some_field`, so it returns an empty string value if `some_field`
-is missing in some of the processed logs according to [VictoriaLogs data model](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
-Use `median(some_field) if (some_field:*) as min_value_without_empty_string` syntax for filtering out empty string values.
-See [conditional stats docs](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters) for more details.
+Функция `median(some_field)` работает со строковыми значениями поля `some_field`, поэтому она возвращает пустую строку, если `some_field`
+отсутствует в части обрабатываемых логов согласно [модели данных VictoriaLogs](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Используйте синтаксис `median(some_field) if (some_field:*) as min_value_without_empty_string` для фильтрации пустых строк.
+Подробнее см. в [документации по условной статистике](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters).
 
-It is possible to calculate the median across all the fields with common prefix via `median(prefix*)` syntax.
+Также возможно вычислять медиану сразу по всем полям с общим префиксом с помощью синтаксиса `median(prefix*)`.
