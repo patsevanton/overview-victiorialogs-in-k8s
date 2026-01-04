@@ -1,13 +1,11 @@
 ### sum_len stats
 
-`sum_len(field1, ..., fieldN)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) calculates the sum of byte lengths of all the values
-for the given [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+`sum_len(field1, ..., fieldN)` — [статистическая функция pipe](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions), которая вычисляет **сумму байтовых длин всех значений** для указанных [лог-полей](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 
-For example, the following query returns the sum of byte lengths of [`_msg` fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
-across all the logs for the last 5 minutes:
+Например, следующий запрос возвращает сумму байтовых длин поля [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) во всех логах за последние 5 минут:
 
 ```logsql
 _time:5m | stats sum_len(_msg) messages_len
 ```
 
-It is possible to find the sum of byte lengths for all the fields with common prefix via `sum_len(prefix*)` syntax.
+Также можно вычислить сумму байтовых длин **для всех полей с общим префиксом** с помощью синтаксиса `sum_len(prefix*)`.
