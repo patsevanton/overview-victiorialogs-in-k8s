@@ -1,30 +1,32 @@
-### histogram stats
+### статистика гистограмм
 
-`histogram(field)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) returns [VictoriaMetrics histogram buckets](https://valyala.medium.com/improving-histogram-usability-for-prometheus-and-grafana-bc7e5df0e350)
-for the given [`field`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Функция конвейера статистики `histogram(field)` (см. [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)) возвращает [бакеты гистограммы VictoriaMetrics](https://valyala.medium.com/improving-histogram-usability-for-prometheus-and-grafana-bc7e5df0e350)
+для заданного [`field`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 
-For example, the following query returns histogram buckets for the `response_size` field grouped by `host` field, across logs for the last 5 minutes:
+Например, следующий запрос возвращает бакеты гистограммы для поля `response_size`, сгруппированные по полю `host`, по логам за последние 5 минут:
 
 ```logsql
 _time:5m | stats by (host) histogram(response_size)
 ```
 
-If the field contains [duration value](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values), then `histogram` normalizes it to nanoseconds. For example, `1.25ms` is normalized to `1_250_000`.
+Если поле содержит [значение длительности](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values), то `histogram` нормализует его к наносекундам. Например, `1.25ms` будет нормализовано до `1_250_000`.
 
-If the field contains [short numeric value](https://docs.victoriametrics.com/victorialogs/logsql/#short-numeric-values), then `histogram` normalizes it to numeric value without any suffixes. For example, `1KiB` is converted to `1024`.
+Если поле содержит [короткое числовое значение](https://docs.victoriametrics.com/victorialogs/logsql/#short-numeric-values), то `histogram` нормализует его к числовому значению без каких-либо суффиксов. Например, `1KiB` будет преобразовано в `1024`.
 
-Histogram buckets are returned as the following JSON array:
+Бакеты гистограммы возвращаются в виде следующего JSON-массива:
 
 ```json
 [{"vmrange":"...","hits":...},...,{"vmrange":"...","hits":...}]
 ```
 
-Every `vmrange` value contains value range for the corresponding [VictoriaMetrics histogram bucket](https://valyala.medium.com/improving-histogram-usability-for-prometheus-and-grafana-bc7e5df0e350),
-while `hits` contains the number of values, which hit the given bucket.
+Каждое значение `vmrange` содержит диапазон значений соответствующего [бакета гистограммы VictoriaMetrics](https://valyala.medium.com/improving-histogram-usability-for-prometheus-and-grafana-bc7e5df0e350),
+а `hits` содержит количество значений, попавших в данный бакет.
 
-It may be handy to unroll the returned histogram buckets for further processing during the query. For example, the following query
-calculates a histogram over the `response_size` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-and then unrolls it into distinct rows with `vmrange` and `hits` fields with the help of [`unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe) and [`unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe) pipes:
+Иногда бывает удобно «развернуть» возвращаемые бакеты гистограммы для дальнейшей обработки прямо в запросе. Например, следующий запрос
+строит гистограмму по [полю](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `response_size`,
+а затем разворачивает её в отдельные строки с полями `vmrange` и `hits` с помощью конвейеров
+[`unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe) и
+[`unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe):
 
 ```logsql
 _time:5m

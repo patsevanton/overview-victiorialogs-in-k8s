@@ -1,39 +1,43 @@
-### json_values stats
+Вот перевод на русский:
 
-`json_values(field1, ..., fieldN)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) packs the given fields into JSON for every log entry and returns a JSON array,
-which can be unrolled with [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
+---
 
-For example, the following query returns per-`app` JSON arrays containing [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field)
-and [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) fields for the last 5 minutes:
+### stats-функция `json_values`
+
+Функция stats-конвейера `json_values(field1, ..., fieldN)` упаковывает указанные поля в JSON для каждой записи лога и возвращает JSON-массив,
+который можно развернуть с помощью конвейера [`unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
+
+Например, следующий запрос возвращает для каждого `app` JSON-массивы, содержащие поля [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field)
+и [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) за последние 5 минут:
 
 ```logsql
 _time:5m | stats by (app) json_values(_time, _msg) as json_logs
 ```
 
-If the list of fields is empty, then all the log fields are encoded into a JSON array:
+Если список полей пуст, то все поля логов кодируются в JSON-массив:
 
 ```logsql
 _time:5m | stats json_values() as json_logs
 ```
 
-It is possible to select values with the given prefix via `json_values(prefix*)` syntax.
+Можно выбирать значения с заданным префиксом, используя синтаксис `json_values(prefix*)`.
 
-It is possible to set the upper limit on the number of JSON-encoded logs with the `limit N` suffix. For example, the following query
-returns up to 3 JSON-encoded logs for every `host`:
+Также можно задать верхний предел количества логов, закодированных в JSON, с помощью суффикса `limit N`. Например, следующий запрос
+возвращает до 3 JSON-закодированных логов для каждого `host`:
 
 ```logsql
 _time:5m | stats by (host) json_values() limit 3 as json_logs
 ```
 
-It is possible to sort the selected log entries by appending `sort by (...)`. For example, the following query returns per-`host` logs
-over the last 5 minutes sorted by descending order of [`_time` field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field):
+Можно отсортировать выбранные записи логов, добавив `sort by (...)`. Например, следующий запрос возвращает для каждого `host` логи
+за последние 5 минут, отсортированные по убыванию поля [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field):
 
 ```logsql
 _time:5m | stats by (host) json_values() sort by (_time desc) as json_logs
 ```
 
-The `sort by (...)` allows selecting top N logs for each group when combined with `limit N`. For example, the following query selects up to 3 of the most recent logs for every `host`
-over the last 5 minutes:
+Конструкция `sort by (...)` позволяет выбирать top-N логов для каждой группы при использовании вместе с `limit N`. Например, следующий запрос выбирает до 3 самых свежих логов для каждого `host`
+за последние 5 минут:
 
 ```logsql
 _time:5m | stats by (host) json_values() sort by (_time desc) limit 3 as json_logs
