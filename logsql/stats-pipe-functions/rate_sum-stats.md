@@ -1,13 +1,14 @@
-### rate_sum stats
+### Статистика `rate_sum`
 
-`rate_sum(field1, ..., fieldN)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) returns the average per-second rate of the sum over the given
-numeric [fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Функция конвейера статистики [`rate_sum(field1, ..., fieldN)`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) возвращает среднюю скорость в секунду для суммы по указанным
+числовым [полям](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
 
-For example, the following query returns the average per-second rate of the sum of `bytes_sent` [log field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over the last 5 minutes:
+Например, следующий запрос возвращает среднюю скорость в секунду для суммы поля журнала `bytes_sent`
+за последние 5 минут:
 
 ```logsql
 _time:5m | stats rate_sum(bytes_sent)
 ```
 
-It is possible to calculate the average per-second rate of the sum over all the fields starting with a particular prefix by using `rate_sum(prefix*)` syntax.
+Также можно вычислить среднюю скорость в секунду для суммы по всем полям, начинающимся с заданного префикса,
+используя синтаксис `rate_sum(prefix*)`.

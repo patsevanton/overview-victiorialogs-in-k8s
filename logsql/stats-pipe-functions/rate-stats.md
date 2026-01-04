@@ -1,8 +1,8 @@
-### rate stats
+### статистика rate
 
-`rate()` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) returns the average per-second rate of matching logs on the selected time range.
+Функция конвейера статистики `rate()` возвращает среднее количество совпадающих логов в секунду за выбранный временной диапазон.
 
-For example, the following query returns the average per-second rate of logs with the `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) over the last 5 minutes:
+Например, следующий запрос возвращает среднюю скорость (в логах в секунду) для логов со [словом](https://docs.victoriametrics.com/victorialogs/logsql/#word) `error` за последние 5 минут:
 
 ```logsql
 _time:5m error | stats rate()
