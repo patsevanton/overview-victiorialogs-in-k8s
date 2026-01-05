@@ -1,15 +1,15 @@
 ## Функции `total_stats` в пайпе
 
-В LogsQL поддерживаются следующие функции для пайпа [`total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe):
+В LogsQL поддерживаются следующие функции для пайпа ``total_stats``:
 
-- [`count`](https://docs.victoriametrics.com/victorialogs/logsql/#count-total_stats) — возвращает количество записей в логах;
-- [`max`](https://docs.victoriametrics.com/victorialogs/logsql/#max-total_stats) —возвращает максимальное значение по указанным [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model);
-- [`min`](https://docs.victoriametrics.com/victorialogs/logsql/#min-total_stats) —возвращает минимальное значение по указанным [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model);
-- [`sum`](https://docs.victoriametrics.com/victorialogs/logsql/#sum-total_stats) —возвращает сумму по указанным числовым [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+- ``count`` — возвращает количество записей в логах;
+- ``max`` —возвращает максимальное значение по указанным `полям логов`;
+- ``min`` —возвращает минимальное значение по указанным `полям логов`;
+- ``sum`` —возвращает сумму по указанным числовым `полям логов`.
 
 ### count в total_stats
 
-Функция `count()` в пайпе [`total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions) вычисляет общее количество выбранных записей в логах.
+Функция `count()` в пайпе ``total_stats`` вычисляет общее количество выбранных записей в логах.
 
 Например, следующий запрос добавляет поле `total_logs` к выбранным записям за последние 5 минут:
 
@@ -17,7 +17,7 @@
 _time:5m | total_stats count() total_logs
 ```
 
-Можно подсчитать количество записей с непустыми значениями для определённого [поля лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), используя синтаксис `count(fieldName)`. Например, следующий запрос возвращает общее количество записей с заполненным полем `username` за последние 5 минут:
+Можно подсчитать количество записей с непустыми значениями для определённого `поля лога`, используя синтаксис `count(fieldName)`. Например, следующий запрос возвращает общее количество записей с заполненным полем `username` за последние 5 минут:
 
 ```logsql
 _time:5m | total_stats count(username) total_logs_with_username
@@ -37,7 +37,7 @@ _time:5m | total_stats count(foo*)
 
 ### max в total_stats
 
-Функция `max(field1, ..., fieldN)` в пайпе [`total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions) возвращает общее максимальное значение среди всех указанных [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Функция `max(field1, ..., fieldN)` в пайпе ``total_stats`` возвращает общее максимальное значение среди всех указанных `полей логов`.
 
 Например, следующий запрос возвращает максимальное значение поля `duration` за записи логов за последние 5 минут:
 
@@ -49,7 +49,7 @@ _time:5m | total_stats max(duration) total_max_duration
 
 ### min в total_stats
 
-Функция `min(field1, ..., fieldN)` в пайпе [`total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions) возвращает общее минимальное значение среди всех указанных [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Функция `min(field1, ..., fieldN)` в пайпе ``total_stats`` возвращает общее минимальное значение среди всех указанных `полей логов`.
 
 Например, следующий запрос возвращает минимальное значение поля `duration` для записей логов за последние 5 минут:
 
@@ -62,7 +62,7 @@ _time:5m | total_stats min(duration) total_min_duration
 
 ### sum в total_stats
 
-Функция `sum(field1, ..., fieldN)` в пайпе [`total_stats`](https://docs.victoriametrics.com/victorialogs/logsql/#total_stats-pipe-functions) вычисляет общую сумму числовых значений по всем указанным [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model). Нечисловые значения пропускаются. Если все значения в полях `field1`, ..., `fieldN` нечисловые, возвращается `NaN`.
+Функция `sum(field1, ..., fieldN)` в пайпе ``total_stats`` вычисляет общую сумму числовых значений по всем указанным `полям логов`. Нечисловые значения пропускаются. Если все значения в полях `field1`, ..., `fieldN` нечисловые, возвращается `NaN`.
 
 Например, следующий запрос возвращает общую сумму числовых значений поля `duration` по записям логов за последние 5 минут:
 

@@ -1,8 +1,8 @@
 ### Конвейер `time_add`
 
-Конструкция `<q> | time_add <duration>` прибавляет указанную `<длительность>` к полю [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
+Конструкция `<q> | time_add <duration>` прибавляет указанную `<длительность>` к полю ``_time``.
 
-Параметр `<длительность>` может быть задан в любом формате, описанном [здесь](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values).
+Параметр `<длительность>` может быть задан в любом формате, описанном `здесь`.
 
 Например, следующий запрос прибавляет один час к полю `_time` в выбранных записях журнала:
 
@@ -16,7 +16,7 @@ _time:5m | time_add 1h
 _time:5m | time_add -1h
 ```
 
-Добавьте `at <имя_поля>` в конец конвейера `time_add`, чтобы прибавить указанную `<длительность>` к [полю журнала](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) с заданным `<имя_поля>`. Например, следующий запрос прибавляет одну неделю к полю `transaction_time`:
+Добавьте `at <имя_поля>` в конец конвейера `time_add`, чтобы прибавить указанную `<длительность>` к `полю журнала` с заданным `<имя_поля>`. Например, следующий запрос прибавляет одну неделю к полю `transaction_time`:
 
 ```logsql
 _time:5m | time_add 1w at transaction_time

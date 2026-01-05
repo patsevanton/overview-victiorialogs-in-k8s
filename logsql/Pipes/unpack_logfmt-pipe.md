@@ -1,12 +1,12 @@
 ### pipe unpack_logfmt
 
-`<q> | unpack_logfmt from field_name` — это [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes), который распаковывает поля формата `k1=v1 ... kN=vN` [logfmt](https://brandur.org/logfmt)
-из указанного [`field_name`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) в результатах [запроса](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>` в поля `k1`, …, `kN`
+`<q> | unpack_logfmt from field_name` — это `pipe`, который распаковывает поля формата `k1=v1 ... kN=vN` `logfmt`
+из указанного ``field_name`` в результатах `запроса` `<q>` в поля `k1`, …, `kN`
 с соответствующими значениями `v1`, …, `vN`.
 Существующие поля с именами из списка `k1`, …, `kN` будут перезаписаны. Остальные поля остаются без изменений.
 
-Например, следующий запрос распаковывает поля [logfmt](https://brandur.org/logfmt) из
-[поля `_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)
+Например, следующий запрос распаковывает поля `logfmt` из
+`поля `_msg``
 для логов за последние 5 минут:
 
 ```logsql
@@ -14,7 +14,7 @@ _time:5m | unpack_logfmt from _msg
 ```
 
 Часть `from _msg` можно опустить, если поля logfmt распаковываются из
-[поля `_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
+`поля `_msg``.
 Следующий запрос эквивалентен предыдущему:
 
 ```logsql
@@ -49,11 +49,11 @@ _time:5m | unpack_logfmt fields (ip, host) skip_empty_results
 ```
 
 **Совет по производительности:** если нужно извлечь одно поле из длинной строки
-[logfmt](https://brandur.org/logfmt), быстрее использовать
-[pipe `extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe).
+`logfmt`, быстрее использовать
+`pipe `extract``.
 Например, следующий запрос извлекает поле `"ip"` из строки logfmt,
 хранящейся в
-[поле `_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+`поле `_msg``:
 
 ```
 _time:5m | extract ' ip=<ip>'
@@ -72,26 +72,26 @@ _time:5m | unpack_logfmt from foo result_prefix "foo_"
 ### Советы по производительности
 
 * С точки зрения производительности и использования ресурсов лучше загружать уже распарсенные
-  логи [logfmt](https://brandur.org/logfmt) в VictoriaLogs в соответствии с
-  [поддерживаемой моделью данных](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
+  логи `logfmt` в VictoriaLogs в соответствии с
+  `поддерживаемой моделью данных`,
   чем загружать нераспарсенные строки logfmt и затем разбирать их во время выполнения запроса
-  с помощью [pipe `unpack_logfmt`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe).
+  с помощью `pipe `unpack_logfmt``.
 
 * Рекомендуется использовать более специфичные
-  [фильтры логов](https://docs.victoriametrics.com/victorialogs/logsql/#filters),
+  `фильтры логов`,
   чтобы уменьшить количество записей, передаваемых в `unpack_logfmt`.
-  Подробнее см. в [общих советах по производительности](https://docs.victoriametrics.com/victorialogs/logsql/#performance-tips).
+  Подробнее см. в `общих советах по производительности`.
 
 
 #### Условный unpack_logfmt
 
-Если [pipe `unpack_logfmt`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_logfmt-pipe)
+Если `pipe `unpack_logfmt``
 нужно применять только к некоторым
-[записям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model),
+`записям логов`,
 добавьте `if (<filters>)` после `unpack_logfmt`.
 
 `<filters>` может содержать любые
-[фильтры](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+`фильтры`.
 Например, следующий запрос распаковывает поля logfmt из поля `foo`
 только если поле `ip` в текущей записи лога не задано или пустое:
 

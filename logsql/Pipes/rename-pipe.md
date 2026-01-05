@@ -1,6 +1,6 @@
 ### Переименование полей (rename pipe)
 
-Если необходимо переименовать некоторые [поля логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), можно использовать конвейер `| rename src1 as dst1, ..., srcN as dstN` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
+Если необходимо переименовать некоторые `поля логов`, можно использовать конвейер `| rename src1 as dst1, ..., srcN as dstN` `pipe`.
 
 Например, следующий запрос переименовывает поле `host` в `server` для логов за последние 5 минут — в результате в выводе будет поле `server` вместо `host`:
 

@@ -15,10 +15,10 @@
 
 Он **не** соответствует следующим сообщениям:
 
-- `processing request foobar` — поскольку сообщение начинается со строчной буквы `p`. В этом случае используйте запрос `="processing request"* OR ="Processing request"*`. Подробнее см. в [документации по логическим фильтрам](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
-- `start: Processing request` — поскольку сообщение не начинается с `Processing request`. В этом случае используйте запрос `"Processing request"`. Подробнее см. в [документации по фильтрам фраз](https://docs.victoriametrics.com/victorialogs/logsql/#phrase-filter).
+- `processing request foobar` — поскольку сообщение начинается со строчной буквы `p`. В этом случае используйте запрос `="processing request"* OR ="Processing request"*`. Подробнее см. в `документации по логическим фильтрам`.
+- `start: Processing request` — поскольку сообщение не начинается с `Processing request`. В этом случае используйте запрос `"Processing request"`. Подробнее см. в `документации по фильтрам фраз`.
 
-По умолчанию фильтр `exact` применяется к полю [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field).
+По умолчанию фильтр `exact` применяется к полю ``_msg``.
 
 Чтобы выполнить поиск в конкретном поле, укажите имя поля перед фильтром `exact` и поставьте после него двоеточие. Например, следующий запрос возвращает записи логов, в которых поле `log.level` начинается с префикса `err`:
 
@@ -26,7 +26,7 @@
 log.level:="err"*
 ```
 
-И имя поля, и фраза могут содержать произвольные символы в кодировке [UTF‑8](https://en.wikipedia.org/wiki/UTF-8). Например:
+И имя поля, и фраза могут содержать произвольные символы в кодировке `UTF‑8`. Например:
 
 ```logsql
 log.დონე:="შეცდომა"*

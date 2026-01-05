@@ -1,6 +1,6 @@
 ### Копирование полей (copy pipe)
 
-Если необходимо скопировать некоторые [поля логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), можно использовать конвейер `| copy src1 as dst1, ..., srcN as dstN` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
+Если необходимо скопировать некоторые `поля логов`, можно использовать конвейер `| copy src1 as dst1, ..., srcN as dstN` `pipe`.
 
 Например, следующий запрос копирует поле `host` в поле `server` для логов за последние 5 минут. В результате в выводе будут присутствовать оба поля — `host` и `server`:
 
@@ -9,8 +9,8 @@ _time:5m | copy host as server
 ```
 
 С помощью одного конвейера `| copy …` можно скопировать несколько полей. Например, в следующем запросе:
-- поле [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field) копируется в `timestamp`;
-- поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) — в `message`.
+- поле ``_time`` копируется в `timestamp`;
+- поле ``_msg`` — в `message`.
 
 ```logsql
 _time:5m | copy _time as timestamp, _msg as message

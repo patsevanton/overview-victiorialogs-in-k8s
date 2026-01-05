@@ -1,8 +1,8 @@
 ### статистика `count_empty`
 
-`count_empty(field1, ..., fieldN)` — это [stats-pipe функция](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions), которая вычисляет количество логов с пустыми кортежами `(field1, ..., fieldN)`.
+`count_empty(field1, ..., fieldN)` — это `stats-pipe функция`, которая вычисляет количество логов с пустыми кортежами `(field1, ..., fieldN)`.
 
-Например, следующий запрос вычисляет количество логов с пустым [полем](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `username` за последние 5 минут:
+Например, следующий запрос вычисляет количество логов с пустым `полем` `username` за последние 5 минут:
 
 ```logsql
 _time:5m | stats count_empty(username) logs_with_missing_username

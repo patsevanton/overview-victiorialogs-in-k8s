@@ -1,6 +1,6 @@
 ### Конвейер `first`
 
-Конвейер `<q> | first N by (fields)` ([документация](https://docs.victoriametrics.com/victorialogs/logsql/#pipes)) возвращает первые `$N$` записей журнала из запроса `<q>` ([синтаксис запросов](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax)) после их сортировки по указанным полям (`fields`) ([модель данных](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)).
+Конвейер `<q> | first N by (fields)` (`документация`) возвращает первые `$N$` записей журнала из запроса `<q>` (`синтаксис запросов`) после их сортировки по указанным полям (`fields`) (`модель данных`).
 
 **Пример.** Следующий запрос возвращает первые 10 записей журнала с наименьшим значением поля `request_duration` за последние 5 минут:
 

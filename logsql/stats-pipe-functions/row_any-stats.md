@@ -1,16 +1,16 @@
 ### Статистика `row_any`
 
-Функция конвейера статистики [`row_any()`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) возвращает произвольную [запись лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-(также называемую sample) для каждой выбранной [группы статистики](https://docs.victoriametrics.com/victorialogs/logsql/#stats-by-fields). Запись лога возвращается в виде JSON-кодированного словаря со всеми полями исходного лога.
+Функция конвейера статистики ``row_any()`` возвращает произвольную `запись лога`
+(также называемую sample) для каждой выбранной `группы статистики`. Запись лога возвращается в виде JSON-кодированного словаря со всеми полями исходного лога.
 
-Например, следующий запрос возвращает одну примерную запись лога для каждого [`_stream`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields)
+Например, следующий запрос возвращает одну примерную запись лога для каждого ``_stream``
 среди логов за последние 5 минут:
 
 ```logsql
 _time:5m | stats by (_stream) row_any() as sample_row
 ```
 
-Поля из возвращаемых значений можно декодировать с помощью конвейеров [`unpack_json`](https://docs.victoriametrics.com/victorialogs/logsql/#unpack_json-pipe) или [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe).
+Поля из возвращаемых значений можно декодировать с помощью конвейеров ``unpack_json`` или ``extract``.
 
 Если нужны только конкретные поля, их можно перечислить внутри `row_any(...)`.
 Например, следующий запрос возвращает только поля `_time` и `path` из примерной записи лога за последние 5 минут:

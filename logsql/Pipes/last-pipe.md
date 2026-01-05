@@ -1,8 +1,8 @@
 ### Последний конвейер (`last pipe`)
 
-Конструкция `<q> | last N by (fields)` [конвейер (pipe)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) возвращает **последние `N` записей журнала** из запроса `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) после их сортировки по указанным полям [`fields`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Конструкция `<q> | last N by (fields)` `конвейер (pipe)` возвращает **последние `N` записей журнала** из запроса `<q>` `query` после их сортировки по указанным полям ``fields``.
 
-**Пример:** следующий запрос возвращает **последние 10 записей журнала** с наибольшим значением поля `request_duration` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) за последние 5 минут:
+**Пример:** следующий запрос возвращает **последние 10 записей журнала** с наибольшим значением поля `request_duration` `field` за последние 5 минут:
 
 ```logsql
 _time:5m | last 10 by (request_duration)

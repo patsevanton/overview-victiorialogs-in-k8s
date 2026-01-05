@@ -1,25 +1,25 @@
 ### Конвейер `query_stats`
 
-Конвейер `<q> | query_stats` ([pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes)) возвращает следующую статистику выполнения для заданного [запроса `<q>`](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax):
+Конвейер `<q> | query_stats` (`pipe`) возвращает следующую статистику выполнения для заданного `запроса `<q>``:
 
-- `BytesReadColumnsHeaders` — количество байт, прочитанных с диска для заголовков колонок. Для уменьшения объёма читаемых данных используйте конвейер [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe).
+- `BytesReadColumnsHeaders` — количество байт, прочитанных с диска для заголовков колонок. Для уменьшения объёма читаемых данных используйте конвейер ``fields``.
 - `BytesReadColumnsHeaderIndexes` — количество байт, прочитанных с диска для индексов заголовков колонок.
 - `BytesReadBloomFilters` — количество байт, прочитанных с диска для фильтров Блума.
-- `BytesReadValues` — количество байт, прочитанных с диска для [значений полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).  
-  Для уменьшения объёма читаемых значений полей используйте конвейер [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe).
-- `BytesReadTimestamps` — количество байт, прочитанных с диска для поля [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field).
+- `BytesReadValues` — количество байт, прочитанных с диска для `значений полей логов`.  
+  Для уменьшения объёма читаемых значений полей используйте конвейер ``fields``.
+- `BytesReadTimestamps` — количество байт, прочитанных с диска для поля ``_time``.
 - `BytesReadBlockHeaders` — количество байт, прочитанных с диска для заголовков блоков.
 - `BytesReadTotal` — общий объём байт, прочитанных с диска.
 - `BlocksProcessed` — количество обработанных блоков данных во время выполнения запроса.  
-  Чтобы уменьшить число обрабатываемых блоков, используйте более узкие [фильтр по времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) и [фильтр потока логов](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter).
+  Чтобы уменьшить число обрабатываемых блоков, используйте более узкие `фильтр по времени` и `фильтр потока логов`.
 - `RowsProcessed` — количество записей логов, обработанных во время выполнения запроса.  
-  Чтобы уменьшить число обрабатываемых записей, используйте более узкие [фильтр по времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) и [фильтр потока логов](https://docs.victoriametrics.com/victorialogs/logsql/#stream-filter).
+  Чтобы уменьшить число обрабатываемых записей, используйте более узкие `фильтр по времени` и `фильтр потока логов`.
 - `RowsFound` — количество записей логов, найденных запросом.
-- `ValuesRead` — количество [значений полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), прочитанных в ходе обработки запроса.  
-  Для уменьшения числа читаемых значений полей используйте конвейер [`fields`](https://docs.victoriametrics.com/victorialogs/logsql/#fields-pipe).
-- `TimestampsRead` — количество полей [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field), прочитанных в ходе обработки запроса.
-- `BytesProcessedUncompressedValues` — объём несжатых байт для [значений полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), обработанных во время выполнения запроса.
+- `ValuesRead` — количество `значений полей логов`, прочитанных в ходе обработки запроса.  
+  Для уменьшения числа читаемых значений полей используйте конвейер ``fields``.
+- `TimestampsRead` — количество полей ``_time``, прочитанных в ходе обработки запроса.
+- `BytesProcessedUncompressedValues` — объём несжатых байт для `значений полей логов`, обработанных во время выполнения запроса.
 - `QueryDurationNsecs` — длительность выполнения запроса в наносекундах.  
-  Может использоваться для расчёта различных показателей по статистике запроса с помощью конвейера [`math`](https://docs.victoriametrics.com/victorialogs/logsql/#math-pipe).
+  Может использоваться для расчёта различных показателей по статистике запроса с помощью конвейера ``math``.
 
 Этот конвейер полезен для анализа и оптимизации медленных запросов.

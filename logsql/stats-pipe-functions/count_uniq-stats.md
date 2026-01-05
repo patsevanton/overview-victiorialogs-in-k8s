@@ -1,14 +1,14 @@
 ### count_uniq статистика
 
-`count_uniq(field1, ..., fieldN)` [функция pipe stats](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) вычисляет количество уникальных непустых кортежей `(field1, ..., fieldN)`.
+`count_uniq(field1, ..., fieldN)` `функция pipe stats` вычисляет количество уникальных непустых кортежей `(field1, ..., fieldN)`.
 
-Например, следующий запрос возвращает количество уникальных непустых значений для поля `ip` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) за последние 5 минут:
+Например, следующий запрос возвращает количество уникальных непустых значений для поля `ip` `field` за последние 5 минут:
 
 ```logsql
 _time:5m | stats count_uniq(ip) ips
 ```
 
-Следующий запрос возвращает количество уникальных пар `(host, path)` для соответствующих [полей](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) за последние 5 минут:
+Следующий запрос возвращает количество уникальных пар `(host, path)` для соответствующих `полей` за последние 5 минут:
 
 ```logsql
 _time:5m | stats count_uniq(host, path) unique_host_path_pairs
@@ -21,4 +21,4 @@ _time:5m | stats count_uniq(host, path) unique_host_path_pairs
 _time:5m | stats count_uniq(ip) limit 1_000_000 as ips_1_000_000
 ```
 
-Если допустимо подсчитать приблизительное количество уникальных значений, можно использовать [`count_uniq_hash`](https://docs.victoriametrics.com/victorialogs/logsql/#count_uniq_hash-stats) — более быструю альтернативу `count_uniq`.
+Если допустимо подсчитать приблизительное количество уникальных значений, можно использовать ``count_uniq_hash`` — более быструю альтернативу `count_uniq`.

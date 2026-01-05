@@ -1,8 +1,8 @@
 ### pipe `unpack_words`
 
-Pipe `<q> | unpack_words from <src_field> as <dst_field>` распаковывает [слова](https://docs.victoriametrics.com/victorialogs/logsql/#word) из указанного [поля лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `<src_field>` в результатах [запроса](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>` и сохраняет их в `<dst_field>` в виде JSON-массива.
+Pipe `<q> | unpack_words from <src_field> as <dst_field>` распаковывает `слова` из указанного `поля лога` `<src_field>` в результатах `запроса` `<q>` и сохраняет их в `<dst_field>` в виде JSON-массива.
 
-Например, следующий запрос распаковывает слова из [сообщений лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) в поле `words`:
+Например, следующий запрос распаковывает слова из `сообщений лога` в поле `words`:
 
 ```logsql
 _time:5m | unpack_words from _msg as words
@@ -29,8 +29,8 @@ _time:5m | unpack_words
 _time:5m | unpack_words from text as words drop_duplicates
 ```
 
-Удобно использовать pipe [`unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe) для «разворачивания» JSON-массива с распакованными словами из поля назначения.
-Например, следующий запрос возвращает топ-5 самых часто встречающихся слов в [сообщениях лога](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) за последние 5 минут:
+Удобно использовать pipe ``unroll`` для «разворачивания» JSON-массива с распакованными словами из поля назначения.
+Например, следующий запрос возвращает топ-5 самых часто встречающихся слов в `сообщениях лога` за последние 5 минут:
 
 ```logsql
 _time:5m | unpack_words as words | unroll words | top 5 (words)

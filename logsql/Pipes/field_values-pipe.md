@@ -4,7 +4,7 @@
 <q> | field_values field_name
 ```
 
-[Конвейер](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) `field_values` возвращает все значения для указанного поля [`field_name`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) вместе с количеством логов для каждого значения, полученных по запросу `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax).
+`Конвейер` `field_values` возвращает все значения для указанного поля ``field_name`` вместе с количеством логов для каждого значения, полученных по запросу `<q>` `query`.
 
 Например, следующий запрос возвращает все значения поля `level` вместе с числом соответствующих логов за последние 5 минут:
 

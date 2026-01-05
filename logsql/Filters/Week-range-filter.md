@@ -26,7 +26,7 @@ _time:week_range[Mon, Fri]
 _time:week_range(Sun, Sat)
 ```
 
-Если диапазон дней нужно применить к часовому поясу, отличному от UTC, добавьте `offset <duration>`, где `<duration>` может иметь любое поддерживаемое значение длительности (см. [значения длительности](https://docs.victoriametrics.com/victorialogs/logsql/#duration-values)).
+Если диапазон дней нужно применить к часовому поясу, отличному от UTC, добавьте `offset <duration>`, где `<duration>` может иметь любое поддерживаемое значение длительности (см. `значения длительности`).
 
 **Пример:** следующий запрос выбирает логи с понедельника по пятницу в часовом поясе `+02:00`:
 
@@ -34,15 +34,15 @@ _time:week_range(Sun, Sat)
 _time:week_range[Mon, Fri] offset 2h
 ```
 
-Фильтр `week_range` можно комбинировать с фильтром [`day_range`](https://docs.victoriametrics.com/victorialogs/logsql/#day-range-filter) с помощью [логических фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
+Фильтр `week_range` можно комбинировать с фильтром ``day_range`` с помощью `логических фильтров`.
 
 **Пример:** следующий запрос выбирает логи с `08:00` до `18:00` каждый день недели, исключая воскресенье и субботу:
 
 ```logsql
-_time:week_range[Mon, Fri] _time:day_range[08:00, 18:00)
+_time:week_range[Mon, Fri] _time:day_range`08:00, 18:00)
 ```
 
-**Совет по производительности:** рекомендуется дополнительно указывать обычный [фильтр времени](https://docs.victoriametrics.com/victorialogs/logsql/#time-filter) вместе с фильтром `week_range`.
+**Совет по производительности:** рекомендуется дополнительно указывать обычный [фильтр времени` вместе с фильтром `week_range`.
 
 **Пример:** следующий запрос выбирает логи с понедельника по пятницу для каждой недели за последние 4 недели:
 

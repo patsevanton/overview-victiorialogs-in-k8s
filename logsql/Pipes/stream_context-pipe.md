@@ -1,10 +1,10 @@
 ### Конвейер `stream_context`
 
-Конвейер `| stream_context ...` в выражении `<q> | stream_context ...` позволяет выбирать окружающие записи логов в рамках одного [потока логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#stream-fields) среди логов, возвращённых [запросом](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax) `<q>`, аналогично `grep -A` / `grep -B`.
+Конвейер `| stream_context ...` в выражении `<q> | stream_context ...` позволяет выбирать окружающие записи логов в рамках одного `потока логов` среди логов, возвращённых `запросом` `<q>`, аналогично `grep -A` / `grep -B`.
 
-Возвращаемые фрагменты логов разделяются сообщением `---` (см. поле [log message](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field)) для более удобного анализа.
+Возвращаемые фрагменты логов разделяются сообщением `---` (см. поле `log message`) для более удобного анализа.
 
-Например, следующий запрос возвращает до 10 дополнительных логов **после** каждого сообщения, содержащего [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) `panic`, среди всех логов за последние 5 минут:
+Например, следующий запрос возвращает до 10 дополнительных логов **после** каждого сообщения, содержащего `слово` `panic`, среди всех логов за последние 5 минут:
 
 ```logsql
 _time:5m panic | stream_context after 10
@@ -29,4 +29,4 @@ _time:5m error | stream_context before 2 after 5
 _time:5m error | stream_context before 10 time_window 1w
 ```
 
-Конвейер `| stream_context` должен располагаться первым — сразу после [фильтров](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+Конвейер `| stream_context` должен располагаться первым — сразу после `фильтров`.

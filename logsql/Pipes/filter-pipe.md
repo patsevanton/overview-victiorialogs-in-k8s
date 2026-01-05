@@ -1,8 +1,8 @@
 ### Конвейер фильтрации (filter pipe)
 
-Конструкция `<q> | filter ...` [конвейер (pipe)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes) фильтрует логи, возвращённые запросом `<q>` [query](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), с помощью указанного [фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#filters).
+Конструкция `<q> | filter ...` `конвейер (pipe)` фильтрует логи, возвращённые запросом `<q>` `query`, с помощью указанного `фильтра`.
 
-Например, следующий запрос возвращает значения поля `host` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), если за последний час количество сообщений с словом `error` [word](https://docs.victoriametrics.com/victorialogs/logsql/#word) для них превышает `1 000`:
+Например, следующий запрос возвращает значения поля `host` `field`, если за последний час количество сообщений с словом `error` `word` для них превышает `1 000`:
 
 ```logsql
 _time:1h error | stats by (host) count() logs_count | filter logs_count:> 1_000
@@ -14,7 +14,7 @@ _time:1h error | stats by (host) count() logs_count | filter logs_count:> 1_000
 _time:1h error | stats by (host) count() logs_count | where logs_count:> 1_000
 ```
 
-Префикс `filter` можно опустить, если используемые фильтры не конфликтуют с [названиями конвейеров (pipe names)](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).  
+Префикс `filter` можно опустить, если используемые фильтры не конфликтуют с `названиями конвейеров (pipe names)`.  
 Так, следующий запрос эквивалентен предыдущим:
 
 ```logsql

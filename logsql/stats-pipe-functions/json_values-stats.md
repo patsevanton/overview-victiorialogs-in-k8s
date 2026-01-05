@@ -5,10 +5,10 @@
 ### stats-функция `json_values`
 
 Функция stats-конвейера `json_values(field1, ..., fieldN)` упаковывает указанные поля в JSON для каждой записи лога и возвращает JSON-массив,
-который можно развернуть с помощью конвейера [`unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
+который можно развернуть с помощью конвейера ``unroll``.
 
-Например, следующий запрос возвращает для каждого `app` JSON-массивы, содержащие поля [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field)
-и [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field) за последние 5 минут:
+Например, следующий запрос возвращает для каждого `app` JSON-массивы, содержащие поля ``_time``
+и ``_msg`` за последние 5 минут:
 
 ```logsql
 _time:5m | stats by (app) json_values(_time, _msg) as json_logs
@@ -30,7 +30,7 @@ _time:5m | stats by (host) json_values() limit 3 as json_logs
 ```
 
 Можно отсортировать выбранные записи логов, добавив `sort by (...)`. Например, следующий запрос возвращает для каждого `host` логи
-за последние 5 минут, отсортированные по убыванию поля [`_time`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#time-field):
+за последние 5 минут, отсортированные по убыванию поля ``_time``:
 
 ```logsql
 _time:5m | stats by (host) json_values() sort by (_time desc) as json_logs

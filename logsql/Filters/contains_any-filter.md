@@ -1,10 +1,10 @@
 ### Фильтр `contains_any`
 
-Иногда требуется найти логи, которые содержат хотя бы одно [слово](https://docs.victoriametrics.com/victorialogs/logsql/#word) или фразу из множества слов / фраз.
-Это можно сделать с помощью [логического фильтра](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter) `v1 OR v2 OR ... OR vN`.
+Иногда требуется найти логи, которые содержат хотя бы одно `слово` или фразу из множества слов / фраз.
+Это можно сделать с помощью `логического фильтра` `v1 OR v2 OR ... OR vN`.
 
 VictoriaLogs предоставляет альтернативный подход — фильтр `contains_any(v1, v2, ..., vN)`.
-Например, следующий запрос находит логи, которые содержат слово `foo` или фразу `"bar baz"` в поле [`_msg`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#message-field):
+Например, следующий запрос находит логи, которые содержат слово `foo` или фразу `"bar baz"` в поле ``_msg``:
 
 ```logsql
 contains_any(foo, "bar baz")

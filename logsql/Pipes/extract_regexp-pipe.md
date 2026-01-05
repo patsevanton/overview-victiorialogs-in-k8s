@@ -50,7 +50,7 @@ _time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' from foo skip_empty_
 
 ### Совет по производительности
 
-Для повышения производительности запросов рекомендуется использовать конвейер [`extract`](https://docs.victoriametrics.com/victorialogs/logsql/#extract-pipe) вместо `extract_regexp`.
+Для повышения производительности запросов рекомендуется использовать конвейер ``extract`` вместо `extract_regexp`.
 
 ## Условный `extract_regexp`
 

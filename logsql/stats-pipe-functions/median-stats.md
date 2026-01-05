@@ -1,8 +1,8 @@
 ### медианные статистики
 
-Функция конвейера статистики `median(field1, ..., fieldN)` ([stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)) вычисляет оценочное значение [медианы](https://en.wikipedia.org/wiki/Median) по указанным [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Функция конвейера статистики `median(field1, ..., fieldN)` (`stats pipe function`) вычисляет оценочное значение `медианы` по указанным `полям логов`.
 
-Например, следующий запрос возвращает медиану для [поля](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model) `duration`
+Например, следующий запрос возвращает медиану для `поля` `duration`
 по логам за последние 5 минут:
 
 ```logsql
@@ -10,8 +10,8 @@ _time:5m | stats median(duration) median_duration
 ```
 
 Функция `median(some_field)` работает со строковыми значениями поля `some_field`, поэтому она возвращает пустую строку, если `some_field`
-отсутствует в части обрабатываемых логов согласно [модели данных VictoriaLogs](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+отсутствует в части обрабатываемых логов согласно `модели данных VictoriaLogs`.
 Используйте синтаксис `median(some_field) if (some_field:*) as min_value_without_empty_string` для фильтрации пустых строк.
-Подробнее см. в [документации по условной статистике](https://docs.victoriametrics.com/victorialogs/logsql/#stats-with-additional-filters).
+Подробнее см. в `документации по условной статистике`.
 
 Также возможно вычислять медиану сразу по всем полям с общим префиксом с помощью синтаксиса `median(prefix*)`.

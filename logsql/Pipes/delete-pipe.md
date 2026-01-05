@@ -1,6 +1,6 @@
 ### Удалить поля (delete pipe)
 
-Если необходимо удалить некоторые [поля логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model), можно использовать конвейер `| delete field1, ..., fieldN` [pipe](https://docs.victoriametrics.com/victorialogs/logsql/#pipes).
+Если необходимо удалить некоторые `поля логов`, можно использовать конвейер `| delete field1, ..., fieldN` `pipe`.
 
 Например, следующий запрос удаляет поля `host` и `app` из логов за последние 5 минут:
 

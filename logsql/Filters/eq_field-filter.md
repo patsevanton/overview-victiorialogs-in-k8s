@@ -1,6 +1,6 @@
 ### Фильтр eq_field
 
-Иногда требуется найти логи, которые содержат одинаковые значения в заданных [полях](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Иногда требуется найти логи, которые содержат одинаковые значения в заданных `полях`.
 Это можно сделать с помощью фильтра `field1:eq_field(field2)`.
 
 Например, следующий запрос находит логи с одинаковыми значениями в полях `user_id` и `customer_id`:
@@ -9,4 +9,4 @@
 user_id:eq_field(customer_id)
 ```
 
-Быстрый совет: используйте `NOT user_id:eq_field(customer_id)` для поиска логов, в которых `user_id` не равен `customer_id`. Здесь используется [логический оператор `NOT`](https://docs.victoriametrics.com/victorialogs/logsql/#logical-filter).
+Быстрый совет: используйте `NOT user_id:eq_field(customer_id)` для поиска логов, в которых `user_id` не равен `customer_id`. Здесь используется `логический оператор `NOT``.
