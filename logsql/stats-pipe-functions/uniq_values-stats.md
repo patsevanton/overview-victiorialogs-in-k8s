@@ -1,28 +1,27 @@
-### uniq_values stats
+### Статистика `uniq_values`
 
-`uniq_values(field1, ..., fieldN)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) returns the unique non-empty values across
-the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
-The returned values are encoded in sorted JSON array.
+Функция конвейера статистики `uniq_values(field1, ..., fieldN)`
+([stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions)) возвращает уникальные непустые значения по указанным [полям логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Возвращаемые значения кодируются в виде отсортированного JSON-массива.
 
-For example, the following query returns unique non-empty values for the `ip` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over logs for the last 5 minutes:
+Например, следующий запрос возвращает уникальные непустые значения поля `ip`
+([field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)) по логам за последние 5 минут:
 
 ```logsql
 _time:5m | stats uniq_values(ip) unique_ips
 ```
 
-The returned unique IP addresses can be unrolled into distinct log entries with [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
+Полученные уникальные IP-адреса можно развернуть в отдельные записи логов с помощью конвейера [`unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
 
-Every unique value is stored in memory during query execution. Big number of unique values may require a lot of memory. Sometimes it is enough to return
-only a subset of unique values. In this case add `limit N` after `uniq_values(...)` in order to limit the number of returned unique values to `N`,
-while limiting the maximum memory usage.
-For example, the following query returns up to `100` unique values for the `ip` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over the logs for the last 5 minutes:
+Каждое уникальное значение хранится в памяти во время выполнения запроса. Большое количество уникальных значений может потребовать значительный объём памяти. Иногда достаточно вернуть только подмножество уникальных значений. В этом случае добавьте `limit N` после `uniq_values(...)`, чтобы ограничить количество возвращаемых уникальных значений числом `N`, тем самым ограничив максимальное потребление памяти.
+
+Например, следующий запрос возвращает до `100` уникальных значений поля `ip`
+([field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)) по логам за последние 5 минут:
 
 ```logsql
 _time:5m | stats uniq_values(ip) limit 100 as unique_ips_100
 ```
 
-Arbitrary subset of unique `ip` values is returned every time if the `limit` is reached.
+Если достигается ограничение `limit`, каждый раз возвращается произвольное подмножество уникальных значений `ip`.
 
-It is possible to find unique values for all the fields with common prefix via `uniq_values(prefix*)` syntax.
+Также можно найти уникальные значения для всех полей с общим префиксом, используя синтаксис `uniq_values(prefix*)`.

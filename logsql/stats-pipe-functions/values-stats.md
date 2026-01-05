@@ -1,16 +1,17 @@
-### values stats
+### Статистика `values`
 
-`values(field1, ..., fieldN)` [stats pipe function](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) returns all the values (including empty values)
-for the mentioned [log fields](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
-The returned values are encoded in JSON array.
+Функция конвейера статистики [`values(field1, ..., fieldN)`](https://docs.victoriametrics.com/victorialogs/logsql/#stats-pipe-functions) возвращает все значения (включая пустые значения)
+для указанных [полей логов](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model).
+Возвращаемые значения кодируются в виде JSON-массива.
 
-For example, the following query returns all the values for the `ip` [field](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
-over logs for the last 5 minutes:
+Например, следующий запрос возвращает все значения поля [`ip`](https://docs.victoriametrics.com/victorialogs/keyconcepts/#data-model)
+по логам за последние 5 минут:
 
 ```logsql
 _time:5m | stats values(ip) ips
 ```
 
-The returned IP addresses can be unrolled into distinct log entries with [`unroll` pipe](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
+Возвращённые IP-адреса можно развернуть в отдельные записи логов с помощью
+[конвейера `unroll`](https://docs.victoriametrics.com/victorialogs/logsql/#unroll-pipe).
 
-It is possible to get values for all the fields with common prefix via `values(prefix*)` syntax.
+Также можно получить значения для всех полей с общим префиксом, используя синтаксис `values(prefix*)`.
