@@ -16,7 +16,3 @@ contains_all(foo, "bar baz")
 foo AND "bar baz"
 ```
 
-Существует специальный случай — `contains_all(*)`. Этот фильтр совпадает со **всеми** логами. Подробнее см. в документации по [no-op фильтрам](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter).
-
-Внутрь фильтра `contains_all(...)` можно передать произвольный [запрос](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), чтобы выполнять сопоставление с результатами этого запроса. Подробнее см. в [этой документации](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter).
-

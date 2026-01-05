@@ -15,8 +15,3 @@ contains_any(foo, "bar baz")
 ```logsql
 foo OR "bar baz"
 ```
-
-Существует специальный случай — `contains_any(*)`. Этот фильтр совпадает со всеми логами. Подробности см. в документации по [no-op фильтру](https://docs.victoriametrics.com/victorialogs/logsql/#no-op-filter).
-
-Внутрь фильтра `contains_any(...)` можно передавать произвольный [запрос](https://docs.victoriametrics.com/victorialogs/logsql/#query-syntax), чтобы выполнять сопоставление по результатам этого запроса. Подробности см. в [этой документации](https://docs.victoriametrics.com/victorialogs/logsql/#subquery-filter).
-
