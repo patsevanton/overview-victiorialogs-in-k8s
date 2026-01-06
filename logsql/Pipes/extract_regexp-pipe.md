@@ -48,10 +48,6 @@ _time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' keep_original_fields
 _time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' from foo skip_empty_results
 ```
 
-### Совет по производительности
-
-Для повышения производительности запросов рекомендуется использовать конвейер ``extract`` вместо `extract_regexp`.
-
 ## Условный `extract_regexp`
 
 Если некоторые записи журнала нужно пропустить в конвейере `extract_regexp`, добавьте `if (<filters>)` после слова `extract_regexp`.

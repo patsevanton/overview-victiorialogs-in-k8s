@@ -43,21 +43,6 @@ _time:5m | unpack_json from foo fields (ip, host) keep_original_fields
 _time:5m | unpack_json fields (ip, host) skip_empty_results
 ```
 
-**Совет по производительности:** если нужно извлечь одно поле из длинного JSON, быстрее использовать ``extract` pipe`. Например, следующий запрос извлекает поле `"ip"` из JSON,
-хранящегося в ``_msg` поле`, с максимальной скоростью:
-
-```
-_time:5m | extract '"ip":<ip>'
-```
-
-Если нужно убедиться, что распакованные JSON-поля не конфликтуют с существующими полями, укажите общий префикс для всех извлекаемых полей,
-добавив `result_prefix "prefix_name"` к `unpack_json`. Например, следующий запрос добавляет префикс `foo_` ко всем полям,
-распакованным из `foo`:
-
-```logsql
-_time:5m | unpack_json from foo result_prefix "foo_"
-```
-
 #### Условный `unpack_json`
 
 Если ``unpack_json` pipe` должен применяться только к некоторым `лог-записям`,

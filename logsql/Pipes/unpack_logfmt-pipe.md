@@ -48,27 +48,6 @@ _time:5m | unpack_logfmt from foo fields (ip, host) keep_original_fields
 _time:5m | unpack_logfmt fields (ip, host) skip_empty_results
 ```
 
-**Совет по производительности:** если нужно извлечь одно поле из длинной строки
-`logfmt`, быстрее использовать
-`pipe `extract``.
-Например, следующий запрос извлекает поле `"ip"` из строки logfmt,
-хранящейся в
-`поле `_msg``:
-
-```
-_time:5m | extract ' ip=<ip>'
-```
-
-Если нужно убедиться, что распакованные поля logfmt не конфликтуют с уже существующими полями,
-можно задать общий префикс для всех извлекаемых полей, добавив
-`result_prefix "prefix_name"` к `unpack_logfmt`.
-Например, следующий запрос добавляет префикс `foo_` ко всем полям,
-распакованным из поля `foo`:
-
-```logsql
-_time:5m | unpack_logfmt from foo result_prefix "foo_"
-```
-
 #### Условный unpack_logfmt
 
 Если `pipe `unpack_logfmt``
