@@ -113,6 +113,24 @@ helm install \
 kubectl apply -f cluster-issuer.yaml
 ```
 
+Содержимое cluster-issuer.yaml:
+```yaml
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: my-email@mycompany.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+```
+
 > Если вы не используете Let's Encrypt, замените настройки ClusterIssuer на внутренний CA или нужный вам провайдер.
 
 ### 2) VictoriaLogs Cluster
@@ -128,6 +146,29 @@ helm upgrade --install victoria-logs-cluster \
   --version 0.0.24 \
   --timeout 15m \
   -f victorialogs-cluster-values.yaml
+```
+
+Содержимое victorialogs-cluster-values.yaml:
+```yaml
+vlselect:
+  ingress:
+    enabled: true
+    hosts:
+      - name: victorialogs.apatsev.org.ru
+        path:
+          - /
+        port: http
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      - hosts:
+        - victorialogs.apatsev.org.ru
+        secretName: victorialogs-tls
+vector:
+  enabled: true
+  rbac:
+    create: true
 ```
 
 Удаление:
@@ -153,6 +194,22 @@ helm upgrade --install victoria-logs-collector \
   -f victoria-logs-collector-values.yaml
 ```
 
+Содержимое victoria-logs-collector-values.yaml:
+```
+remoteWrite:
+  - url: http://victoria-logs-cluster-vlinsert.victoria-logs-cluster:9481
+    headers:
+      VL-Ignore-Fields:
+        - kubernetes.container_id
+        - kubernetes.pod_ip
+        - kubernetes.pod_labels.pod-template-hash
+collector:
+  msgField:
+    - message
+    - msg
+    - http.uri
+```
+
 
 ### 4) VM K8s Stack (метрики, Grafana)
 
@@ -169,8 +226,60 @@ helm upgrade --install vmks \
   -f vmks-values.yaml
 ```
 
- Можно анализировать логи через explore Grafana.
- Для получения пароля admin от Grafana необходимо:
+Сожержимое vmks-values.yaml:
+```
+grafana:
+  plugins:
+    - victoriametrics-logs-datasource
+  ingress:
+    ingressClassName: nginx
+    enabled: true
+    hosts:
+      - grafana.apatsev.org.ru
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "false"
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+    tls:
+      - hosts:
+          - grafana.apatsev.org.ru
+        secretName: grafana-tls
+defaultDatasources:
+  extra:
+    - name: victoriametrics-logs
+      access: proxy
+      type: victoriametrics-logs-datasource
+      url: http://victoria-logs-cluster-vlselect.victoria-logs-cluster.svc.cluster.local:9471
+      jsonData:
+        maxLines: 1000
+      version: 1
+defaultRules:
+  groups:
+    etcd:
+      create: false
+kube-state-metrics:
+  metricLabelsAllowlist:
+    - pods=[*]
+vmsingle:
+  enabled: false
+vmcluster:
+  enabled: true
+  ingress:
+    select:
+      enabled: true
+      ingressClassName: nginx
+      annotations:
+        nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        cert-manager.io/cluster-issuer: letsencrypt-prod
+      hosts:
+        - vmselect.apatsev.org.ru
+      tls:
+        - secretName: victoriametrics-tls
+          hosts:
+            - vmselect.apatsev.org.ru
+```
+
+Можно анализировать логи через explore Grafana.
+Для получения пароля admin от Grafana необходимо:
 
 ```bash
 # Откройте http://grafana.apatsev.org.ru/
@@ -260,7 +369,7 @@ LogsQL — pipeline-язык. Короткий набор базовых опе�
 ```
 
 
-## Полное руководство по LogsQL
+## Руководство по LogsQL
 
 ### Содержание
 
@@ -282,7 +391,7 @@ LogsQL — pipeline-язык. Короткий набор базовых опе�
 16. [Справочник конвейеров (Pipes) LogsQL](#16-справочник-конвейеров-pipes-logsql)
 17. [Справочник функций статистики (stats)](#17-справочник-функций-статистики-stats)
 
----
+
 
 ## 1. Фильтрация логов и временные фильтры
 
@@ -300,7 +409,7 @@ _time:1h      # последний час
 _time:24h     # последние сутки
 ```
 
----
+
 
 ## 2. Быстрые примеры (nginx-log-generator)
 
@@ -336,7 +445,7 @@ kubernetes.pod_namespace:"nginx-log-generator" |
 _time:1h "failed login" | stats by (user, ip) count() as attempts | filter attempts:>20
 ```
 
----
+
 
 ## 3. Примеры дашбордов / графиков
 
@@ -364,7 +473,7 @@ timestamp missing max_time: 1.9978073 http.url: api.example.com/api/v1/users?Req
 timestamp missing nginx.remote_addr: 10.0.0.1 errors: 103
 ```
 
----
+
 
 ## 4. LogsQL — язык запросов VictoriaLogs (кратко)
 
@@ -401,7 +510,7 @@ kubernetes.pod_namespace:"default"
 _time:10m "error" kubernetes.pod_name:"nginx-log-generator"
 ```
 
----
+
 
 ## 5. Операторы пайплайна (часто используемые)
 
@@ -433,7 +542,7 @@ _time:10m "error" kubernetes.pod_name:"nginx-log-generator"
 
 `head` / `first` / `last` — (поддержка в разных версиях) — для получения первых/последних N элементов.
 
----
+
 
 ## 6. Извлечение данных и парсинг
 
@@ -455,7 +564,7 @@ _time:10m "error" kubernetes.pod_name:"nginx-log-generator"
 
 `replace`, `replace_regexp`, `pack_json`, `pack_logfmt` — для трансформаций и упаковки.
 
----
+
 
 ## 7. Агрегации и аналитика (`stats`)
 
@@ -488,7 +597,7 @@ _time:5m | stats by (http.url) sum(http.bytes_sent) as bytes | sort by (bytes de
 _time:10m | stats quantile(0.95, request_time) as p95
 ```
 
----
+
 
 ## 8. Вычисления (`math`) и условия в агрегациях
 
@@ -514,7 +623,7 @@ stats
 math errors / total * 100 as error_rate
 ```
 
----
+
 
 ## 9. Практические паттерны
 
@@ -544,7 +653,7 @@ stats by (user, ip) count() as attempts |
 filter attempts:>20
 ```
 
----
+
 
 ## 10. Использование LogsQL в Grafana / VMUI
 
@@ -555,7 +664,7 @@ LogsQL поддерживается в VictoriaLogs datasource для Grafana и
 - алерты на основе логов;
 - единый язык запросов для VMUI и Grafana.
 
----
+
 
 ## 11. Cheatsheet (кратко)
 
@@ -571,7 +680,7 @@ LogsQL поддерживается в VictoriaLogs datasource для Grafana и
 | Ограничение       | `| limit 10`                   |
 | Вычисление        | `| math a / b * 100 as pct`    |
 
----
+
 
 ## 12. Учебное пособие по LogsQL
 
@@ -654,7 +763,7 @@ _time:5m error | stats count() logs_with_error
 
 **Слово (Word):** LogsQL разбивает все поля лога на слова, разделённые небуквенными символами. Слова могут содержать любые символы UTF‑8.
 
----
+
 
 ## 13. Советы по повышению производительности
 
@@ -666,7 +775,7 @@ _time:5m error | stats count() logs_with_error
 - **Старайтесь сократить число отобранных логов** за счёт более точных фильтров, возвращающих меньше записей для обработки операторами.
 - **Если логи хранятся в системах хранения с высокой задержкой** (например, NFS или S3), **увеличьте число параллельных читателей** через параметр `parallel_readers`.
 
----
+
 
 ## 14. Устранение неполадок (Troubleshooting)
 
@@ -737,7 +846,7 @@ _time:5m error contains_any("access denied", "unauthorized", "403") | count()
 - Функции с высокой кардинальностью, такие как `count_uniq()`, хранят в памяти все уникальные значения.
 - Большое число групп в `stats by (...)` может потреблять много памяти.
 
----
+
 
 ## 15. Справочник фильтров LogsQL
 
@@ -1125,7 +1234,7 @@ log.level:error
 "ip:remote":"1.2.3.45"
 ```
 
----
+
 
 ## 16. Справочник конвейеров (Pipes) LogsQL
 
@@ -1660,7 +1769,7 @@ _time:5m | unroll (timestamp, value)
 _time:5m | unroll if (value_type:="json_array") (value)
 ```
 
----
+
 
 ## 17. Справочник функций статистики (stats)
 
@@ -1885,7 +1994,7 @@ _time:5m | stats values(ip) ips
 _time:5m | stats values(prefix*)
 ```
 
----
+
 
 ## Заключение
 
