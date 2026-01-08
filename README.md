@@ -884,11 +884,15 @@ _time:10m | stats by (status) count() as requests
 _time:5m | stats by (http.status_code) count() as requests
 ```
 
+![count_of_http_requests_grouped_by_status_code_last_5m](count_of_http_requests_grouped_by_status_code_last_5m.png)
+
 - Топ URL по трафику:
 
 ```logsql
 _time:5m | stats by (http.url) sum(http.bytes_sent) as bytes | sort by (bytes desc) | limit 10
 ```
+
+![top10_http_urls_by_bytes_sent_last_5m](top10_http_urls_by_bytes_sent_last_5m.png)
 
 - P95 latency:
 
