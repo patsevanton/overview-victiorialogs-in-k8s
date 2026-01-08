@@ -831,18 +831,40 @@ _time:10m | sort by (errors desc) | limit 5
 
 ## 5. Извлечение данных и парсинг
 
-`extract` — извлечение по регулярному выражению:
+`extract` — извлечение по шаблону с плейсхолдерами:
 
 ```logsql
-_time:10m | extract "duration=(\d+)"
-_time:10m | extract "status=(?<status>\d+)"
+# Извлечение IP-адреса и использование для статистики. вывод "requests: 3855091"
+_time:10m | extract "ip=<ip> " from _msg | stats by (ip) count() as requests | sort by (requests desc) | limit 10
+
+# Извлечение нескольких полей и фильтрация. вывод "No logs volume available"
+_time:10m | extract "user=<user_id> duration=<duration_ms>ms" | filter duration_ms:>1000 | fields _time, user_id, duration_ms
+
+# Извлечение RequestId из URL и группировка
+_time:10m | extract "RequestId=<request_id>" from _msg | stats by (request_id) count() as hits
+```
+
+`extract_regexp` — извлечение по регулярному выражению с именованными группами:
+
+```logsql
+# Извлечение IP-адреса через regex и топ по количеству. переделать на использование http.user_agent	Mozilla/5.0 (iPad; CPU OS 9_0_3 like Mac OS X; en-US) AppleWebKit/535.14.8 (KHTML, like Gecko) Version/3.0.5 Mobile/8B111 Safari/6535.14.8
+_time:10m | extract_regexp "(?P<ip>([0-9]+[.]){3}[0-9]+)" from _msg | stats by (ip) count() as hits | sort by (hits desc) | limit 10
+
+# Извлечение статуса и времени ответа, затем фильтрация медленных запросов. не работает. выдает ошибку
+_time:10m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:>1.0 | fields _time, status, response_time
+
+# Извлечение нескольких полей и агрегация. не работает. выдает ошибку
+_time:10m | extract_regexp 'user_id=(?P<user_id>\d+).*amount=(?P<amount>[\d.]+)' | stats by (user_id) sum(amount) as total_amount | sort by (total_amount desc)
 ```
 
 `unpack_json` — распаковка JSON-поля в отдельные поля:
 
 ```logsql
-_time:10m | unpack_json
-_time:10m | filter level:"ERROR"
+# Распаковка JSON и использование полей
+_time:10m | unpack_json | filter level:"ERROR" | stats by (kubernetes.pod_name) count() as errors
+
+# Распаковка и выбор конкретных полей для отображения
+_time:10m | unpack_json | fields _time, level, message, kubernetes.pod_name, kubernetes.namespace
 ```
 
 `unpack_logfmt`, `unpack_syslog` и другие — для соответствующих форматов.
@@ -1566,12 +1588,36 @@ _time:5m | extract 'email: <email>,' from foo | drop_empty_fields
 **Примеры:**
 
 ```logsql
+# Базовое извлечение IP-адреса
 _time:5m | extract_regexp "(?P<ip>([0-9]+[.]){3}[0-9]+)" from _msg
-_time:5m | extract_regexp "(?P<ip>([0-9]+[.]){3}[0-9]+)"
-_time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' keep_original_fields
-_time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' from foo skip_empty_results
-_time:5m | extract_regexp if (ip:"") "ip=(?P<ip>([0-9]+[.]){3}[0-9]+)"
+
+# Извлечение IP и статистика по IP-адресам
+_time:5m | extract_regexp "(?P<ip>([0-9]+[.]){3}[0-9]+)" from _msg | stats by (ip) count() as requests | sort by (requests desc) | limit 10
+
+# Извлечение нескольких полей и использование в запросе
+_time:5m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:>1.0 | stats by (status) avg(response_time) as avg_time
+
+# Извлечение с сохранением оригинальных полей
+_time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' keep_original_fields | fields _time, ip, _msg
+
+# Извлечение из другого поля
+_time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' from foo skip_empty_results | filter ip:* | fields ip, foo
+
+# Условное извлечение
+_time:5m | extract_regexp if (ip:"") "ip=(?P<ip>([0-9]+[.]){3}[0-9]+)" | fields _time, ip
+
+# Извлечение RequestId и группировка
+_time:10m | extract_regexp 'RequestId=(?P<request_id>[a-f0-9\-]+)' from _msg | stats by (request_id) count() as hits | sort by (hits desc)
 ```
+
+**Использование извлеченных переменных:**
+- Именованные группы `(?P<имя>...)` создают поля с соответствующими именами
+- Извлеченные поля можно использовать в последующих операторах:
+  - `stats by (извлеченное_поле)` — группировка
+  - `filter извлеченное_поле:значение` — фильтрация
+  - `sort by (извлеченное_поле)` — сортировка
+  - `fields извлеченное_поле` — выбор для отображения
+  - `math` — вычисления с извлеченными числовыми полями
 
 ### Оператор extract (извлечение данных)
 
@@ -1580,13 +1626,34 @@ _time:5m | extract_regexp if (ip:"") "ip=(?P<ip>([0-9]+[.]){3}[0-9]+)"
 **Примеры:**
 
 ```logsql
+# Базовое извлечение IP и топ по частоте
 _time:1d error | extract "ip=<ip> " from _msg | top 10 (ip)
-_time:1d error | extract "ip=<ip> "
-_time:5m | extract '"ip":"<ip>"'
-_time:5m | extract 'ip=<ip> ' keep_original_fields
-_time:5m | extract 'ip=<ip> ' from foo skip_empty_results
-_time:5m | extract if (ip:"") "ip=<ip> "
+
+# Извлечение и использование в статистике
+_time:1d error | extract "ip=<ip> " from _msg | stats by (ip) count() as errors | sort by (errors desc) | limit 10
+
+# Извлечение нескольких полей и отображение
+_time:1d error | extract "ip=<ip> user=<user> " from _msg | fields _time, ip, user, _msg
+
+# Извлечение из JSON-формата
+_time:5m | extract '"ip":"<ip>"' | filter ip:* | stats by (ip) count() as requests
+
+# Извлечение с сохранением оригинальных полей
+_time:5m | extract 'ip=<ip> ' keep_original_fields | fields _time, ip, _msg
+
+# Извлечение из другого поля
+_time:5m | extract 'ip=<ip> ' from foo skip_empty_results | filter ip:* | fields ip, foo
+
+# Условное извлечение (только если поле ip пустое)
+_time:5m | extract if (ip:"") "ip=<ip> " | fields _time, ip, _msg
 ```
+
+**Использование извлеченных переменных:**
+- После извлечения поля доступны как обычные поля лога
+- Можно использовать в `stats by (извлеченное_поле)`
+- Можно фильтровать: `filter извлеченное_поле:значение`
+- Можно сортировать: `sort by (извлеченное_поле desc)`
+- Можно отображать: `fields извлеченное_поле`
 
 **Плейсхолдеры:** `<поле>` — именованный, `<_>` — анонимный, `plain:` — отключение удаления кавычек.
 
