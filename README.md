@@ -305,10 +305,10 @@ helm upgrade --install victoria-logs-collector \
   --wait \
   --version 0.2.4 \
   --timeout 15m \
-  -f victoria-logs-collector-values.yaml
+  -f victorialogs-collector-values.yaml
 ```
 
-Содержимое victoria-logs-collector-values.yaml:
+Содержимое victorialogs-collector-values.yaml:
 ```
 remoteWrite:
   - url: http://victoria-logs-cluster-vlinsert.victoria-logs-cluster:9481
