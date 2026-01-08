@@ -671,12 +671,15 @@ kubernetes.pod_namespace:"nginx-log-generator" | stats by (http.status_code) cou
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | limit 10
 ```
+![nginx_http_url_max_request_time_top10](nginx_http_url_max_request_time_top10.png)
 
 3) IP с наибольшим количеством ошибок (>=400):
 
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" | http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | sort by (errors desc) | limit 10
 ```
+
+![nginx_http_4xx_5xx_errors_by_ip](nginx_http_4xx_5xx_errors_by_ip.png)
 
 4) Доля ошибок (процент):
 
