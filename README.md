@@ -952,9 +952,7 @@ math errors / total * 100 as error_rate
 **Примеры:**
 
 ```logsql
-_time:5m host:"api-" level:error "database" | count()
-_time:5m level:error | count()
-_time:5m host:"api-" | count()
+_time:5m kubernetes.pod_node_name:"cl1419v18u5teucb9ldc-" http.method: POST | count()
 ```
 
 ### Проверьте количество уникальных log stream'ов
@@ -964,7 +962,7 @@ _time:5m host:"api-" | count()
 ```logsql
 _time:1d | stats count_uniq(_stream) as streams
 _time:1d | top 10 by (_stream)
-_time:1d {app="nginx"} | stats count_uniq(_stream) as streams, count() as logs
+_time:1d {kubernetes.pod_namespace="flog-log-generator"} | stats count_uniq(_stream) as streams, count() as logs
 ```
 
 ### Определите самые «дорогие» части запроса
@@ -975,6 +973,8 @@ _time:1d {app="nginx"} | stats count_uniq(_stream) as streams, count() as logs
 _time:1d | keep kubernetes.pod_name, kubernetes.pod_namespace | block_stats
 _time:1d | keep kubernetes.pod_name, kubernetes.pod_namespace | block_stats | stats by (field) sum(values_bytes) values_bytes_on_disk, sum(rows) rows | sort by (values_bytes_on_disk) desc
 ```
+
+![pod_namespace_storage_usage_and_rows_aggregation_last_1d](pod_namespace_storage_usage_and_rows_aggregation_last_1d.png)
 
 ### Профилируйте pipes поэтапно
 
