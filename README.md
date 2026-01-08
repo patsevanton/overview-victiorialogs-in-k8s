@@ -850,16 +850,6 @@ _time:10m | extract_regexp "AppleWebKit/(?P<webkit_version>[0-9.]+)" from http.u
 
 ![applewebkit_http_user_agent_version_usage_statistics](applewebkit_http_user_agent_version_usage_statistics.png)
 
-# Извлечение статуса и времени ответа, затем фильтрация медленных запросов
-```
-_time:10m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:range(1.0, Inf) | fields _time, status, response_time
-```
-
-# Извлечение нескольких полей и агрегация. не работает. выдает ошибку
-```
-_time:10m | extract_regexp 'user_id=(?P<user_id>\d+).*amount=(?P<amount>[\d.]+)' | stats by (user_id) sum(amount) as total_amount | sort by (total_amount desc)
-```
-
 `unpack_json` — распаковка JSON-поля в отдельные поля:
 
 ```logsql
@@ -881,7 +871,6 @@ _time:10m | unpack_json | fields _time, level, message, kubernetes.pod_name, kub
 `stats` — основной оператор агрегации.
 
 ```logsql
-_time:10m | stats count()
 _time:10m | stats by (status) count() as requests
 ```
 
