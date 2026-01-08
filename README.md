@@ -956,17 +956,17 @@ LogsQL поддерживается в VictoriaLogs datasource для Grafana и
 
 ## 11. Cheatsheet (кратко)
 
-| Операция          | Пример                         |
-|-------------------|--------------------------------|
-| Фильтр по времени | `_time:5m`                     |
-| Поиск строки      | `"error"`                      |
-| Фильтр поля       | `status:>=500`                 |
-| JSON / распаковка | `| unpack_json`                |
-| Regex extract     | `| extract "id=(\d+)"`         |
-| Агрегация         | `| stats by (status) count()`  |
-| Сортировка        | `| sort by (count desc)`       |
-| Ограничение       | `| limit 10`                   |
-| Вычисление        | `| math a / b * 100 as pct`    |
+| Операция          | Пример                       |
+|-------------------|------------------------------|
+| Фильтр по времени | `_time:5m`                   |
+| Поиск строки      | `"error"`                    |
+| Фильтр поля       | `status:>=500`               |
+| JSON / распаковка | `unpack_json`                |
+| Regex extract     | `extract "id=(\d+)"`         |
+| Агрегация         | `stats by (status) count()`  |
+| Сортировка        | `sort by (count desc)`       |
+| Ограничение       | `limit 10`                   |
+| Вычисление        | `math a / b * 100 as pct`    |
 
 
 
