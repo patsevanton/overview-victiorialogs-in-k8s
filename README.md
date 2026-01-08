@@ -834,11 +834,6 @@ _time:10m | sort by (errors desc) | limit 5
 `extract` — извлечение по шаблону с плейсхолдерами:
 
 ```logsql
-# Извлечение IP-адреса и использование для статистики. вывод "requests: 3855091"
-_time:10m | extract "ip=<ip> " from _msg | stats by (ip) count() as requests | sort by (requests desc) | limit 10
-
-# Извлечение нескольких полей и фильтрация. вывод "No logs volume available"
-_time:10m | extract "user=<user_id> duration=<duration_ms>ms" | filter duration_ms:>1000 | fields _time, user_id, duration_ms
 
 # Извлечение RequestId из URL и группировка
 _time:10m | extract "RequestId=<request_id>" from _msg | stats by (request_id) count() as hits
@@ -847,8 +842,8 @@ _time:10m | extract "RequestId=<request_id>" from _msg | stats by (request_id) c
 `extract_regexp` — извлечение по регулярному выражению с именованными группами:
 
 ```logsql
-# Извлечение IP-адреса через regex и топ по количеству. переделать на использование http.user_agent	Mozilla/5.0 (iPad; CPU OS 9_0_3 like Mac OS X; en-US) AppleWebKit/535.14.8 (KHTML, like Gecko) Version/3.0.5 Mobile/8B111 Safari/6535.14.8
-_time:10m | extract_regexp "(?P<ip>([0-9]+[.]){3}[0-9]+)" from _msg | stats by (ip) count() as hits | sort by (hits desc) | limit 10
+# Извлечение версии AppleWebKit из http.user_agent и топ по количеству
+_time:10m | extract_regexp "AppleWebKit/(?P<webkit_version>[0-9.]+)" from http.user_agent | stats by (webkit_version) count() as hits | sort by (hits desc) | limit 10
 
 # Извлечение статуса и времени ответа, затем фильтрация медленных запросов. не работает. выдает ошибку
 _time:10m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:>1.0 | fields _time, status, response_time
