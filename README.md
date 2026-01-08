@@ -472,13 +472,8 @@ nginx-log-generator nginx-log-generator {"ts":"2026-01-08T09:11:40.13508164Z","h
 При раскрытии лога видим метаданные
 ![nginx-log-generator-vmui-extend](nginx-log-generator-vmui-extend.png)
 
-```bash
-kubectl create ns python-log-generator
-kubectl apply -f python-log-generator.yaml
-# проверить логи, затем
-kubectl delete -f python-log-generator.yaml
-```
 
+Используем mingrammer/flog для генерации логов
 ```bash
 kubectl create ns flog-log-generator
 kubectl apply -f flog-log-generator.yaml
@@ -486,7 +481,17 @@ kubectl apply -f flog-log-generator.yaml
 kubectl delete -f flog-log-generator.yaml
 ```
 
-Для других генераторов (flog, python и т.д.) используйте аналогичный паттерн (namespace → apply → delete).
+
+Сырые логи в таком виде:
+```
+flog-log-generator-7b9df8d855-bt777 flog {"host":"86.89.148.235", "user-identifier":"-", "datetime":"08/Jan/2026:09:08:52 +0000", "method": "PATCH", "request": "/whiteboard", "protocol":"HTTP/2.0", "status":205, "bytes":29813, "referer": "http://www.humanintegrated.org/visualize/world-class/turn-key/out-of-the-box"}
+```
+
+В VMUI видно так
+![flog-log-generator-vmui](flog-log-generator-vmui.png)
+
+При раскрытии лога видим метаданные
+![flog-log-generator-vmui-extend](flog-log-generator-vmui-extend.png)
 
 
 ## Причина высокой производительности VictoriaLogs
