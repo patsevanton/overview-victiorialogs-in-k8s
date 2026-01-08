@@ -976,222 +976,17 @@ _time:1d | keep kubernetes.pod_name, kubernetes.pod_namespace | block_stats | st
 
 ![pod_namespace_storage_usage_and_rows_aggregation_last_1d](pod_namespace_storage_usage_and_rows_aggregation_last_1d.png)
 
-### Профилируйте pipes поэтапно
-
-Добавляйте фильтры и pipes по одному, измеряя производительность:
-
-```logsql
-_time:5m | count()
-_time:5m error | count()
-_time:5m error -"cannot open file" | count()
-_time:5m error contains_any("access denied", "unauthorized", "403") | count()
-```
-
-**Рекомендации по оптимизации:**
-
-- Сопоставление по regex и парсинг JSON — дорогие операции. Используйте более быстрые альтернативы.
-- Сортировка без ограничения (`sort` без `limit`) сохраняет все логи в памяти. Добавьте `limit` или уменьшите входной объём данных.
-- Функции с высокой кардинальностью, такие как `count_uniq()`, хранят в памяти все уникальные значения.
-- Большое число групп в `stats by (...)` может потреблять много памяти.
-
-
 
 ## 14. Справочник фильтров LogsQL
 
-### Фильтр «любое значение»
-
-Находит записи журнала, содержащие любое непустое значение для заданного поля.
-
-**Примеры:**
-
-```logsql
-log_field:*
-"some:field":*
-```
-
-### Регистронезависимый фильтр
-
-Применяется к любому слову, фразе или префиксу, обернув соответствующий фильтр в `i()`.
-
-**Примеры:**
-
-```logsql
-i(error)
-i("ssh: login fail")
-i(err*)
-```
-
-### Фильтр `contains_all`
-
-Находит логи, которые содержат все заданные слова/фразы. Эквивалентно `v1 AND v2 ... AND vN`.
-
-**Примеры:**
-
-```logsql
-contains_all(foo, "bar baz")
-contains_all(error, file, app)
-```
-
-### Фильтр `contains_any`
-
-Находит логи, которые содержат хотя бы одно слово или фразу из множества. Эквивалентно `v1 OR v2 OR ... OR vN`.
-
-**Примеры:**
-
-```logsql
-contains_any(foo, "bar baz")
-contains_any(error, warning, info)
-```
-
-### Фильтр contains_common_case
-
-Ищет логи, в которых поле содержит заданные фразы, учитывая различные варианты регистра (обычно быстрее, чем `i(...)`).
-
-**Примеры:**
-
-```logsql
-_msg:contains_common_case("VictoriaMetrics")
-```
-
-### Фильтр дневного диапазона
-
-Выбирает логи в интервале времени каждый день. Границы: `[`/`]` — включить, `(`/`)` — исключить.
-
-**Примеры:**
-
-```logsql
-_time:day_range[08:00, 18:00)
-_time:day_range(08:00, 18:00]
-_time:day_range[08:00, 18:00) offset 2h # Указание часового пояса UTC+2:
-```
-
-### Фильтр пустого значения
-
-Находит записи логов без указанного поля.
-
-**Примеры:**
-
-```logsql
-host.hostname:""
-```
-
-### Фильтр eq_field
-
-Находит логи, которые содержат одинаковые значения в заданных полях.
-
-**Примеры:**
-Например, следующий запрос находит логи с одинаковыми значениями в полях `user_id` и `customer_id`:
-
-```logsql
-user_id:eq_field(customer_id)
-NOT user_id:eq_field(customer_id)
-```
-
-### Фильтр equals_common_case
-
-Ищет логи, в которых поле равно заданным фразам, учитывая различные варианты регистра (обычно быстрее, чем `i(...)`).
-
-**Примеры:**
-
-```logsql
-_msg:equals_common_case("VictoriaMetrics")
-```
-
-### Фильтр точного совпадения (`exact`)
-
-Ищет строгое совпадение значения без лишнего текста. Чувствителен к регистру (для нечувствительного — `i(...)`). По умолчанию применяется к полю `_msg`.
-
-**Примеры:**
-
-```logsql
-="fatal error" # — только точное сообщение в поле **`_msg`**.
-log.level:="error" # точное значение в поле log.level
-```
-
-### Фильтр точного префикса
-
-Ищет логи, начинающиеся с заданного префикса. Чувствителен к регистру и позиции (только начало строки). По умолчанию применяется к полю `_msg`.
-
-**Примеры:**
-
-```logsql
-="префикс"*
-field:="префикс"*
-"log:level":="err"*
-```
-
-### Фильтр диапазонов IPv4
-
-Фильтрует сообщения журнала по полю, содержащему только IPv4-адреса. Поддерживает CIDR-нотацию.
-
-**Примеры:**
-
-```logsql
-user.ip:ipv4_range(127.0.0.0, 127.255.255.255)
-user.ip:ipv4_range("127.0.0.0/8")
-```
-
-### Фильтр le_field
-
-Находит логи, в которых значение одного поля не превышает значение другого поля.
-
-**Примеры:**
-Например, следующий запрос отбирает логи, в которых значение поля `duration` не превышает значения поля `max_duration`:
-
-```logsql
-duration:le_field(max_duration)
-NOT duration:le_field(max_duration)
-```
-
 ### Фильтр по диапазону длины
 
-Фильтрует сообщения журнала по их длине. По умолчанию применяется к полю `_msg`.
+Фильтрует сообщения журнала по их длине. Очень полезный запрос для поиска длинных логов.
 
 **Примеры:**
 
 ```logsql
-len_range(5, 10)
-len_range(5, inf)
-len_range(1_000, 2_345_678)
-foo:len_range(10, 20)
-```
-
-### Логический фильтр
-
-Объединяет базовые фильтры с помощью логических операций: `AND`, `OR`, `NOT` (или `-`, `!`). Приоритет: `NOT` > `AND` > `OR`. Можно использовать скобки для изменения порядка.
-
-**Примеры:**
-
-```logsql
-error AND file AND app
-error file app
-error OR warning OR info
-NOT info
--info
-log.level:(error OR warning OR info)
-NOT (info OR debug)
-```
-
-### Фильтр lt_field
-
-Отбирает записи, где значение первого поля строго меньше значения второго поля.
-
-**Примеры:**
-
-```logsql
-duration:lt_field(max_duration)
-NOT duration:lt_field(max_duration)
-```
-
-### Фильтр множественного точного совпадения
-
-Находит сообщения журнала, в которых определённое поле содержит одно из заданных значений. Используйте `in()`.
-
-**Примеры:**
-
-```logsql
-log.level:in("error", "fatal")
-log.level:(="error" OR ="fatal")
+len_range(500, inf)
 ```
 
 ### Фильтр сопоставления с шаблоном
@@ -1204,32 +999,6 @@ log.level:(="error" OR ="fatal")
 pattern_match("user_id=<N>, ip=<IP4>, time=<DATETIME>")
 pattern_match_full("шаблон")
 поле_лога:pattern_match("шаблон")
-```
-
-### Фильтр по фразе
-
-Находит сообщения логов, содержащие определённую фразу. Заключите фразу в кавычки. Фраза может включать любые символы (пробелы, знаки препинания и т.д.). По умолчанию ищется в поле `_msg`.
-
-**Примеры:**
-
-```logsql
-"ssh: login fail"
-'"foo":"bar"'
-event.original:"cannot open file"
-"some:message":"cannot open file"
-```
-
-### Фильтр по префиксу
-
-Находит сообщения логов, содержащие слова/фразы с определённым префиксом. Добавьте символ `*` в конец слова/фразы. По умолчанию применяется к полю `_msg`.
-
-**Примеры:**
-
-```logsql
-err*
-"unexpected fail"*
-log.level:err*
-"log:level":err*
 ```
 
 ### Фильтр сравнения диапазонов
@@ -1270,119 +1039,6 @@ event.original:~"err|warn"
 "event:original":~"err|warn"
 ```
 
-### Фильтр последовательности
-
-Находит сообщения логов, в которых слова или фразы идут в определённом порядке. По умолчанию применяется к полю `_msg`.
-
-**Примеры:**
-
-```logsql
-seq("error", "open file")
-event.original:seq(error, "open file")
-"event:original":seq(error, "open file")
-```
-
-### Фильтр потоков
-
-Оптимизированный способ выбора логов по потокам с помощью селектора меток Prometheus `{...}`.
-
-**Примеры:**
-
-```logsql
-{app="nginx"}
-{app in ("nginx", "foo.bar")}
-{app not_in ("nginx", "foo.bar")}
-_stream:{app="nginx"}
-```
-
-### Фильтр диапазона строк
-
-Фильтрует сообщения журнала по полю со строковыми значениями в определённом диапазоне. Включает нижнюю границу, исключает верхнюю.
-
-**Примеры:**
-
-```logsql
-user.name:string_range(A, C)
-user.name:string_range(C, E)
-```
-
-### Фильтр с подзапросом
-
-Отбирает логи, в которых значения полей совпадают со значениями, полученными в результате подзапроса. Подзапрос должен завершаться конвейером `fields` или `uniq` с одним полем.
-
-**Примеры:**
-
-```logsql
-_time:5m AND user_id:in(_time:1d AND path:admin | fields user_id)
-_time:5m _msg:contains_all(_time:1d is_admin:true | fields user_id)
-_time:5m _msg:contains_any(_time:1d is_admin:true | fields user_id)
-```
-
-### Фильтр по подстроке
-
-Находит логи, содержащие определённую подстроку. Используйте `*подстрока*`. По умолчанию применяется к полю `_msg`.
-
-**Примеры:**
-
-```logsql
-*ampl*
-~"(?i)ampl"
-```
-
-### Фильтр по времени
-
-Сужает область поиска по времени. Рекомендуется использовать для оптимизации запросов.
-
-**Примеры:**
-
-```logsql
-_time:1h AND error
-_time:5m
-_time:2.5d15m42.345s
-_time:2023-04-25Z
-_time:[2023-04-01Z, 2023-04-30Z]
-_time:5m offset 1h
-_time:2023-04-25+05:30
-_time:>2023-04-01Z
-_time:<=2023-04-30Z
-```
-
-### Фильтр value_type
-
-Выбирает логи с полями определённого типа значения (например, `uint64`, `int64`, `float64`, `string`, `dict`, `const`).
-
-**Примеры:**
-
-```logsql
-user_id:value_type(uint64)
-```
-
-### Фильтр диапазона дней недели
-
-Фильтрует логи по дням недели. Дни: `Sun/Sunday`, `Mon/Monday`, ..., `Sat/Saturday`. Границы: `[`/`]` — включить, `(`/`)` — исключить.
-
-**Примеры:**
-
-```logsql
-_time:week_range[Mon, Fri]
-_time:week_range(Sun, Sat)
-_time:week_range[Mon, Fri] offset 2h
-_time:week_range[Mon, Fri] _time:day_range(08:00, 18:00)
-```
-
-### Фильтр по слову
-
-Запрос из одного слова ищет это слово в поле `_msg`. Соответствует строкам, содержащим точное совпадение слова. Поиск чувствителен к регистру (без регистра: `i(error)`).
-
-**Примеры:**
-
-```logsql
-error
-log.level:error
-"ip:remote":"1.2.3.45"
-```
-
-
 
 ## 15. Справочник конвейеров (Pipes) LogsQL
 
@@ -1400,17 +1056,6 @@ _time:1h | collapse_nums prettify
 _time:5m | collapse_nums if (user_type:=admin) at foo
 ```
 
-### Удалить поля (delete pipe)
-
-Удаляет указанные поля из логов. Можно использовать `drop`, `del`, `rm` вместо `delete`. Поддерживает удаление полей с общим префиксом.
-
-**Примеры:**
-
-```logsql
-_time:5m | delete host, app
-_time:5m | drop host
-_time:5m | delete foo*
-```
 
 ### Конвейер drop_empty_fields
 
@@ -1421,82 +1066,6 @@ _time:5m | delete foo*
 ```logsql
 _time:5m | extract 'email: <email>,' from foo | drop_empty_fields
 ```
-
-### Конвейер extract_regexp
-
-Извлекает подстроки из поля согласно регулярному выражению RE2 с именованными группами `(?P<capture_field_name>...)`. Если применяется к `_msg`, часть `from _msg` можно опустить.
-
-**Примеры:**
-
-```logsql
-# Базовое извлечение IP-адреса
-_time:5m | extract_regexp "(?P<ip>([0-9]+[.]){3}[0-9]+)" from _msg
-
-# Извлечение IP и статистика по IP-адресам
-_time:5m | extract_regexp "(?P<ip>([0-9]+[.]){3}[0-9]+)" from _msg | stats by (ip) count() as requests | sort by (requests desc) | limit 10
-
-# Извлечение нескольких полей и использование в запросе
-_time:5m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:>1.0 | stats by (status) avg(response_time) as avg_time
-
-# Извлечение с сохранением оригинальных полей
-_time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' keep_original_fields | fields _time, ip, _msg
-
-# Извлечение из другого поля
-_time:5m | extract_regexp 'ip=(?P<ip>([0-9]+[.]){3}[0-9]+)' from foo skip_empty_results | filter ip:* | fields ip, foo
-
-# Условное извлечение
-_time:5m | extract_regexp if (ip:"") "ip=(?P<ip>([0-9]+[.]){3}[0-9]+)" | fields _time, ip
-
-# Извлечение RequestId и группировка
-_time:10m | extract_regexp 'RequestId=(?P<request_id>[a-f0-9\-]+)' from _msg | stats by (request_id) count() as hits | sort by (hits desc)
-```
-
-**Использование извлеченных переменных:**
-- Именованные группы `(?P<имя>...)` создают поля с соответствующими именами
-- Извлеченные поля можно использовать в последующих операторах:
-  - `stats by (извлеченное_поле)` — группировка
-  - `filter извлеченное_поле:значение` — фильтрация
-  - `sort by (извлеченное_поле)` — сортировка
-  - `fields извлеченное_поле` — выбор для отображения
-  - `math` — вычисления с извлеченными числовыми полями
-
-### Оператор extract (извлечение данных)
-
-Извлекает текст из указанного поля и сохраняет в новые поля согласно шаблону. Существующие поля не изменяются. Если применяется к `_msg`, часть `from _msg` можно опустить.
-
-**Примеры:**
-
-```logsql
-# Базовое извлечение IP и топ по частоте
-_time:1d error | extract "ip=<ip> " from _msg | top 10 (ip)
-
-# Извлечение и использование в статистике
-_time:1d error | extract "ip=<ip> " from _msg | stats by (ip) count() as errors | sort by (errors desc) | limit 10
-
-# Извлечение нескольких полей и отображение
-_time:1d error | extract "ip=<ip> user=<user> " from _msg | fields _time, ip, user, _msg
-
-# Извлечение из JSON-формата
-_time:5m | extract '"ip":"<ip>"' | filter ip:* | stats by (ip) count() as requests
-
-# Извлечение с сохранением оригинальных полей
-_time:5m | extract 'ip=<ip> ' keep_original_fields | fields _time, ip, _msg
-
-# Извлечение из другого поля
-_time:5m | extract 'ip=<ip> ' from foo skip_empty_results | filter ip:* | fields ip, foo
-
-# Условное извлечение (только если поле ip пустое)
-_time:5m | extract if (ip:"") "ip=<ip> " | fields _time, ip, _msg
-```
-
-**Использование извлеченных переменных:**
-- После извлечения поля доступны как обычные поля лога
-- Можно использовать в `stats by (извлеченное_поле)`
-- Можно фильтровать: `filter извлеченное_поле:значение`
-- Можно сортировать: `sort by (извлеченное_поле desc)`
-- Можно отображать: `fields извлеченное_поле`
-
-**Плейсхолдеры:** `<поле>` — именованный, `<_>` — анонимный, `plain:` — отключение удаления кавычек.
 
 ### Конвейер facets
 
@@ -1557,17 +1126,6 @@ _time:1h error | stats by (host) count() logs_count | where logs_count:> 1_000
 _time:1h error | stats by (host) count() logs_count | logs_count:> 1_000
 ```
 
-### Конвейер first
-
-Возвращает первые N записей журнала после сортировки по указанным полям. Поддерживает `partition by` для группировки.
-
-**Примеры:**
-
-```logsql
-_time:5m | first 10 by (request_duration)
-_time:1h | first 3 by (request_duration) partition by (host)
-```
-
 ### Труба format (format pipe)
 
 Объединяет поля логов согласно шаблону и сохраняет результат в поле. Если результат сохраняется в `_msg`, часть `as _msg` можно опустить. Поддерживает префиксы: `duration_seconds:`, `q:`, `uc:`, `lc:`, `urlencode:`, `urldecode:`, `hexencode:`, `hexdecode:`, `base64encode:`, `base64decode:`, `hexnumdecode:`, `time:`, `duration:`, `ipv4:`, `hexnumencode:`. Поддерживает `keep_original_fields`, `skip_empty_results`, условное форматирование `if (...)`.
@@ -1583,25 +1141,6 @@ _time:5m | format 'url: http://foo.com/?user=<urlencode:user>'
 _time:5m | format if (ip:* and host:*) "request from <ip>:<host>" as message
 ```
 
-### Конвейер generate_sequence
-
-Пропускает все результаты запроса и генерирует N выходных логов с полем `_msg`, содержащим целочисленную последовательность от 0 до N-1. Полезен для тестирования и отладки.
-
-**Примеры:**
-
-```logsql
-* | generate_sequence 1000 | math round(rand()*10) as rand_num | stats by (rand_num) count() hits | sort by (rand_num)
-```
-
-### Конвейер hash
-
-Вычисляет хеш-значение для указанного поля и сохраняет его в новое поле.
-
-**Примеры:**
-
-```logsql
-_time:5m | hash(user_id) as user_id_hash
-```
 
 ### Труба join (соединение)
 
@@ -1613,27 +1152,6 @@ _time:5m | hash(user_id) as user_id_hash
 _time:1d {app="app1"} | stats by (user) count() app1_hits | join by (user) (_time:1d {app="app2"} | stats by (user) count() app2_hits)
 _time:1d {app="app1"} | stats by (user) count() app1_hits | join by (user) (_time:1d {app="app2"} | stats by (user) count() app2_hits) inner
 _time:1d {app="app1"} | stats by (user) count() app1_hits | join by (user) (_time:1d {app="app2"} | stats by (user) count() app2_hits) prefix "app2."
-```
-
-### Конвейер json_array_len
-
-Вычисляет длину JSON-массива в указанном поле и сохраняет результат в новое поле.
-
-**Примеры:**
-
-```logsql
-_time:5m | unpack_words _msg as words | json_array_len(words) as words_count | first 5 (words_count desc)
-```
-
-### Последний конвейер (last pipe)
-
-Возвращает последние N записей журнала после сортировки по указанным полям. Поддерживает `partition by` для группировки.
-
-**Примеры:**
-
-```logsql
-_time:5m | last 10 by (request_duration)
-_time:1h | last 3 by (request_duration) partition by (host)
 ```
 
 ### len (длина) — конвейер
@@ -1656,18 +1174,6 @@ _time:5m | len(_msg) as msg_len | sort by (msg_len desc) | limit 5
 _time:5m | limit 100
 _time:5m | head 100
 error | head
-```
-
-### Конвейер math (математические вычисления)
-
-Выполняет математические вычисления над числовыми значениями полей. Поддерживает операции: `+`, `-`, `*`, `/`, `%`, `^`, `&`, `or`, `xor`, `default`, функции: `abs`, `ceil`, `exp`, `floor`, `ln`, `max`, `min`, `now()`, `rand()`, `round`. Можно использовать `eval` вместо `math`.
-
-**Примеры:**
-
-```logsql
-_time:5m | math round(duration_msecs / 1000) as duration_secs
-_time:5m | eval (duration_secs * 1000) as duration_msecs
-_time:5m | math round(request_duration, 1e9) as request_duration_nsecs | format '<duration:request_duration_nsecs>' as request_duration
 ```
 
 ### Труба offset (пропуск записей)
@@ -1737,19 +1243,6 @@ _time:5m | replace ("secret-password", "***") at _msg
 _time:5m | replace ("secret-password", "***")
 _time:5m | replace ('foo', 'bar') at baz limit 1
 _time:5m | replace if (user_type:=admin) ("secret", "***") at password
-```
-
-### Конвейер running_stats
-
-Вычисляет накапливаемые статистики по указанным полям логов. Запрос должен возвращать поле `_time`. Поддерживает группировку `by (field1, ..., fieldM)`. Ключевое слово `by` можно опустить.
-
-**Примеры:**
-
-```logsql
-_time:5m | running_stats sum(hits) as running_hits
-_time:5m | running_stats count() as running_logs, sum(hits) as running_hits
-_time:1d | stats by (_time:hour) count() as hits | running_stats sum(hits) as running_hits
-_time:5m | running_stats by (host, path) count() running_logs, sum(hits) running_hits
 ```
 
 ### Канал sample
