@@ -805,27 +805,27 @@ _time:10m "error" kubernetes.pod_name:"nginx-log-generator"
 `filter` — пост-фильтрация результатов (обычно после `stats` или `math`):
 
 ```logsql
-| filter status:>=500
+_time:10m | filter status:>=500
 ```
 
 `fields` — выбор полей (аналог SELECT):
 
 ```logsql
-| fields _time, level, _msg, kubernetes.pod_name
+_time:10m | fields _time, level, _msg, kubernetes.pod_name
 ```
 
 `sort` — сортировка:
 
 ```logsql
-| sort by (_time desc)
-| sort by (requests desc)
+_time:10m | sort by (_time desc)
+_time:10m | sort by (requests desc)
 ```
 
 `limit` — ограничение количества строк:
 
 ```logsql
-| limit 10
-| limit 5 by (errors desc)
+_time:10m | limit 10
+_time:10m | limit 5 by (errors desc)
 ```
 
 `head` / `first` / `last` — (поддержка в разных версиях) — для получения первых/последних N элементов.
@@ -837,15 +837,15 @@ _time:10m "error" kubernetes.pod_name:"nginx-log-generator"
 `extract` — извлечение по регулярному выражению:
 
 ```logsql
-| extract "duration=(\d+)"
-| extract "status=(?<status>\d+)"
+_time:10m | extract "duration=(\d+)"
+_time:10m | extract "status=(?<status>\d+)"
 ```
 
 `unpack_json` — распаковка JSON-поля в отдельные поля:
 
 ```logsql
-| unpack_json
-| filter level:"ERROR"
+_time:10m | unpack_json
+_time:10m | filter level:"ERROR"
 ```
 
 `unpack_logfmt`, `unpack_syslog` и другие — для соответствующих форматов.
@@ -859,8 +859,8 @@ _time:10m "error" kubernetes.pod_name:"nginx-log-generator"
 `stats` — основной оператор агрегации.
 
 ```logsql
-| stats count()
-| stats by (status) count() as requests
+_time:10m | stats count()
+_time:10m | stats by (status) count() as requests
 ```
 
 Функции: `count()`, `sum(field)`, `avg(field)`, `min(field)`, `max(field)`, `quantile(0.95, field)`, `count_uniq()`, `row_any()` и т.д.
