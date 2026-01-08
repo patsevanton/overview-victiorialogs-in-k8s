@@ -812,6 +812,8 @@ _time:10m | filter status:>=500
 _time:10m | fields _time, level, _msg, kubernetes.pod_name
 ```
 
+![logs_last_10_minutes_with_level_and_message](logs_last_10_minutes_with_level_and_message.png)
+
 `sort` — сортировка:
 
 ```logsql
