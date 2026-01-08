@@ -474,11 +474,41 @@ nginx-log-generator nginx-log-generator {"ts":"2026-01-08T09:11:40.13508164Z","h
 
 
 Используем mingrammer/flog для генерации логов
+Содержимое flog-log-generator.yaml
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flog-log-generator
+  namespace: flog-log-generator
+  labels:
+    app: flog-log-generator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flog-log-generator
+  template:
+    metadata:
+      labels:
+        app: flog-log-generator
+    spec:
+      containers:
+      - name: flog
+        image: mingrammer/flog:latest
+        args:
+        - "--format"
+        - "json"
+        - "--loop"
+        env:
+        - name: LOG_LEVEL
+          value: "info"
+```
+
+
 ```bash
 kubectl create ns flog-log-generator
 kubectl apply -f flog-log-generator.yaml
-# проверить логи, затем
-kubectl delete -f flog-log-generator.yaml
 ```
 
 
@@ -656,7 +686,7 @@ _time:24h     # последние сутки
 
 
 
-## 2. Быстрые примеры (nginx-log-generator)
+## 2. Примеры дашбордов / графиков
 
 1) Счётчики по статусам для namespace `nginx-log-generator` (за последние 5 минут):
 
@@ -689,21 +719,47 @@ kubernetes.pod_namespace:"nginx-log-generator" |
   math errors / total * 100 as error_rate
 ```
 
-5) Поиск подозрительных попыток входа (анализ аномалий):
+![http_response_error_percentage](http_response_error_percentage.png)
 
-```logsql
-_time:1h "failed login" | stats by (user, ip) count() as attempts | filter attempts:>20
+
+Для запроса ниже используем логи от самодельного приложения python-log-generator
+```bash
+kubectl create ns python-log-generator
+kubectl apply -f python-log-generator.yaml
 ```
 
+Содержимое python-log-generator.yaml
+```
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: python-log-generator
+  namespace: python-log-generator
+  labels:
+    app: python-log-generator
+spec:
+  containers:
+  - name: python-log-generator
+    image: antonpatsev/log-generator:2
+```
+
+5) Поиск подозрительных попыток подключения к БД (анализ аномалий):
+
+```logsql
+_time:1h "Failed to connect" | stats count() as attempts 
+```
+
+![failed_connect_attempts_last_1h](failed_connect_attempts_last_1h.png)
 
 
-## 3. Примеры дашбордов / графиков
-
-- График распределения `status_code` по ручке `/api/v1/products` для `namespace nginx-log-generator`:
+6) График распределения `status_code` по ручке `/api/v1/products` для `namespace nginx-log-generator`:
 
 ```logsql
 kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count
 ```
+
+![pod_namespace_nginx_log_generator_api_v1_products_http_status_stats](pod_namespace_nginx_log_generator_api_v1_products_http_status_stats.png)
 
 - Топ медленных запросов (пример вывода):
 
@@ -725,7 +781,7 @@ timestamp missing nginx.remote_addr: 10.0.0.1 errors: 103
 
 
 
-## 4. LogsQL — язык запросов VictoriaLogs (кратко)
+## 3. LogsQL — язык запросов VictoriaLogs (кратко)
 
 LogsQL — потоковый (pipeline) язык запросов. Запрос состоит из последовательности стадий, разделённых `|`.
 
