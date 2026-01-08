@@ -754,7 +754,7 @@ _time:1h "Failed to connect" | stats count() as attempts
 6) График распределения `status_code` по ручке `/api/v1/products` для `namespace nginx-log-generator`:
 
 ```logsql
-kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count
+kubernetes.pod_namespace:"nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count
 ```
 
 ![pod_namespace_nginx_log_generator_api_v1_products_http_status_stats](pod_namespace_nginx_log_generator_api_v1_products_http_status_stats.png)
@@ -825,7 +825,7 @@ _time:10m | sort by (requests desc)
 
 ```logsql
 _time:10m | limit 10
-_time:10m | limit 5 by (errors desc)
+_time:10m | sort by (errors desc) | limit 5
 ```
 
 
@@ -901,7 +901,7 @@ _time:5m | stats count() if (level:"ERROR") as error_count
 Пример расчёта процента ошибок:
 
 ```logsql
-kubernetes.pod_namespace: "nginx-log-generator" |
+kubernetes.pod_namespace:"nginx-log-generator" |
 stats
   count() as total,
   count() if (http.status_code:>=400) as errors |
@@ -1099,7 +1099,7 @@ app:=nginx
 **Примеры:**
 
 ```logsql
-_time:1d | count_uniq(_stream_id)
+_time:1d | stats count_uniq(_stream) as streams
 _time:1d | top 10 by (_stream)
 _time:1d {app="nginx"} | stats count_uniq(_stream) as streams, count() as logs
 ```
