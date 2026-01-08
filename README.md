@@ -926,6 +926,7 @@ stats
 math errors / total * 100 as error_rate
 ```
 
+![nginx_http_status_code_error_rate_percentage](nginx_http_status_code_error_rate_percentage.png)
 
 
 ## 8. Практические паттерны
