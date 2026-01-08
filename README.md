@@ -761,24 +761,6 @@ kubernetes.pod_namespace: "nginx-log-generator" | "/api/v1/products" | stats by 
 
 ![pod_namespace_nginx_log_generator_api_v1_products_http_status_stats](pod_namespace_nginx_log_generator_api_v1_products_http_status_stats.png)
 
-- Топ медленных запросов (пример вывода):
-
-```logsql
-_time:5m | kubernetes.pod_namespace:"nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | limit 10
-```
-
-Пример строки вывода:
-
-```
-timestamp missing max_time: 1.9978073 http.url: api.example.com/api/v1/users?RequestId=a1b2c3...
-```
-
-- Ошибки по IP-адресам (пример вывода):
-
-```
-timestamp missing nginx.remote_addr: 10.0.0.1 errors: 103
-```
-
 
 
 ## 3. LogsQL — язык запросов VictoriaLogs (кратко)
@@ -797,7 +779,7 @@ LogsQL — потоковый (pipeline) язык запросов. Запрос
 http.status_code:200
 http.status_code:>=400
 http.method:GET
-kubernetes.pod_namespace:"default"
+kubernetes.pod_namespace:"nginx-log-generator"
 ```
 
 Поддерживаемые операторы сравнения: `=`, `!=`, `>`, `<`, `>=`, `<=`.
