@@ -1266,21 +1266,6 @@ _time:5m | set_stream_fields host, path
 _time:5m | set_stream_fields if (host:="foobar") host, app
 ```
 
-### Оператор sort (сортировка)
-
-Сортирует логи по указанным полям с естественным порядком сортировки. Поддерживает `desc` для обратного порядка, `limit`, `offset`, `partition by`, `rank`.
-
-**Примеры:**
-
-```logsql
-_time:5m | sort by (_stream, _time)
-_time:5m | sort by (request_duration_seconds desc)
-_time:1h | sort by (request_duration desc) limit 10
-_time:1h | sort by (request_duration desc) offset 10 limit 20
-_time:1h | sort by (request_duration desc) partition by (host) limit 3
-_time:5m | sort by (_time) rank as position
-```
-
 ### Разделение строки (split pipe)
 
 Разделяет поле журнала на элементы по заданному разделителю и сохраняет результат в виде JSON-массива. Части `from <src_field>` и `as <dst_field>` необязательны.
@@ -1292,21 +1277,6 @@ _time:5m | split "," from _msg as items
 _time:5m | split "," from _msg
 _time:5m | split ","
 _time:5m | split "," as items | unroll items | top 5 (items)
-```
-
-### Пайп stats
-
-Вычисляет статистику по логам. Поддерживает группировку по полям (`by (field1, ...)`), по временным бакетам (`by (_time:step)`), по бакетам полей, по IPv4-бакетам, дополнительные фильтры (`if (...)`).
-
-**Примеры:**
-
-```logsql
-_time:5m | stats count() as logs_total
-_time:5m | stats by (host, path) count() logs_total, count_uniq(ip) ips_total
-_time:5m | stats by (_time:1m) count() logs_total, count_uniq(ip) ips_total
-_time:1h | stats by (request_size_bytes:10KB) count() requests
-_time:5m | stats by (ip:/24) count() requests_per_subnet
-_time:5m | stats count() if (GET) gets, count() if (POST) posts, count() total
 ```
 
 ### Конвейер stream_context
@@ -1348,18 +1318,7 @@ _time:5m | top 10 by (ip) rank
 _time:5m | top 10 by (ip) rank as position
 ```
 
-### Конвейер total_stats
 
-Вычисляет общие (глобальные) статистические показатели по указанным полям логов. Запрос должен возвращать поле `_time`. Поддерживает группировку `by (field1, ..., fieldM)`. Ключевое слово `by` можно опустить.
-
-**Примеры:**
-
-```logsql
-_time:5m | total_stats sum(hits) as total_hits
-_time:5m | total_stats count() as total_logs, sum(hits) as total_hits
-_time:1d | stats by (_time:hour) count() as hits | total_stats sum(hits) as total_hits | math round((hits / total_hits)*100) as hits_percent
-_time:5m | total_stats by (host, path) count() total_logs, sum(hits) total_hits
-```
 
 ### Объединение потоков (union pipe)
 
