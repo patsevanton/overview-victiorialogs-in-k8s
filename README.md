@@ -949,7 +949,7 @@ math errors / total * 100 as error_rate
 
 Добавляйте `| count()` после каждого фильтра или pipe, чтобы увидеть количество совпадающих логов.
 
-**Примеры:**
+**Пример:**
 
 ```logsql
 _time:5m kubernetes.pod_node_name:"cl1419v18u5teucb9ldc-" http.method: POST | count()
@@ -983,7 +983,7 @@ _time:1d | keep kubernetes.pod_name, kubernetes.pod_namespace | block_stats | st
 
 Фильтрует сообщения журнала по их длине. Очень полезный запрос для поиска длинных логов.
 
-**Примеры:**
+**Пример:**
 
 ```logsql
 len_range(500, inf)
@@ -993,7 +993,7 @@ len_range(500, inf)
 
 Фильтрует логи по шаблонам с плейсхолдерами: `<N>` (число), `<UUID>`, `<IP4>`, `<TIME>`, `<DATE>`, `<DATETIME>`, `<W>` (слово). По умолчанию применяется к полю `_msg`.
 
-**Примеры:**
+**Пример:**
 
 ```logsql
 pattern_match("/api/v1/<W>?RequestId=<UUID>") | stats by (http.status_code) count() as requests
@@ -1005,7 +1005,7 @@ pattern_match("/api/v1/<W>?RequestId=<UUID>") | stats by (http.status_code) coun
 
 Поддерживает фильтры вида `field:>X`, `field:>=X`, `field:<X` и `field:<=X`, где `X` — числовое значение, IPv4-адрес или строка.
 
-**Примеры:**
+**Пример:**
 
 ```logsql
 http.request_time:>0.9 and http.bytes_sent:>110 and http.status_code:>400
@@ -1018,7 +1018,7 @@ http.request_time:>0.9 and http.bytes_sent:>110 and http.status_code:>400
 
 Поддерживает фильтрацию по регулярным выражениям (синтаксис RE2) через конструкцию `~"regex"`. По умолчанию применяется к полю `_msg`.
 
-**Примеры:**
+**Пример:**
 
 ```logsql
 ~"(?i)(err|warn)" # найдет строки, содержащие "err" или "warn" в любом регистре.
@@ -1031,7 +1031,7 @@ http.request_time:>0.9 and http.bytes_sent:>110 and http.status_code:>400
 
 Заменяет все десятичные и шестнадцатеричные числа в указанном поле на заполнитель `<N>`. Если применяется к `_msg`, суффикс `at ...` можно опустить. Поддерживает `prettify` для распознавания шаблонов (UUID, IP4, TIME, DATE, DATETIME), условное применение `if (...)`.
 
-**Примеры:**
+**Пример:**
 
 ```logsql
 kubernetes.container_name:"nginx-log-generator"
@@ -1046,7 +1046,7 @@ kubernetes.container_name:"nginx-log-generator"
 
 Удаляет поля с пустыми значениями из результатов. Пропускает записи журнала, в которых нет ни одного непустого поля.
 
-**Примеры:**
+**Пример:**
 
 ```logsql
 _time:5m | extract 'email: <email>,' from foo | drop_empty_fields
@@ -1211,11 +1211,12 @@ _time:5m | pack_logfmt as foo | fields foo
 **Примеры:**
 
 ```logsql
-_time:5m | replace_regexp ("host-(.+?)-foo", "$1") at _msg
-_time:5m | replace_regexp ("host-(.+?)-foo", "$1")
-_time:5m | replace_regexp ('password: [^ ]+', '') at baz limit 1
-_time:5m | replace_regexp if (user_type:=admin) ("password: [^ ]+", "***") at foo
+kubernetes.container_name:"nginx-log-generator"
+| replace_regexp("(/v)[0-9]+(/orders/)[^/]+(/courier)", "$1<N>$2<ID>$3") at http.uri
+| stats by (http.uri) count()
 ```
+
+![nginx_log_uri_regexp_normalizer](nginx_log_uri_regexp_normalizer.png)
 
 ### Замена подстроки (pipe replace)
 
