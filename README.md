@@ -839,14 +839,19 @@ _time:10m | sort by (errors desc) | limit 5
 _time:10m | extract "RequestId=<request_id>" from _msg | stats by (request_id) count() as hits
 ```
 
+![request_id_extraction_and_hits_aggregation_10m](request_id_extraction_and_hits_aggregation_10m.png)
+
 `extract_regexp` — извлечение по регулярному выражению с именованными группами:
 
 ```logsql
 # Извлечение версии AppleWebKit из http.user_agent и топ по количеству
 _time:10m | extract_regexp "AppleWebKit/(?P<webkit_version>[0-9.]+)" from http.user_agent | stats by (webkit_version) count() as hits | sort by (hits desc) | limit 10
 
-# Извлечение статуса и времени ответа, затем фильтрация медленных запросов. не работает. выдает ошибку
-_time:10m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:>1.0 | fields _time, status, response_time
+
+![applewebkit_http_user_agent_version_usage_statistics](applewebkit_http_user_agent_version_usage_statistics.png)
+
+# Извлечение статуса и времени ответа, затем фильтрация медленных запросов
+_time:10m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:range(1.0, Inf) | fields _time, status, response_time
 
 # Извлечение нескольких полей и агрегация. не работает. выдает ошибку
 _time:10m | extract_regexp 'user_id=(?P<user_id>\d+).*amount=(?P<amount>[\d.]+)' | stats by (user_id) sum(amount) as total_amount | sort by (total_amount desc)
