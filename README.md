@@ -1040,6 +1040,7 @@ kubernetes.container_name:"nginx-log-generator"
 | sort by (hits desc)
 ```
 
+![nginx_http_url_request_hits_sorted_descending](nginx_http_url_request_hits_sorted_descending.png)
 
 ### Конвейер drop_empty_fields
 
