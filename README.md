@@ -846,14 +846,17 @@ _time:10m | extract "RequestId=<request_id>" from _msg | stats by (request_id) c
 ```logsql
 # Извлечение версии AppleWebKit из http.user_agent и топ по количеству
 _time:10m | extract_regexp "AppleWebKit/(?P<webkit_version>[0-9.]+)" from http.user_agent | stats by (webkit_version) count() as hits | sort by (hits desc) | limit 10
-
+```
 
 ![applewebkit_http_user_agent_version_usage_statistics](applewebkit_http_user_agent_version_usage_statistics.png)
 
 # Извлечение статуса и времени ответа, затем фильтрация медленных запросов
+```
 _time:10m | extract_regexp 'status=(?P<status>\d+).*time=(?P<response_time>[\d.]+)' from _msg | filter response_time:range(1.0, Inf) | fields _time, status, response_time
+```
 
 # Извлечение нескольких полей и агрегация. не работает. выдает ошибку
+```
 _time:10m | extract_regexp 'user_id=(?P<user_id>\d+).*amount=(?P<amount>[\d.]+)' | stats by (user_id) sum(amount) as total_amount | sort by (total_amount desc)
 ```
 
