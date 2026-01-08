@@ -295,7 +295,7 @@ helm uninstall -n victoria-logs-cluster victoria-logs-cluster
 
 ### 3) collector (victoria-logs-collector)
 
-Чарт для развёртывания collector/vl-агента:
+Victoria-logs-collector — это Helm-чарт от VictoriaMetrics, развертывающий агент сбора логов (vlagent) как DaemonSet в Kubernetes-кластере для автоматического сбора логов со всех контейнеров и их репликации в VictoriaLogs-хранилища:
 
 ```bash
 helm upgrade --install victoria-logs-collector \
