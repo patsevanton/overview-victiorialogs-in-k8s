@@ -1259,11 +1259,13 @@ _time:5m | set_stream_fields if (host:="foobar") host, app
 **Примеры:**
 
 ```logsql
-_time:5m | split "," from _msg as items
-_time:5m | split "," from _msg
-_time:5m | split ","
-_time:5m | split "," as items | unroll items | top 5 (items)
+kubernetes.container_name:"nginx-log-generator"
+  | split "?" from _msg as parts
+  | extract '["<path>","<request_id>"' from parts
+  | stats by (path) count()
 ```
+
+![nginx_http_path_stats_collector](nginx_http_path_stats_collector.png)
 
 ### Конвейер stream_context
 
