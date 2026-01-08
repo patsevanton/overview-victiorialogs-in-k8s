@@ -461,6 +461,20 @@ kubectl apply -f nginx-log-generator.yaml
 kubectl delete -f nginx-log-generator.yaml
 ```
 
+```bash
+kubectl create ns python-log-generator
+kubectl apply -f python-log-generator.yaml
+# проверить логи, затем
+kubectl delete -f python-log-generator.yaml
+```
+
+```bash
+kubectl create ns flog-log-generator
+kubectl apply -f flog-log-generator.yaml
+# проверить логи, затем
+kubectl delete -f flog-log-generator.yaml
+```
+
 Для других генераторов (flog, python и т.д.) используйте аналогичный паттерн (namespace → apply → delete).
 
 
