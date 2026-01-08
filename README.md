@@ -645,7 +645,7 @@ LogsQL — pipeline-язык. Короткий набор базовых опе�
 Примеры:
 
 ```logsql
-*                 # время указывается в UI
+*             # время указывается в UI
 ```
 
 ```logsql
@@ -663,6 +663,8 @@ _time:24h     # последние сутки
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" | stats by (http.status_code) count() as requests | sort by (requests desc)
 ```
+
+![nginx_log_generator_requests_by_http_status_code](nginx_log_generator_requests_by_http_status_code.png)
 
 2) Топ медленных URL по времени ответа:
 
