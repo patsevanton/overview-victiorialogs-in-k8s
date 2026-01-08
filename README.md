@@ -461,6 +461,17 @@ kubectl apply -f nginx-log-generator.yaml
 kubectl delete -f nginx-log-generator.yaml
 ```
 
+Сырые логи в таком виде:
+```
+nginx-log-generator nginx-log-generator {"ts":"2026-01-08T09:11:40.13508164Z","http":{"request_id":"a7bde975-51be-4412-8053-ca11f83168a0","method":"GET","status_code":403,"url":"api.example.com/api/v1/users?RequestId=123e4567-e89b-12d3-a456-426614174000","host":"api.example.com","uri":"/api/v1/users?RequestId=123e4567-e89b-12d3-a456-426614174000","request_time":1.6586195,"user_agent":"Mozilla/5.0 (Windows CE) AppleWebKit/5340 (KHTML, like Gecko) Chrome/38.0.871.0 Mobile Safari/5340","protocol":"HTTP/1.1","trace_session_id":"","server_protocol":"HTTP/1.1","content_type":"application/json","bytes_sent":"61"},"nginx":{"x-forward-for":"10.0.0.2","remote_addr":"10.0.0.2","http_referrer":""}}
+```
+
+В VMUI видно так
+![nginx-log-generator-vmui](nginx-log-generator-vmui.png)
+
+При раскрытии лога видим метаданные
+![nginx-log-generator-vmui-extend](nginx-log-generator-vmui-extend.png)
+
 ```bash
 kubectl create ns python-log-generator
 kubectl apply -f python-log-generator.yaml
