@@ -996,10 +996,10 @@ len_range(500, inf)
 **Примеры:**
 
 ```logsql
-pattern_match("user_id=<N>, ip=<IP4>, time=<DATETIME>")
-pattern_match_full("шаблон")
-поле_лога:pattern_match("шаблон")
+pattern_match("/api/v1/<W>?RequestId=<UUID>") | stats by (http.status_code) count() as requests
 ```
+
+![api_v1_requests_with_requestid_status_code_count](api_v1_requests_with_requestid_status_code_count.png)
 
 ### Фильтр сравнения диапазонов
 
@@ -1008,21 +1008,11 @@ pattern_match_full("шаблон")
 **Примеры:**
 
 ```logsql
-response_size:>10KiB
-username:<"John"
+http.request_time:>0.9 and http.bytes_sent:>110 and http.status_code:>400
 ```
 
-### Фильтр диапазона
+![http_requests_with_high_latency_large_payload_and_errors](http_requests_with_high_latency_large_payload_and_errors.png)
 
-Фильтрует сообщения журнала по полю, содержащему только числовые значения. Границы по умолчанию исключаются (используйте квадратные скобки для включения).
-
-**Примеры:**
-
-```logsql
-request.duration:range(4.2, Inf)
-request.duration:range[1, 10]
-request.duration:>4.2
-```
 
 ### Фильтр по регулярным выражениям
 
