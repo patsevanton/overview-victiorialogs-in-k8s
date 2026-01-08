@@ -283,10 +283,6 @@ vlselect:
       - hosts:
         - victorialogs.apatsev.org.ru
         secretName: victorialogs-tls
-vector:
-  enabled: true
-  rbac:
-    create: true
 ```
 
 Удаление:
@@ -299,7 +295,7 @@ helm uninstall -n victoria-logs-cluster victoria-logs-cluster
 
 ### 3) collector (victoria-logs-collector)
 
-Чарт для развёртывания collector/ingest-агента:
+Чарт для развёртывания collector/vl-агента:
 
 ```bash
 helm upgrade --install victoria-logs-collector \
