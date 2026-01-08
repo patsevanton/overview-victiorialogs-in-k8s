@@ -1021,12 +1021,7 @@ http.request_time:>0.9 and http.bytes_sent:>110 and http.status_code:>400
 **Примеры:**
 
 ```logsql
-~"err|warn"
-~"(?i)(err|warn)"
-~'"foo":"(bar|baz)"'
-~"a\\.b"
-event.original:~"err|warn"
-"event:original":~"err|warn"
+~"(?i)(err|warn)" # найдет строки, содержащие "err" или "warn" в любом регистре.
 ```
 
 
@@ -1039,11 +1034,10 @@ event.original:~"err|warn"
 **Примеры:**
 
 ```logsql
-_time:5m | collapse_nums at _msg
-_time:5m | collapse_nums
-_time:1h | collapse_nums | top 5 by (_msg)
-_time:1h | collapse_nums prettify
-_time:5m | collapse_nums if (user_type:=admin) at foo
+kubernetes.container_name:"nginx-log-generator"
+| collapse_nums at http.url prettify
+| stats by (http.url) count() as hits
+| sort by (hits desc)
 ```
 
 
