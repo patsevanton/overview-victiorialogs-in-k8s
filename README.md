@@ -897,10 +897,10 @@ _time:5m | stats by (http.url) sum(http.bytes_sent) as bytes | sort by (bytes de
 - P95 latency:
 
 ```logsql
-_time:10m | stats quantile(0.95, request_time) as p95
+kubernetes.pod_namespace: "nginx-log-generator" | stats quantile(0.95, http.request_time) as p95
 ```
 
-
+![nginx_request_time_percentile_95](nginx_request_time_percentile_95.png)
 
 ## 7. Вычисления (`math`) и условия в агрегациях
 
