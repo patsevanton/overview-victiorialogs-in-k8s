@@ -892,13 +892,13 @@ _time:10m | stats quantile(0.95, request_time) as p95
 `math` позволяет вычислять новые поля на основе существующих:
 
 ```logsql
-| math errors / total * 100 as error_rate
+_time:5m | math errors / total * 100 as error_rate
 ```
 
 Условия внутри `stats` (через `if`):
 
 ```logsql
-| stats count() if (level:"ERROR") as error_count
+_time:5m | stats count() if (level:"ERROR") as error_count
 ```
 
 Пример расчёта процента ошибок:
