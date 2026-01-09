@@ -1120,16 +1120,16 @@ kubernetes.container_name:"nginx-log-generator"
 
 ### Конвейер stream_context
 
-Позволяет выбирать окружающие записи логов в рамках одного потока логов, аналогично `grep -A` / `grep -B`. Возвращаемые фрагменты разделяются сообщением `---`. Должен располагаться первым после фильтров. Поддерживает `before N`, `after N`, `time_window`.
+Позволяет выбирать окружающие записи логов в рамках одного потока логов, аналогично `grep -A` / `grep -B`. Возвращаемые фрагменты разделяются сообщением `---` в поле `_msg`. Должен располагаться первым после фильтров (сразу после условий фильтрации). Поддерживает `before N`, `after N`, `time_window`.
 
 **Примеры:**
-
+Получить контекст до и после ошибок
 ```logsql
-_time:5m panic | stream_context after 10
-_time:5m stacktrace | stream_context before 5
-_time:5m error | stream_context before 2 after 5
-_time:5m error | stream_context before 10 time_window 1w
+_time:10m kubernetes.pod_namespace:"nginx-log-generator" http.status_code:>=500 | stream_context before 2 after 5
 ```
+
+![stream_context_nginx_log_generator_server_errors_500_plus](stream_context_nginx_log_generator_server_errors_500_plus.png)
+
 
 ### Конвейер time_add
 
