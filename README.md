@@ -1130,19 +1130,6 @@ _time:10m kubernetes.pod_namespace:"nginx-log-generator" http.status_code:>=500 
 
 ![stream_context_nginx_log_generator_server_errors_500_plus](stream_context_nginx_log_generator_server_errors_500_plus.png)
 
-
-### Конвейер time_add
-
-Прибавляет указанную длительность к полю `_time`. Для вычитания укажите отрицательное значение. Поддерживает `at <имя_поля>` для работы с другими полями.
-
-**Примеры:**
-
-```logsql
-_time:5m | time_add 1h
-_time:5m | time_add -1h
-_time:5m | time_add 1w at transaction_time
-```
-
 ### Конвейер top
 
 Возвращает топ-N наборов значений по полям, которые встречаются чаще всего. Параметр N необязателен (по умолчанию 10). Поддерживает `hits as`, `rank`.
@@ -1156,7 +1143,6 @@ _time:5m | top by (path) hits as visits
 _time:5m | top 10 by (ip) rank
 _time:5m | top 10 by (ip) rank as position
 ```
-
 
 
 ### Объединение потоков (union pipe)
