@@ -1089,14 +1089,19 @@ kubernetes.container_name:"nginx-log-generator"
 
 Заменяет все вхождения подстроки на новую подстроку в указанном поле. Если замена в `_msg`, часть `at _msg` можно опустить. Поддерживает `limit N` и условную замену `if (...)`.
 
-**Примеры:**
+**Пример:**
 
+Практический пример: нормализация URL с последующей агрегацией
+Заменяем домен на короткую версию, затем группируем по нормализованному URL
 ```logsql
-_time:5m | replace ("secret-password", "***") at _msg
-_time:5m | replace ("secret-password", "***")
-_time:5m | replace ('foo', 'bar') at baz limit 1
-_time:5m | replace if (user_type:=admin) ("secret", "***") at password
+kubernetes.container_name:"nginx-log-generator"
+| replace ("api.example.com", "api.example") at http.url
+| stats by (http.url) count() as requests
+| sort by (requests desc)
 ```
+
+![kubernetes_nginx_replace_http_url_requests_stats](kubernetes_nginx_replace_http_url_requests_stats.png)
+
 
 ### Канал sample
 
