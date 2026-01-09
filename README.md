@@ -1163,86 +1163,6 @@ _time:5m | stats by (status) avg(bytes) as avg_bytes, count() as total | sort by
 _time:5m | stats avg(http.*)
 ```
 
-### Статистика count_uniq_hash
-
-Вычисляет приблизительное количество уникальных хешей для непустых кортежей по указанным полям логов. Работает быстрее и использует меньше памяти, чем `count_uniq`.
-
-**Примеры:**
-
-```logsql
-# Приблизительное количество уникальных IP-адресов по статус-кодам
-_time:5m | stats by (status) count_uniq_hash(host) as unique_hosts_count
-```
-
-### Статистика count_uniq
-
-Вычисляет количество уникальных непустых кортежей по указанным полям логов. Поддерживает `limit N` для ограничения памяти. Для приблизительного подсчёта можно использовать `count_uniq_hash`.
-
-**Примеры:**
-
-```logsql
-# Уникальные комбинации метода и статус-кода
-_time:5m | stats by (status) count_uniq(method) as unique_methods
-```
-
-### Статистика count
-
-Вычисляет количество выбранных логов. Можно указать поля для подсчёта логов с непустыми значениями. Поддерживает несколько полей и префиксы.
-
-**Примеры:**
-
-```logsql
-# Количество логов с непустым полем referer, сгруппированные по статусу
-_time:5m | stats by (status) count(referer) as logs_with_referer, count() as total_logs
-
-# Количество логов с любым из указанных полей
-_time:5m | stats count(method, host) as logs_with_method_or_host
-```
-
-### Статистика max
-
-Возвращает максимальное значение среди указанных полей логов. Работает и со строковыми значениями. Поддерживает префиксы и условную статистику `if (...)`. Вместо max можно использовать median, min
-
-**Примеры:**
-
-```logsql
-# Максимальный размер ответа по статус-кодам
-_time:5m | stats by (status) max(bytes) as max_bytes
-```
-
-
-### Статистика quantile
-
-Вычисляет приближённый phi-й процентиль по значениям указанных полей логов. Параметр phi должен быть в диапазоне 0...1. Работает и со строковыми значениями. Поддерживает префиксы и условную статистику `if (...)`.
-
-**Примеры:**
-
-```logsql
-# Процентили размера ответа (p50, p90, p99) по статус-кодам
-_time:5m | stats by (status) quantile(0.5, bytes) as p50, quantile(0.9, bytes) as p90, quantile(0.99, bytes) as p99
-
-# Процентили времени запроса для NGINX логов
-_time:5m http.request_time:* | stats by (status) quantile(0.5, http.request_time) as p50, quantile(0.95, http.request_time) as p95
-
-# Процентили только для непустых значений
-_time:5m | stats by (status) quantile(0.9, bytes) if (bytes:*) as p90_bytes_with_value
-```
-
-
-### Статистика sum_len
-
-Вычисляет сумму байтовых длин всех значений для указанных полей логов. Поддерживает префиксы.
-
-**Примеры:**
-
-```logsql
-# Суммарная длина всех сообщений по статус-кодам
-_time:5m | stats by (status) sum_len(_msg) as total_message_len
-
-# Суммарная длина для всех полей с префиксом
-_time:5m | stats by (status) sum_len(http.*) as total_http_fields_len
-```
-
 ### Статистика sum
 
 Вычисляет сумму числовых значений по указанным полям логов. Нечисловые значения пропускаются. Поддерживает префиксы.
@@ -1250,48 +1170,9 @@ _time:5m | stats by (status) sum_len(http.*) as total_http_fields_len
 **Примеры:**
 
 ```logsql
-# Суммарный размер всех ответов по статус-кодам
-_time:5m | stats by (status) sum(bytes) as total_bytes
-
-# Сумма для всех полей с префиксом http
-_time:5m | stats by (status) sum(http.*) as total_http_bytes
-
 # Использование результата для сортировки (топ статус-коды по объему данных)
 _time:5m | stats by (status) sum(bytes) as total_bytes, count() as count_logs | sort by (total_bytes desc) | limit 10
 ```
-
-### Статистика uniq_values
-
-Возвращает уникальные непустые значения по указанным полям логов в виде отсортированного JSON-массива. Поддерживает `limit N` и префиксы.
-
-**Примеры:**
-
-```logsql
-# Уникальные методы по статус-кодам (возвращает JSON-массив)
-_time:5m | stats by (status) uniq_values(method) as unique_methods
-
-# Уникальные хосты с ограничением
-_time:5m | stats uniq_values(host) limit 100 as unique_hosts_100
-
-# Уникальные комбинации (возвращает массив строковых представлений кортежей)
-_time:5m | stats by (status) uniq_values(method, host) limit 50 as unique_method_host_pairs
-```
-
-### Статистика values
-
-Возвращает все значения (включая пустые) для указанных полей логов в виде JSON-массива. Поддерживает префиксы.
-
-**Примеры:**
-
-```logsql
-# Все значения метода по статус-кодам (включая дубликаты)
-_time:5m | stats by (status) values(method) as all_methods
-
-# Все значения для всех полей с префиксом
-_time:5m | stats by (status) values(http.*) as all_http_values
-```
-
-
 
 ## Заключение
 
