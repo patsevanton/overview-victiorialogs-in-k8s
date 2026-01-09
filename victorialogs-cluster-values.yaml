@@ -13,3 +13,7 @@ vlselect:
     #   - hosts:
     #     - victorialogs.apatsev.org.ru
     #     secretName: victorialogs-tls
+vlstorage:
+  retentionPeriod: 1d
+  persistentVolume:
+    size: 200Gi
