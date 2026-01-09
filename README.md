@@ -1071,10 +1071,6 @@ _time:5m | format "<method> <_msg> - <status> (<bytes> bytes)" as _msg
 ![http_requests_format_method_msg_status_bytes](http_requests_format_method_msg_status_bytes.png)
 
 
-### Конвейер query_stats
-
-Возвращает статистику выполнения запроса: `BytesReadColumnsHeaders`, `BytesReadValues`, `BytesReadTotal`, `BlocksProcessed`, `RowsProcessed`, `RowsFound`, `ValuesRead`, `QueryDurationNsecs` и другие метрики. Полезен для анализа и оптимизации медленных запросов.
-
 ### Конвейер replace_regexp
 
 Заменяет подстроки, соответствующие регулярному выражению RE2, на строку замены. В строке замены можно использовать плейсхолдеры `$N` или `${N}`. Если замена в `_msg`, часть `at _msg` можно опустить. Поддерживает `limit N` и условную замену `if (...)`.
