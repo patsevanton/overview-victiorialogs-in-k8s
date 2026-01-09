@@ -1076,44 +1076,17 @@ _time:5m | format "<method> <_msg> - <status> (<bytes> bytes)" as _msg
 
 **Примеры:**
 
-```logsql
-_time:1d {app="app1"} | stats by (user) count() app1_hits | join by (user) (_time:1d {app="app2"} | stats by (user) count() app2_hits)
-_time:1d {app="app1"} | stats by (user) count() app1_hits | join by (user) (_time:1d {app="app2"} | stats by (user) count() app2_hits) inner
-_time:1d {app="app1"} | stats by (user) count() app1_hits | join by (user) (_time:1d {app="app2"} | stats by (user) count() app2_hits) prefix "app2."
-```
-
-### len (длина) — конвейер
-
-Сохраняет длину в байтах значения указанного поля в новое поле.
-
-**Примеры:**
+Соединение статистики по request_id: количество запросов и среднее время из первого запроса объединяются с максимальным временем и суммой байт из второго запроса. Результат используется дальше для отображения через `fields`, `sort` и `limit`.
 
 ```logsql
-_time:5m | len(_msg) as msg_len | sort by (msg_len desc) | limit 5
+_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) count() as request_count, avg(http.request_time) as avg_time | join by (http.request_id) (_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) max(http.request_time) as max_time, sum(http.bytes_sent) as total_bytes) | fields http.request_id, request_count, avg_time, max_time, total_bytes | sort by (request_count desc) | limit 5
 ```
 
-### Ограничение вывода (limit pipe)
-
-Ограничивает количество возвращаемых логов. Можно использовать `head` вместо `limit`. По умолчанию строки выбираются в произвольном порядке.
-
-**Примеры:**
-
+Пример с inner join (только request_id, присутствующие в обоих запросах):
 ```logsql
-_time:5m | limit 100
-_time:5m | head 100
-error | head
+_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) count() as request_count | join by (http.request_id) (_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) max(http.request_time) as max_time) inner | limit 5
 ```
 
-### Труба offset (пропуск записей)
-
-Пропускает указанное количество записей после сортировки. Можно использовать `skip` вместо `offset`. Рекомендуется использовать после `sort`.
-
-**Примеры:**
-
-```logsql
-_time:5m | sort by (_time) | offset 100
-_time:5m | skip 10
-```
 
 ### Конвейер pack_json
 
