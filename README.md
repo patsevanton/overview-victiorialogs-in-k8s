@@ -1134,14 +1134,38 @@ _time:10m kubernetes.pod_namespace:"nginx-log-generator" http.status_code:>=500 
 
 Возвращает топ-N наборов значений по полям, которые встречаются чаще всего. Параметр N необязателен (по умолчанию 10). Поддерживает `hits as`, `rank`.
 
+**Результат:** Конвейер возвращает таблицу с полями:
+- `hits` (или переименованное через `hits as`) — количество вхождений
+- Поля, указанные в `by (...)` — значения, по которым происходит группировка
+- `rank` (или переименованное через `rank as`) — позиция в рейтинге (если указано `rank`)
+
+Результат можно отобразить в VMUI или использовать для дальнейшего анализа данных.
+
 **Примеры:**
 
+Топ namespace по количеству логов:
 ```logsql
-_time:5m | top 7 by (_stream)
-_time:5m | top by (ip)
-_time:5m | top by (path) hits as visits
-_time:5m | top 10 by (ip) rank
-_time:5m | top 10 by (ip) rank as position
+_time:5m | top 5 by (kubernetes.pod_namespace)
+```
+
+Топ HTTP статус-кодов для nginx логов:
+```logsql
+_time:5m kubernetes.pod_namespace:"nginx-log-generator" | top by (http.status_code)
+```
+
+Топ статус-кодов с переименованием поля hits:
+```logsql
+_time:5m kubernetes.pod_namespace:"nginx-log-generator" | top by (http.status_code) hits as requests_count
+```
+
+Топ статус-кодов с ранжированием:
+```logsql
+_time:5m kubernetes.pod_namespace:"nginx-log-generator" | top 10 by (http.status_code) rank
+```
+
+Топ статус-кодов с ранжированием и переименованием rank:
+```logsql
+_time:5m kubernetes.pod_namespace:"nginx-log-generator" | top 10 by (http.status_code) rank as position
 ```
 
 
