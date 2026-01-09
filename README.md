@@ -1199,94 +1199,17 @@ _time:5m | stats by (status) count(referer) as logs_with_referer, count() as tot
 _time:5m | stats count(method, host) as logs_with_method_or_host
 ```
 
-### Статистика histogram
-
-Возвращает бакеты гистограммы VictoriaMetrics для заданного поля. Нормализует значения длительности к наносекундам и короткие числовые значения. Возвращает JSON-массив с `vmrange` и `hits`.
-
-**Примеры:**
-
-```logsql
-# Гистограмма размера ответов по статус-кодам (возвращает JSON-массив)
-_time:5m | stats by (status) histogram(bytes) as buckets
-
-# Распаковка гистограммы для дальнейшего анализа: unroll разворачивает JSON-массив в отдельные записи,
-# unpack_json извлекает поля vmrange и hits из каждого объекта
-_time:5m | stats by (status) histogram(bytes) as buckets | unroll (buckets) | unpack_json from buckets | fields status, vmrange, hits | sort by (hits desc)
-```
-
-### Статистика json_values
-
-Упаковывает указанные поля в JSON для каждой записи лога и возвращает JSON-массив. Поддерживает пустой список полей (все поля), префиксы, `limit N`, `sort by (...)`.
-
-**Примеры:**
-
-```logsql
-# Получение примеров логов по статус-кодам в виде JSON-массива
-_time:5m | stats by (status) json_values(_time, bytes, method, host) limit 3 as sample_logs
-
-# Распаковка JSON-массива для дальнейшего анализа: unpack_json извлекает поля из JSON-объектов
-_time:5m | stats by (status) json_values(_time, bytes, method) limit 2 as sample_logs | unpack_json from sample_logs | fields status, _time, bytes, method
-
-# Все поля логов, отсортированные по времени (новые сначала)
-_time:5m | stats by (status) json_values() sort by (_time desc) limit 3 as recent_logs
-
-# Все поля логов для каждого статус-кода (первые 5 записей)
-_time:5m | stats by (status) json_values() limit 5 as sample_logs
-```
-
 ### Статистика max
 
-Возвращает максимальное значение среди указанных полей логов. Работает и со строковыми значениями. Поддерживает префиксы и условную статистику `if (...)`.
+Возвращает максимальное значение среди указанных полей логов. Работает и со строковыми значениями. Поддерживает префиксы и условную статистику `if (...)`. Вместо max можно использовать median, min
 
 **Примеры:**
 
 ```logsql
 # Максимальный размер ответа по статус-кодам
 _time:5m | stats by (status) max(bytes) as max_bytes
-
-# Максимальный размер ответа только для логов с непустым полем bytes
-_time:5m | stats by (status) max(bytes) if (bytes:*) as max_bytes_with_value
-
-# Максимальное значение для всех полей с префиксом
-_time:5m | stats by (status) max(http.*) as max_http_values
-
-# Использование результата для фильтрации (топ статус-коды с большими ответами)
-_time:5m | stats by (status) max(bytes) as max_bytes, count() as total | sort by (max_bytes desc) | limit 10
 ```
 
-### Статистика median
-
-Вычисляет оценочное значение медианы по указанным полям логов. Работает и со строковыми значениями. Поддерживает префиксы и условную статистику `if (...)`.
-
-**Примеры:**
-
-```logsql
-# Медианный размер ответа по статус-кодам
-_time:5m | stats by (status) median(bytes) as median_bytes
-
-# Медиана для всех полей с префиксом http
-_time:5m | stats by (status) median(http.*) as median_http_values
-
-# Медиана только для непустых значений
-_time:5m | stats by (status) median(bytes) if (bytes:*) as median_bytes_with_value
-```
-
-### Статистика min
-
-Возвращает минимальное значение среди указанных полей логов. Работает и со строковыми значениями. Поддерживает префиксы и условную статистику `if (...)`.
-
-**Примеры:**
-
-```logsql
-# Минимальный размер ответа по статус-кодам
-_time:5m | stats by (status) min(bytes) as min_bytes
-
-# Минимальное значение только для непустых полей
-_time:5m | stats by (status) min(bytes) if (bytes:*) as min_bytes_with_value
-
-# Минимальное значение для всех полей с префиксом
-_time:5m | stats by (status) min(http.*) as min_http_values
-```
 
 ### Статистика quantile
 
