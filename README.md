@@ -1173,14 +1173,37 @@ _time:5m kubernetes.pod_namespace:"nginx-log-generator" | top 10 by (http.status
 
 Возвращает уникальные значения для указанных полей. Поддерживает `with hits` для подсчёта совпадений, `limit` для ограничения памяти. Ключевое слово `by` можно опустить.
 
+**Результат:** Конвейер возвращает таблицу с полями:
+- Поля, указанные в `by (...)` — уникальные значения
+- `hits` — количество вхождений (если указано `with hits`)
+
+Результат можно использовать дальше в запросах: сортировать по `hits`, применять `limit`, фильтровать по полям.
+
 **Примеры:**
 
+Уникальные namespace в кластере:
 ```logsql
-_time:5m | uniq by (ip)
-_time:5m | uniq by (host, path)
-_time:5m | uniq by (host) with hits
-_time:5m | uniq by (host, path) limit 100
-_time:5m | uniq (host, path) limit 100
+_time:5m | uniq by (kubernetes.pod_namespace)
+```
+
+Уникальные комбинации метода и статус-кода:
+```logsql
+_time:5m | uniq by (method, status)
+```
+
+Уникальные статус-коды с подсчётом количества:
+```logsql
+_time:5m | uniq by (status) with hits
+```
+
+Топ-5 статус-кодов по количеству запросов:
+```logsql
+_time:5m | uniq by (status) with hits | sort by (hits desc) | limit 5
+```
+
+Уникальные комбинации namespace и статус-кода с ограничением памяти:
+```logsql
+_time:5m | uniq by (kubernetes.pod_namespace, status) limit 100
 ```
 
 ### Пайп unpack_json
