@@ -1206,64 +1206,6 @@ _time:5m | uniq by (status) with hits | sort by (hits desc) | limit 5
 _time:5m | uniq by (kubernetes.pod_namespace, status) limit 100
 ```
 
-### Пайп unpack_json
-
-Распаковывает JSON из указанного поля в выходные поля. Если применяется к `_msg`, часть `from _msg` можно опустить. Поддерживает `fields (...)`, `keep_original_fields`, `skip_empty_results`, условную распаковку `if (...)`.
-
-**Примеры:**
-
-```logsql
-_time:5m | unpack_json from _msg
-_time:5m | unpack_json
-_time:5m | unpack_json from my_json fields (foo, bar)
-_time:5m | unpack_json from foo fields (ip, host) keep_original_fields
-_time:5m | unpack_json fields (ip, host) skip_empty_results
-_time:5m | unpack_json if (ip:"") from foo
-```
-
-### Пайп unpack_logfmt
-
-Распаковывает поля формата logfmt (`k1=v1 ... kN=vN`) из указанного поля. Если применяется к `_msg`, часть `from _msg` можно опустить. Поддерживает `fields (...)`, `keep_original_fields`, `skip_empty_results`, условную распаковку `if (...)`.
-
-**Примеры:**
-
-```logsql
-_time:5m | unpack_logfmt from _msg
-_time:5m | unpack_logfmt
-_time:5m | unpack_logfmt from my_logfmt fields (foo, bar)
-_time:5m | unpack_logfmt from foo fields (ip, host) keep_original_fields
-_time:5m | unpack_logfmt fields (ip, host) skip_empty_results
-_time:5m | unpack_logfmt if (ip:"") from foo
-```
-
-### Пайп unpack_syslog
-
-Распаковывает сообщения syslog (RFC3164, RFC5424) из указанного поля. Если применяется к `_msg`, часть `from _msg` можно опустить. Поддерживает `offset`, `keep_original_fields`, `result_prefix`, условную распаковку `if (...)`.
-
-**Примеры:**
-
-```logsql
-_time:5m | unpack_syslog from _msg
-_time:5m | unpack_syslog
-_time:5m | unpack_syslog offset 5h30m
-_time:5m | unpack_syslog keep_original_fields
-_time:5m | unpack_syslog from foo result_prefix "foo_"
-_time:5m | unpack_syslog if (hostname:"") from foo
-```
-
-### Пайп unpack_words
-
-Распаковывает слова из указанного поля и сохраняет их в виде JSON-массива. Части `from <src_field>` и `as <dst_field>` необязательны. Поддерживает `drop_duplicates`.
-
-**Примеры:**
-
-```logsql
-_time:5m | unpack_words from _msg as words
-_time:5m | unpack_words from _msg
-_time:5m | unpack_words
-_time:5m | unpack_words from text as words drop_duplicates
-_time:5m | unpack_words as words | unroll words | top 5 (words)
-```
 
 ### Пайп unroll
 
