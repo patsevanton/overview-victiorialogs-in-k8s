@@ -1290,9 +1290,6 @@ _time:5m | stats by (status) histogram(bytes) as buckets
 # Распаковка гистограммы для дальнейшего анализа: unroll разворачивает JSON-массив в отдельные записи,
 # unpack_json извлекает поля vmrange и hits из каждого объекта
 _time:5m | stats by (status) histogram(bytes) as buckets | unroll (buckets) | unpack_json from buckets | fields status, vmrange, hits | sort by (hits desc)
-
-# Гистограмма с фильтрацией больших значений
-_time:5m | stats by (status) histogram(bytes) as buckets | unroll (buckets) | unpack_json from buckets | filter hits > 10000 | fields status, vmrange, hits
 ```
 
 ### Статистика json_values
