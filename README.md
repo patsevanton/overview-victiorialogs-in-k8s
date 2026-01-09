@@ -25,6 +25,7 @@
     - [Bloom-фильтры: не открывай блок, если там точно нет нужного](#bloom-фильтры-не-открывай-блок-если-там-точно-нет-нужного)
     - [Синергия оптимизаций](#синергия-оптимизаций)
   - [Быстрый вход в LogsQL (cheatsheet)](#быстрый-вход-в-logsql-cheatsheet)
+  - [Overview ваших логов](#overview-ваших-логов)
   - [Руководство по LogsQL](#руководство-по-logsql)
     - [Содержание](#содержание)
     - [1. Фильтрация логов и временные фильтры](#1-фильтрация-логов-и-временные-фильтры)
@@ -612,7 +613,7 @@ _time:24h     # последние сутки
 
 ## 2. Примеры дашбордов / графиков
 
-1) Счётчики по статусам для namespace `nginx-log-generator` (за последние 5 минут):
+1. Счётчики по статусам для namespace `nginx-log-generator` (за последние 5 минут):
 
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" | stats by (http.status_code) count() as requests | sort by (requests desc)
@@ -620,14 +621,14 @@ kubernetes.pod_namespace:"nginx-log-generator" | stats by (http.status_code) cou
 
 ![nginx_log_generator_requests_by_http_status_code](nginx_log_generator_requests_by_http_status_code.png)
 
-2) Топ медленных URL по времени ответа:
+2. Топ медленных URL по времени ответа:
 
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" | stats by (http.url) max(http.request_time) as max_time | sort by (max_time desc) | limit 10
 ```
 ![nginx_http_url_max_request_time_top10](nginx_http_url_max_request_time_top10.png)
 
-3) IP с наибольшим количеством ошибок (>=400):
+3. IP с наибольшим количеством ошибок (>=400):
 
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" | http.status_code:>=400 | stats by (nginx.remote_addr) count() as errors | sort by (errors desc) | limit 10
@@ -635,7 +636,7 @@ kubernetes.pod_namespace:"nginx-log-generator" | http.status_code:>=400 | stats 
 
 ![nginx_http_4xx_5xx_errors_by_ip](nginx_http_4xx_5xx_errors_by_ip.png)
 
-4) Доля ошибок (процент):
+4. Доля ошибок (процент):
 
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" |
@@ -668,7 +669,7 @@ spec:
     image: antonpatsev/log-generator:2
 ```
 
-5) Поиск подозрительных попыток подключения к БД (анализ аномалий):
+5. Поиск подозрительных попыток подключения к БД (анализ аномалий):
 
 ```logsql
 _time:1h "Failed to connect" | stats count() as attempts 
@@ -677,7 +678,7 @@ _time:1h "Failed to connect" | stats count() as attempts
 ![failed_connect_attempts_last_1h](failed_connect_attempts_last_1h.png)
 
 
-6) График распределения `status_code` по ручке `/api/v1/products` для `namespace nginx-log-generator`:
+6. График распределения `status_code` по ручке `/api/v1/products` для `namespace nginx-log-generator`:
 
 ```logsql
 kubernetes.pod_namespace:"nginx-log-generator" | "/api/v1/products" | stats by (http.status_code) count() as count
