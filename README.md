@@ -323,10 +323,10 @@ vmcluster:
 ```
 
 Можно анализировать логи через explore Grafana.
+Откройте http://grafana.apatsev.org.ru/
 Для получения пароля admin от Grafana необходимо:
 
 ```bash
-# Откройте http://grafana.apatsev.org.ru/
 kubectl get secret vmks-grafana -n vmks -o jsonpath='{.data.admin-password}' | base64 --decode; echo
 ```
 
