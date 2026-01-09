@@ -1035,6 +1035,9 @@ kubernetes.container_name:"nginx-log-generator"
 _time:5m | field_names
 ```
 
+![field_names_collected_last_5_minutes](field_names_collected_last_5_minutes.png)
+
+
 ### Конвейер field_values
 
 Возвращает все значения для указанного поля вместе с количеством логов для каждого значения. Поддерживает `limit N`.
@@ -1042,8 +1045,11 @@ _time:5m | field_names
 **Примеры:**
 
 ```logsql
-_time:5m | field_values host limit 10
+_time:5m | field_values kubernetes.container_name limit 10
 ```
+
+![kubernetes_container_name_field_values_last_5m_top_10](kubernetes_container_name_field_values_last_5m_top_10.png)
+
 
 ### Конвейер fields (выбор полей)
 
