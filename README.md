@@ -1070,51 +1070,6 @@ _time:5m | format "<method> <_msg> - <status> (<bytes> bytes)" as _msg
 
 ![http_requests_format_method_msg_status_bytes](http_requests_format_method_msg_status_bytes.png)
 
-### Труба join (соединение)
-
-Соединяет результаты первого запроса с результатами второго по заданному набору полей. Работает как `LEFT JOIN` в SQL. Поддерживает `inner` для `INNER JOIN`, `prefix` для добавления префикса к полям.
-
-**Примеры:**
-
-Соединение статистики по request_id: количество запросов и среднее время из первого запроса объединяются с максимальным временем и суммой байт из второго запроса. Результат используется дальше для отображения через `fields`, `sort` и `limit`.
-
-```logsql
-_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) count() as request_count, avg(http.request_time) as avg_time | join by (http.request_id) (_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) max(http.request_time) as max_time, sum(http.bytes_sent) as total_bytes) | fields http.request_id, request_count, avg_time, max_time, total_bytes | sort by (request_count desc) | limit 5
-```
-
-Пример с inner join (только request_id, присутствующие в обоих запросах):
-```logsql
-_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) count() as request_count | join by (http.request_id) (_time:30m {kubernetes.container_name="nginx-log-generator"} | stats by (http.request_id) max(http.request_time) as max_time) inner | limit 5
-```
-
-
-### Конвейер pack_json
-
-Упаковывает все поля записи журнала в объект JSON и сохраняет в виде строки. Если результат сохраняется в `_msg`, часть `as _msg` можно опустить. Поддерживает `fields (...)` для выбора полей.
-
-**Примеры:**
-
-```logsql
-_time:5m | pack_json as _msg
-_time:5m | pack_json
-_time:5m | pack_json fields (foo, bar) as baz
-_time:5m | pack_json fields (foo.*, bar.*) as baz
-_time:5m | pack_json as foo | fields foo
-```
-
-### Конвейер pack_logfmt
-
-Упаковывает все поля записи журнала в сообщение формата logfmt и сохраняет в виде строки. Если результат сохраняется в `_msg`, часть `as _msg` можно опустить. Поддерживает `fields (...)` для выбора полей.
-
-**Примеры:**
-
-```logsql
-_time:5m | pack_logfmt as _msg
-_time:5m | pack_logfmt
-_time:5m | pack_logfmt fields (foo, bar) as baz
-_time:5m | pack_logfmt fields (foo.*, bar.*) as baz
-_time:5m | pack_logfmt as foo | fields foo
-```
 
 ### Конвейер query_stats
 
