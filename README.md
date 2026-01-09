@@ -1216,8 +1216,14 @@ _time:5m | uniq by (kubernetes.pod_namespace, status) limit 100
 **Примеры:**
 
 ```logsql
-_time:5m | stats avg(duration) avg_duration
-_time:5m | stats avg(foo*)
+# Средний размер ответа по HTTP статус-кодам
+_time:5m | stats by (status) avg(bytes) as avg_bytes
+
+# Средний размер ответа с использованием результата в дальнейшем запросе (сортировка)
+_time:5m | stats by (status) avg(bytes) as avg_bytes, count() as total | sort by (total desc)
+
+# Среднее значение для всех полей с префиксом
+_time:5m | stats avg(http.*)
 ```
 
 ### Статистика count_uniq_hash
@@ -1227,8 +1233,11 @@ _time:5m | stats avg(foo*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats count_uniq_hash(ip) unique_ips_count
-_time:5m | stats count_uniq_hash(host, path) unique_host_path_pairs
+# Приблизительное количество уникальных IP-адресов по статус-кодам
+_time:5m | stats by (status) count_uniq_hash(host) as unique_hosts_count
+
+# Уникальные комбинации метода и хоста
+_time:5m | stats count_uniq_hash(method, host) as unique_method_host_pairs
 ```
 
 ### Статистика count_uniq
@@ -1238,9 +1247,14 @@ _time:5m | stats count_uniq_hash(host, path) unique_host_path_pairs
 **Примеры:**
 
 ```logsql
-_time:5m | stats count_uniq(ip) ips
-_time:5m | stats count_uniq(host, path) unique_host_path_pairs
-_time:5m | stats count_uniq(ip) limit 1_000_000 as ips_1_000_000
+# Точное количество уникальных хостов
+_time:5m | stats count_uniq(host) as unique_hosts
+
+# Уникальные комбинации метода и статус-кода
+_time:5m | stats by (status) count_uniq(method) as unique_methods
+
+# С ограничением памяти для больших данных
+_time:5m | stats count_uniq(host) limit 1_000_000 as unique_hosts_limited
 ```
 
 ### Статистика count
@@ -1250,10 +1264,17 @@ _time:5m | stats count_uniq(ip) limit 1_000_000 as ips_1_000_000
 **Примеры:**
 
 ```logsql
-_time:5m | stats count() logs
-_time:5m | stats count(username) logs_with_username
-_time:5m | stats count(username, password) logs_with_username_or_password
-_time:5m | stats count(foo*)
+# Общее количество логов
+_time:5m | stats count() as total_logs
+
+# Количество логов с непустым полем referer, сгруппированные по статусу
+_time:5m | stats by (status) count(referer) as logs_with_referer, count() as total_logs
+
+# Количество логов с любым из указанных полей
+_time:5m | stats count(method, host) as logs_with_method_or_host
+
+# Количество логов с полями, начинающимися с префикса
+_time:5m | stats by (status) count(http.*) as logs_with_http_fields
 ```
 
 ### Статистика histogram
@@ -1263,8 +1284,15 @@ _time:5m | stats count(foo*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats by (host) histogram(response_size)
-_time:5m | stats histogram(response_size) as buckets | unroll (buckets) | unpack_json from buckets
+# Гистограмма размера ответов по статус-кодам (возвращает JSON-массив)
+_time:5m | stats by (status) histogram(bytes) as buckets
+
+# Распаковка гистограммы для дальнейшего анализа: unroll разворачивает JSON-массив в отдельные записи,
+# unpack_json извлекает поля vmrange и hits из каждого объекта
+_time:5m | stats by (status) histogram(bytes) as buckets | unroll (buckets) | unpack_json from buckets | fields status, vmrange, hits | sort by (hits desc)
+
+# Гистограмма с фильтрацией больших значений
+_time:5m | stats by (status) histogram(bytes) as buckets | unroll (buckets) | unpack_json from buckets | filter hits > 10000 | fields status, vmrange, hits
 ```
 
 ### Статистика json_values
@@ -1274,10 +1302,17 @@ _time:5m | stats histogram(response_size) as buckets | unroll (buckets) | unpack
 **Примеры:**
 
 ```logsql
-_time:5m | stats by (app) json_values(_time, _msg) as json_logs
-_time:5m | stats json_values() as json_logs
-_time:5m | stats by (host) json_values() limit 3 as json_logs
-_time:5m | stats by (host) json_values() sort by (_time desc) limit 3 as json_logs
+# Получение примеров логов по статус-кодам в виде JSON-массива
+_time:5m | stats by (status) json_values(_time, bytes, method, host) limit 3 as sample_logs
+
+# Распаковка JSON-массива для дальнейшего анализа: unpack_json извлекает поля из JSON-объектов
+_time:5m | stats by (status) json_values(_time, bytes, method) limit 2 as sample_logs | unpack_json from sample_logs | fields status, _time, bytes, method
+
+# Все поля логов, отсортированные по времени (новые сначала)
+_time:5m | stats by (status) json_values() sort by (_time desc) limit 3 as recent_logs
+
+# Все поля логов для каждого статус-кода (первые 5 записей)
+_time:5m | stats by (status) json_values() limit 5 as sample_logs
 ```
 
 ### Статистика max
@@ -1287,9 +1322,17 @@ _time:5m | stats by (host) json_values() sort by (_time desc) limit 3 as json_lo
 **Примеры:**
 
 ```logsql
-_time:5m | stats max(duration) max_duration
-_time:5m | stats max(prefix*)
-_time:5m | stats max(some_field) if (some_field:*) as max_value_without_empty_string
+# Максимальный размер ответа по статус-кодам
+_time:5m | stats by (status) max(bytes) as max_bytes
+
+# Максимальный размер ответа только для логов с непустым полем bytes
+_time:5m | stats by (status) max(bytes) if (bytes:*) as max_bytes_with_value
+
+# Максимальное значение для всех полей с префиксом
+_time:5m | stats by (status) max(http.*) as max_http_values
+
+# Использование результата для фильтрации (топ статус-коды с большими ответами)
+_time:5m | stats by (status) max(bytes) as max_bytes, count() as total | sort by (max_bytes desc) | limit 10
 ```
 
 ### Статистика median
@@ -1299,9 +1342,14 @@ _time:5m | stats max(some_field) if (some_field:*) as max_value_without_empty_st
 **Примеры:**
 
 ```logsql
-_time:5m | stats median(duration) median_duration
-_time:5m | stats median(prefix*)
-_time:5m | stats median(some_field) if (some_field:*) as median_without_empty_string
+# Медианный размер ответа по статус-кодам
+_time:5m | stats by (status) median(bytes) as median_bytes
+
+# Медиана для всех полей с префиксом http
+_time:5m | stats by (status) median(http.*) as median_http_values
+
+# Медиана только для непустых значений
+_time:5m | stats by (status) median(bytes) if (bytes:*) as median_bytes_with_value
 ```
 
 ### Статистика min
@@ -1311,9 +1359,14 @@ _time:5m | stats median(some_field) if (some_field:*) as median_without_empty_st
 **Примеры:**
 
 ```logsql
-_time:5m | stats min(duration) min_duration
-_time:5m | stats min(prefix*)
-_time:5m | stats min(some_field) if (some_field:*) as min_value_without_empty_string
+# Минимальный размер ответа по статус-кодам
+_time:5m | stats by (status) min(bytes) as min_bytes
+
+# Минимальное значение только для непустых полей
+_time:5m | stats by (status) min(bytes) if (bytes:*) as min_bytes_with_value
+
+# Минимальное значение для всех полей с префиксом
+_time:5m | stats by (status) min(http.*) as min_http_values
 ```
 
 ### Статистика quantile
@@ -1323,9 +1376,14 @@ _time:5m | stats min(some_field) if (some_field:*) as min_value_without_empty_st
 **Примеры:**
 
 ```logsql
-_time:5m | stats quantile(0.5, request_duration_seconds) p50, quantile(0.9, request_duration_seconds) p90, quantile(0.99, request_duration_seconds) p99
-_time:5m | stats quantile(phi, prefix*)
-_time:5m | stats quantile(phi, some_field) if (some_field:*) as quantile_without_empty_string
+# Процентили размера ответа (p50, p90, p99) по статус-кодам
+_time:5m | stats by (status) quantile(0.5, bytes) as p50, quantile(0.9, bytes) as p90, quantile(0.99, bytes) as p99
+
+# Процентили времени запроса для NGINX логов
+_time:5m http.request_time:* | stats by (status) quantile(0.5, http.request_time) as p50, quantile(0.95, http.request_time) as p95
+
+# Процентили только для непустых значений
+_time:5m | stats by (status) quantile(0.9, bytes) if (bytes:*) as p90_bytes_with_value
 ```
 
 ### Статистика rate_sum
@@ -1335,8 +1393,11 @@ _time:5m | stats quantile(phi, some_field) if (some_field:*) as quantile_without
 **Примеры:**
 
 ```logsql
-_time:5m | stats rate_sum(bytes_sent)
-_time:5m | stats rate_sum(prefix*)
+# Средняя скорость передачи данных в секунду по статус-кодам
+_time:5m | stats by (status) rate_sum(bytes) as bytes_per_second
+
+# Средняя скорость для всех полей с префиксом http
+_time:5m | stats by (status) rate_sum(http.*) as http_bytes_per_second
 ```
 
 ### Статистика rate
@@ -1346,7 +1407,14 @@ _time:5m | stats rate_sum(prefix*)
 **Примеры:**
 
 ```logsql
-_time:5m error | stats rate()
+# Средняя скорость логов с ошибками (5xx) в секунду
+_time:5m status:5* | stats rate() as error_rate
+
+# Средняя скорость логов по статус-кодам
+_time:5m | stats by (status) rate() as requests_per_second
+
+# Средняя скорость ошибок по методам
+_time:5m status:(4* OR 5*) | stats by (method) rate() as error_rate_per_method
 ```
 
 ### Статистика row_any
@@ -1356,9 +1424,17 @@ _time:5m error | stats rate()
 **Примеры:**
 
 ```logsql
-_time:5m | stats by (_stream) row_any() as sample_row
-_time:5m | stats row_any(_time, path) as time_and_path_sample
-_time:5m | stats row_any(prefix*)
+# Произвольная запись лога для каждого статус-кода
+_time:5m | stats by (status) row_any() as sample_log
+
+# Произвольная запись с указанными полями для каждого статус-кода
+_time:5m | stats by (status) row_any(_time, bytes, method, host) as sample_log
+
+# Распаковка JSON-объекта для дальнейшего анализа
+_time:5m | stats by (status) row_any(_time, bytes, method) as sample_log | unpack_json from sample_log | fields status, _time, bytes, method
+
+# Все поля с префиксом http
+_time:5m | stats by (status) row_any(http.*) as sample_http_fields
 ```
 
 ### Статистика row_max
@@ -1368,9 +1444,14 @@ _time:5m | stats row_any(prefix*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats row_max(duration) as log_with_max_duration
-_time:5m | stats row_max(duration, _time, path, duration) as time_and_path_with_max_duration
-_time:5m | stats row_max(field, prefix*)
+# Запись лога с максимальным размером ответа по статус-кодам
+_time:5m | stats by (status) row_max(bytes) as log_with_max_bytes
+
+# Запись с максимальным размером и дополнительными полями
+_time:5m | stats by (status) row_max(bytes, _time, method, host) as max_bytes_log
+
+# Распаковка JSON для просмотра деталей
+_time:5m | stats by (status) row_max(bytes, _time, method, host) as max_log | unpack_json from max_log | fields status, _time, bytes, method, host
 ```
 
 ### Статистика row_min
@@ -1380,9 +1461,14 @@ _time:5m | stats row_max(field, prefix*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats row_min(duration) as log_with_min_duration
-_time:5m | stats row_min(duration, _time, path, duration) as time_and_path_with_min_duration
-_time:5m | stats row_min(field, prefix*)
+# Запись лога с минимальным размером ответа по статус-кодам
+_time:5m | stats by (status) row_min(bytes) as log_with_min_bytes
+
+# Запись с минимальным размером и дополнительными полями
+_time:5m | stats by (status) row_min(bytes, _time, method, host) as min_bytes_log
+
+# Распаковка JSON для просмотра деталей
+_time:5m | stats by (status) row_min(bytes, _time, method) as min_log | unpack_json from min_log | fields status, _time, bytes, method
 ```
 
 ### Статистика sum_len
@@ -1392,8 +1478,11 @@ _time:5m | stats row_min(field, prefix*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats sum_len(_msg) messages_len
-_time:5m | stats sum_len(prefix*)
+# Суммарная длина всех сообщений по статус-кодам
+_time:5m | stats by (status) sum_len(_msg) as total_message_len
+
+# Суммарная длина для всех полей с префиксом
+_time:5m | stats by (status) sum_len(http.*) as total_http_fields_len
 ```
 
 ### Статистика sum
@@ -1403,8 +1492,14 @@ _time:5m | stats sum_len(prefix*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats sum(duration) sum_duration
-_time:5m | stats sum(prefix*)
+# Суммарный размер всех ответов по статус-кодам
+_time:5m | stats by (status) sum(bytes) as total_bytes
+
+# Сумма для всех полей с префиксом http
+_time:5m | stats by (status) sum(http.*) as total_http_bytes
+
+# Использование результата для сортировки (топ статус-коды по объему данных)
+_time:5m | stats by (status) sum(bytes) as total_bytes, count() as count_logs | sort by (total_bytes desc) | limit 10
 ```
 
 ### Статистика uniq_values
@@ -1414,9 +1509,14 @@ _time:5m | stats sum(prefix*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats uniq_values(ip) unique_ips
-_time:5m | stats uniq_values(ip) limit 100 as unique_ips_100
-_time:5m | stats uniq_values(prefix*)
+# Уникальные методы по статус-кодам (возвращает JSON-массив)
+_time:5m | stats by (status) uniq_values(method) as unique_methods
+
+# Уникальные хосты с ограничением
+_time:5m | stats uniq_values(host) limit 100 as unique_hosts_100
+
+# Уникальные комбинации (возвращает массив строковых представлений кортежей)
+_time:5m | stats by (status) uniq_values(method, host) limit 50 as unique_method_host_pairs
 ```
 
 ### Статистика values
@@ -1426,8 +1526,11 @@ _time:5m | stats uniq_values(prefix*)
 **Примеры:**
 
 ```logsql
-_time:5m | stats values(ip) ips
-_time:5m | stats values(prefix*)
+# Все значения метода по статус-кодам (включая дубликаты)
+_time:5m | stats by (status) values(method) as all_methods
+
+# Все значения для всех полей с префиксом
+_time:5m | stats by (status) values(http.*) as all_http_values
 ```
 
 
