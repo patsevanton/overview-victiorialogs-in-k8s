@@ -1051,45 +1051,24 @@ _time:5m | field_values kubernetes.container_name limit 10
 ![kubernetes_container_name_field_values_last_5m_top_10](kubernetes_container_name_field_values_last_5m_top_10.png)
 
 
-### Конвейер fields (выбор полей)
-
-Выбирает конкретный набор полей лога. Можно использовать `keep` вместо `fields`. Поддерживает шаблоны с подстановкой.
-
-**Примеры:**
-
-```logsql
-_time:5m | fields host, _msg
-_time:5m | keep host, _msg
-_time:5m | fields foo*
-```
-
-### Конвейер фильтрации (filter pipe)
-
-Фильтрует логи с помощью указанного фильтра. Можно использовать `where` вместо `filter`. Префикс `filter` можно опустить, если фильтры не конфликтуют с названиями конвейеров.
-
-**Примеры:**
-
-```logsql
-_time:1h error | stats by (host) count() logs_count | filter logs_count:> 1_000
-_time:1h error | stats by (host) count() logs_count | where logs_count:> 1_000
-_time:1h error | stats by (host) count() logs_count | logs_count:> 1_000
-```
-
 ### Труба format (format pipe)
 
 Объединяет поля логов согласно шаблону и сохраняет результат в поле. Если результат сохраняется в `_msg`, часть `as _msg` можно опустить. Поддерживает префиксы: `duration_seconds:`, `q:`, `uc:`, `lc:`, `urlencode:`, `urldecode:`, `hexencode:`, `hexdecode:`, `base64encode:`, `base64decode:`, `hexnumdecode:`, `time:`, `duration:`, `ipv4:`, `hexnumencode:`. Поддерживает `keep_original_fields`, `skip_empty_results`, условное форматирование `if (...)`.
 
 **Примеры:**
-
+Форматирование HTTP-запроса в читаемое сообщение и использование для отображения
 ```logsql
-_time:5m | format "request from <ip>:<port>" as _msg
-_time:5m | format "request from <ip>:<port>"
-_time:5m | format '{"_msg":<q:_msg>,"stacktrace":<q:stacktrace>}' as my_json
-_time:5m | format 'uppercase foo: <uc:foo>, lowercase bar: <lc:bar>' as result
-_time:5m | format 'url: http://foo.com/?user=<urlencode:user>'
-_time:5m | format if (ip:* and host:*) "request from <ip>:<host>" as message
+_time:5m {kubernetes.container_name="nginx-log-generator"} | format "<http.method> <http.url> - Status: <http.status_code>, Time: <duration:http.request_time>, Bytes: <http.bytes_sent>" as request_summary | fields request_summary, http.status_code, http.request_id | sort by (http.status_code desc) | limit 5
 ```
 
+![kubernetes_nginx_logs_format_http_request_summary_view](kubernetes_nginx_logs_format_http_request_summary_view.png)
+
+Форматирование с сохранением в _msg (часть "as _msg" можно опустить)
+```
+_time:5m | format "<method> <_msg> - <status> (<bytes> bytes)" as _msg
+```
+
+![http_requests_format_method_msg_status_bytes](http_requests_format_method_msg_status_bytes.png)
 
 ### Труба join (соединение)
 
