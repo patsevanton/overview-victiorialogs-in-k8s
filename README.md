@@ -953,7 +953,6 @@ _time:1d {kubernetes.pod_namespace="flog-log-generator"} | stats count_uniq(_str
 Используйте `block_stats` для анализа:
 
 ```logsql
-_time:1d | keep kubernetes.pod_name, kubernetes.pod_namespace | block_stats
 _time:1d | keep kubernetes.pod_name, kubernetes.pod_namespace | block_stats | stats by (field) sum(values_bytes) values_bytes_on_disk, sum(rows) rows | sort by (values_bytes_on_disk) desc
 ```
 
