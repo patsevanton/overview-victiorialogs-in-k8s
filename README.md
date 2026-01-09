@@ -1103,16 +1103,6 @@ kubernetes.container_name:"nginx-log-generator"
 ![kubernetes_nginx_replace_http_url_requests_stats](kubernetes_nginx_replace_http_url_requests_stats.png)
 
 
-### Канал sample
-
-Возвращает случайную выборку логов в объёме 1/N-ю часть от всех подходящих записей.
-
-**Примеры:**
-
-```logsql
-_time:1h error | sample 100
-```
-
 ### Конвейер set_stream_fields
 
 Задаёт указанные поля логов в качестве полей `_stream`. Поддерживает условное применение `if (...)`.
