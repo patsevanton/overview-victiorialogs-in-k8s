@@ -1103,17 +1103,6 @@ kubernetes.container_name:"nginx-log-generator"
 ![kubernetes_nginx_replace_http_url_requests_stats](kubernetes_nginx_replace_http_url_requests_stats.png)
 
 
-### Конвейер set_stream_fields
-
-Задаёт указанные поля логов в качестве полей `_stream`. Поддерживает условное применение `if (...)`.
-
-**Примеры:**
-
-```logsql
-_time:5m | set_stream_fields host, path
-_time:5m | set_stream_fields if (host:="foobar") host, app
-```
-
 ### Разделение строки (split pipe)
 
 Разделяет поле журнала на элементы по заданному разделителю и сохраняет результат в виде JSON-массива. Части `from <src_field>` и `as <dst_field>` необязательны.
