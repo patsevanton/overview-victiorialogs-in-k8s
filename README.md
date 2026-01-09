@@ -1172,9 +1172,6 @@ _time:5m | stats avg(http.*)
 ```logsql
 # Приблизительное количество уникальных IP-адресов по статус-кодам
 _time:5m | stats by (status) count_uniq_hash(host) as unique_hosts_count
-
-# Уникальные комбинации метода и хоста
-_time:5m | stats count_uniq_hash(method, host) as unique_method_host_pairs
 ```
 
 ### Статистика count_uniq
@@ -1184,14 +1181,8 @@ _time:5m | stats count_uniq_hash(method, host) as unique_method_host_pairs
 **Примеры:**
 
 ```logsql
-# Точное количество уникальных хостов
-_time:5m | stats count_uniq(host) as unique_hosts
-
 # Уникальные комбинации метода и статус-кода
 _time:5m | stats by (status) count_uniq(method) as unique_methods
-
-# С ограничением памяти для больших данных
-_time:5m | stats count_uniq(host) limit 1_000_000 as unique_hosts_limited
 ```
 
 ### Статистика count
@@ -1201,17 +1192,11 @@ _time:5m | stats count_uniq(host) limit 1_000_000 as unique_hosts_limited
 **Примеры:**
 
 ```logsql
-# Общее количество логов
-_time:5m | stats count() as total_logs
-
 # Количество логов с непустым полем referer, сгруппированные по статусу
 _time:5m | stats by (status) count(referer) as logs_with_referer, count() as total_logs
 
 # Количество логов с любым из указанных полей
 _time:5m | stats count(method, host) as logs_with_method_or_host
-
-# Количество логов с полями, начинающимися с префикса
-_time:5m | stats by (status) count(http.*) as logs_with_http_fields
 ```
 
 ### Статистика histogram
