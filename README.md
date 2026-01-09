@@ -1024,29 +1024,6 @@ kubernetes.container_name:"nginx-log-generator"
 
 ![nginx_http_url_request_hits_sorted_descending](nginx_http_url_request_hits_sorted_descending.png)
 
-### Конвейер drop_empty_fields
-
-Удаляет поля с пустыми значениями из результатов. Пропускает записи журнала, в которых нет ни одного непустого поля.
-
-**Пример:**
-
-```logsql
-_time:5m | extract 'email: <email>,' from foo | drop_empty_fields
-```
-
-### Конвейер facets
-
-Возвращает наиболее частые значения для каждого встреченного поля лога и оценку числа попаданий. Поддерживает `facets N`, `max_values_per_field M`, `max_value_len K`, `keep_const_fields`.
-
-**Примеры:**
-
-```logsql
-_time:1h error | facets
-_time:1h error | facets 3
-_time:1h error | facets 15 max_values_per_field 100000
-_time:1h error | facets max_value_len 100
-_time:1h error | facets keep_const_fields
-```
 
 ### Конвейер field_names
 
@@ -1065,8 +1042,7 @@ _time:5m | field_names
 **Примеры:**
 
 ```logsql
-_time:5m | field_values level
-_time:5m | field_values user_id limit 10
+_time:5m | field_values host limit 10
 ```
 
 ### Конвейер fields (выбор полей)
