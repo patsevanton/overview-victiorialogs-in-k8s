@@ -168,7 +168,7 @@ helm upgrade --install victoria-logs-cluster \
   --namespace victoria-logs-cluster \
   --create-namespace \
   --wait \
-  --version 0.0.24 \
+  --version 0.0.25 \
   --timeout 15m \
   -f victorialogs-cluster-values.yaml
 ```
@@ -210,7 +210,7 @@ helm upgrade --install victoria-logs-collector \
   --namespace victoria-logs-collector \
   --create-namespace \
   --wait \
-  --version 0.2.4 \
+  --version 0.2.5 \
   --timeout 15m \
   -f victorialogs-collector-values.yaml
 ```
